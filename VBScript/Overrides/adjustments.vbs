@@ -1,3 +1,4 @@
+'matt is weird
 Dim solarReport, Master, closedWon As Workbook
     Dim map, report, repRef, findRep, closedRep, histSheet As Worksheet
 Dim overrideMonth, overrideYear As String
