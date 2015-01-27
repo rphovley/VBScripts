@@ -40,29 +40,7 @@ Worksheets.Add(, Worksheets(Worksheets.Count)).Name = "Jobs in Progress"
     
 
     'Clawbacks Pending sheet
-    Worksheets("Clawbacks Pending").Cells(1, 1) = "Clawbacks Pending"
-    Worksheets("Clawbacks Pending").Cells(2, 1) = "Customer"
-    Worksheets("Clawbacks Pending").Cells(2, 2) = "JobID"
-    Worksheets("Clawbacks Pending").Cells(2, 3) = "System Size"
-    Worksheets("Clawbacks Pending").Cells(2, 4) = "Earned"
-    Worksheets("Clawbacks Pending").Cells(2, 5) = "Paid but Never Clawed Back"
-    Worksheets("Clawbacks Pending").Cells(2, 6) = "Due to Evolve"
-
-    'Formats the main header
-    With Worksheets("Clawbacks Pending").Range("A1:F1")
-        .HorizontalAlignment = xlLeft
-        .Font.Bold = True
-        .Interior.Color = RGB(0, 77, 0)
-        .Font.Color = RGB(255, 255, 255)
-    End With
-
-    'Formats the column headers
-    With Worksheets("Clawbacks Pending").Range("A2:F2")
-        .HorizontalAlignment = xlLeft
-        .Font.Bold = True
-        .Interior.Color = RGB(0, 0, 0)
-        .Font.Color = RGB(255, 255, 255)
-    End With
+    
     
     'Jobs in Jeopardy sheet
     Worksheets("Jobs in Jeopardy").Cells(1, 1) = "Jobs in Jeopardy"
@@ -284,5 +262,28 @@ End Sub
 Sub clawbacks_pending()
 Worksheets.Add(, Worksheets(Worksheets.Count)).Name = "Clawbacks Pending"
 
+Worksheets("Clawbacks Pending").Cells(1, 1) = "Clawbacks Pending"
+    Worksheets("Clawbacks Pending").Cells(2, 1) = "Customer"
+    Worksheets("Clawbacks Pending").Cells(2, 2) = "JobID"
+    Worksheets("Clawbacks Pending").Cells(2, 3) = "System Size"
+    Worksheets("Clawbacks Pending").Cells(2, 4) = "Earned"
+    Worksheets("Clawbacks Pending").Cells(2, 5) = "Paid but Never Clawed Back"
+    Worksheets("Clawbacks Pending").Cells(2, 6) = "Due to Evolve"
 
+    'Formats the main header
+    With Worksheets("Clawbacks Pending").Range("A1:F1")
+        .HorizontalAlignment = xlLeft
+        .Font.Bold = True
+        .Interior.Color = RGB(0, 77, 0)
+        .Font.Color = RGB(255, 255, 255)
+    End With
+
+    'Formats the column headers
+    With Worksheets("Clawbacks Pending").Range("A2:F2")
+        .HorizontalAlignment = xlLeft
+        .Font.Bold = True
+        .Interior.Color = RGB(0, 0, 0)
+        .Font.Color = RGB(255, 255, 255)
+    End With
+	
 End Sub
