@@ -25,26 +25,19 @@ Dim clawbacks_pending_row As Integer
 Dim jobs_in_jeopardy_row As Integer
 Dim jobs_in_progress_row As Integer
 Dim rep_row As Integer
+dim rate_col as integer
 
+rate_col = 5
 rep_row = 2
 Do
-'Creates a new tab
+'Creates the new tabs
+	call format_sheet "Commissions Earned" "Earned" "Paid" "Due"
 
-
-
-
-
-
-'Formats the new spreadsheets
-    'Commissions Earned sheet
-    
-
-    'Clawbacks Pending sheet
-    
- 
-    
-    'Jobs in Progress sheet
-    
+	call format_sheet "Clawbacks Pending" "Earned" "Paid but Never Clawed Back" "Due to Evolve"
+	
+	call format_sheet "Jobs in Jeopardy" "Status" "Paid" "High Probability of Cancelling"
+	
+	call format_sheet "Jobs in Progress" "Potentially Earned" "Paid" "Potentially Due"
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''
     financial_data_row = 2
     current_data_row = 2
@@ -52,9 +45,11 @@ Do
     clawbacks_pending_row = 3
     jobs_in_jeopardy_row = 3
     jobs_in_progress_row = 3
-      
+	      
     rep = Sheets("RepList").Cells(rep_row, 2)
     rep_name = Sheets("RepList").Cells(rep_row, 1)
+	rep_ID = sheets("RepList").cells(rep_row, 3)
+	rate = Sheets("RepList").cells(rep_row, 4)
     
     'cycles through the accounts
     Do
@@ -73,31 +68,12 @@ Do
         status = Sheets("Current Data").Cells(current_data_row, 4)
 
         'code for calculating earned based on rep. This is in here for confidentiality.
-        If rep = "alejandro@evolvesolar.com" Then
-            earned = system_size * 250
-        ElseIf rep = "benjamin@evolvesolar.com" Then
-            earned = system_size * 200
-        ElseIf rep = "daniel.field@evolvesolar.com" Then
-            earned = system_size * 250
-        ElseIf rep = "heriberto@evolvesolar.com" Then
-            earned = system_size * 200
-        ElseIf rep = "stoxen@evolvesolar.com" Then
-            earned = system_size * 200
-        ElseIf rep = "kent.shumway@evolvesolar.com" Then
-            earned = system_size * 200
-        ElseIf rep = "jaredb@evolvesolar.com" Then
-            earned = system_size * 250
-        ElseIf rep = "scottk@evolvesolar.com" Then
-            earned = system_size * 250
-        ElseIf rep = "ryanp@evolvesolar.com" Then
-            earned = system_size * 250
-        ElseIf rep = "tyson@evolvesolar.com" Then
-            earned = system_size * 200
-        ElseIf rep = "jasonm@evolvesolar.com" Then
-            earned = system_size * 200
-        ElseIf rep = "matt@evolvesolar.com" Then
-            earned = system_size * 280
-        End If
+        if sheets("Financial Data").cells(financial_data_row, 2) = rep_ID AND sheets("Financial Data").cells(financial_data_row, 3) = customer then
+			earned = system_size * sheets("RepList").cells(rep_row, rate_col)
+			financial_data_row = financial_data_row + 1
+		Else
+			financial_data_row = financial_data_row + 1
+		End if
         
         'code for summing the amount paid for the account
         Dim sale_amount_row As Integer
@@ -183,20 +159,22 @@ Loop Until Sheets("RepList").Cells(rep_row, 2) = ""
 
 End Sub
 
-sub commissions_earned()
+Sub format_sheet(ByVal sheetName As String, ByVal Col4 As String, ByVal Col5 As String, By Val Col6 As String)
 
-Worksheets.Add(, Worksheets(Worksheets.Count)).Name = "Commissions Earned"
+Worksheets.Add(, Worksheets(Worksheets.Count)).Name = sheetName
 
-Worksheets("Commissions Earned").Cells(1, 1) = "Commissions Earned"
-    Worksheets("Commissions Earned").Cells(2, 1) = "Customer"
-    Worksheets("Commissions Earned").Cells(2, 2) = "JobID"
-    Worksheets("Commissions Earned").Cells(2, 3) = "System Size"
-    Worksheets("Commissions Earned").Cells(2, 4) = "Earned"
-    Worksheets("Commissions Earned").Cells(2, 5) = "Paid"
-    Worksheets("Commissions Earned").Cells(2, 6) = "Due"
+    With Worksheets(sheetName)
+        .Cells(1, 1) = sheetName
+        .Cells(2, 1) = "Customer"
+        .Cells(2, 2) = "JobID"
+        .Cells(2, 3) = "System Size"
+        .Cells(2, 4) = Col4
+        .Cells(2, 5) = Col5
+        .Cells(2, 6) = Col6
+    End With
 
     'Formats the main header
-    With Worksheets("Commissions Earned").Range("A1:F1")
+    With Worksheets(sheetName).Range("A1:F1")
         .HorizontalAlignment = xlLeft
         .Font.Bold = True
         .Interior.Color = RGB(0, 77, 0)
@@ -204,36 +182,7 @@ Worksheets("Commissions Earned").Cells(1, 1) = "Commissions Earned"
     End With
 
     'Formats the column headers
-    With Worksheets("Commissions Earned").Range("A2:F2")
-        .HorizontalAlignment = xlLeft
-        .Font.Bold = True
-        .Interior.Color = RGB(0, 0, 0)
-        .Font.Color = RGB(255, 255, 255)
-    End With
-
-End Sub
-
-Sub clawbacks_pending()
-Worksheets.Add(, Worksheets(Worksheets.Count)).Name = "Clawbacks Pending"
-
-Worksheets("Clawbacks Pending").Cells(1, 1) = "Clawbacks Pending"
-    Worksheets("Clawbacks Pending").Cells(2, 1) = "Customer"
-    Worksheets("Clawbacks Pending").Cells(2, 2) = "JobID"
-    Worksheets("Clawbacks Pending").Cells(2, 3) = "System Size"
-    Worksheets("Clawbacks Pending").Cells(2, 4) = "Earned"
-    Worksheets("Clawbacks Pending").Cells(2, 5) = "Paid but Never Clawed Back"
-    Worksheets("Clawbacks Pending").Cells(2, 6) = "Due to Evolve"
-
-    'Formats the main header
-    With Worksheets("Clawbacks Pending").Range("A1:F1")
-        .HorizontalAlignment = xlLeft
-        .Font.Bold = True
-        .Interior.Color = RGB(0, 77, 0)
-        .Font.Color = RGB(255, 255, 255)
-    End With
-
-    'Formats the column headers
-    With Worksheets("Clawbacks Pending").Range("A2:F2")
+    With Worksheets(sheetName).Range("A2:F2")
         .HorizontalAlignment = xlLeft
         .Font.Bold = True
         .Interior.Color = RGB(0, 0, 0)
@@ -242,62 +191,3 @@ Worksheets("Clawbacks Pending").Cells(1, 1) = "Clawbacks Pending"
 	
 End Sub
 
-Sub jeopardy()
-
-Worksheets.Add(, Worksheets(Worksheets.Count)).Name = "Jobs in Jeopardy"   
-    'Jobs in Jeopardy sheet
-    Worksheets("Jobs in Jeopardy").Cells(1, 1) = "Jobs in Jeopardy"
-    Worksheets("Jobs in Jeopardy").Cells(2, 1) = "Customer"
-    Worksheets("Jobs in Jeopardy").Cells(2, 2) = "JobID"
-    Worksheets("Jobs in Jeopardy").Cells(2, 3) = "System Size"
-    Worksheets("Jobs in Jeopardy").Cells(2, 4) = "Status"
-    Worksheets("Jobs in Jeopardy").Cells(2, 5) = "Paid"
-    Worksheets("Jobs in Jeopardy").Cells(2, 6) = "High Probability of Cancelling"
-
-    'Formats the main header
-    With Worksheets("Jobs in Jeopardy").Range("A1:F1")
-        .HorizontalAlignment = xlLeft
-        .Font.Bold = True
-        .Interior.Color = RGB(0, 77, 0)
-        .Font.Color = RGB(255, 255, 255)
-    End With
-
-    'Formats the column headers
-    With Worksheets("Jobs in Jeopardy").Range("A2:F2")
-        .HorizontalAlignment = xlLeft
-        .Font.Bold = True
-        .Interior.Color = RGB(0, 0, 0)
-        .Font.Color = RGB(255, 255, 255)
-    End With
-
-End Sub
-
-sub jobs_in_progress ()
-
-Worksheets.Add(, Worksheets(Worksheets.Count)).Name = "Jobs in Progress"
-
-Worksheets("Jobs in Progress").Cells(1, 1) = "Jobs in Progress"
-    Worksheets("Jobs in Progress").Cells(2, 1) = "Customer"
-    Worksheets("Jobs in Progress").Cells(2, 2) = "JobID"
-    Worksheets("Jobs in Progress").Cells(2, 3) = "System Size"
-    Worksheets("Jobs in Progress").Cells(2, 4) = "Potentially Earned"
-    Worksheets("Jobs in Progress").Cells(2, 5) = "Paid"
-    Worksheets("Jobs in Progress").Cells(2, 6) = "Potentially Due"
-
-    'Formats the main header
-    With Worksheets("Jobs in Progress").Range("A1:F1")
-        .HorizontalAlignment = xlLeft
-        .Font.Bold = True
-        .Interior.Color = RGB(0, 77, 0)
-        .Font.Color = RGB(255, 255, 255)
-    End With
-
-    'Formats the column headers
-    With Worksheets("Jobs in Progress").Range("A2:F2")
-        .HorizontalAlignment = xlLeft
-        .Font.Bold = True
-        .Interior.Color = RGB(0, 0, 0)
-        .Font.Color = RGB(255, 255, 255)
-    End With
-
-End Sub
