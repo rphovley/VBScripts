@@ -1,4 +1,9 @@
 Develop script for out boarding to send out full pay report
+	5th Tab
+		Columns/what will it look like?
+	lump Jobs for reps (sum)
+	Treat blanks/sunnova different (if statement, no sum)
+	Use Columns
 
 Develop script for full override report
 
@@ -10,4 +15,14 @@ Redevelop Overrides
 	develop outline for Cancellations
 	Cancellations script
 	
+
+
+Tomorrow
+	EZRA
+	Clean the code
+	Figure out paid section
+	else statement for "Other" Sheet
+	
+	PAUL	
+	figure out how to format override breakdown for entire history
 	
