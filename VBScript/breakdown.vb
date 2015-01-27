@@ -38,6 +38,8 @@ Do
 	call format_sheet "Jobs in Jeopardy" "Status" "Paid" "High Probability of Cancelling"
 	
 	call format_sheet "Jobs in Progress" "Potentially Earned" "Paid" "Potentially Due"
+	
+	call format_sheet "Other" "Col4" "Col5" "Col6"
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''
     financial_data_row = 2
     current_data_row = 2
@@ -68,12 +70,16 @@ Do
         status = Sheets("Current Data").Cells(current_data_row, 4)
 
         'code for calculating earned based on rep. This is in here for confidentiality.
-        if sheets("Financial Data").cells(financial_data_row, 2) = rep_ID AND sheets("Financial Data").cells(financial_data_row, 3) = customer then
-			earned = system_size * sheets("RepList").cells(rep_row, rate_col)
-			financial_data_row = financial_data_row + 1
-		Else
-			financial_data_row = financial_data_row + 1
-		End if
+		with sheets("Financial Data")
+			do until (IsEmpty(.cells(financial_data_row, 2)))
+				if .cells(financial_data_row, 2) = rep_ID AND .cells(financial_data_row, 3) = customer then
+					earned = system_size * sheets("RepList").cells(rep_row, rate_col)
+					financial_data_row = financial_data_row + 1
+				Else
+					financial_data_row = financial_data_row + 1
+				End if
+			Loop
+		end with
         
         'code for summing the amount paid for the account
         Dim sale_amount_row As Integer
