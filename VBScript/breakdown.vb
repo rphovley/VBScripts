@@ -29,37 +29,15 @@ Dim rep_row As Integer
 rep_row = 2
 Do
 'Creates a new tab
-Worksheets.Add(, Worksheets(Worksheets.Count)).Name = "Commissions Earned"
-Worksheets.Add(, Worksheets(Worksheets.Count)).Name = "Clawbacks Pending"
+
+
 Worksheets.Add(, Worksheets(Worksheets.Count)).Name = "Jobs in Jeopardy"
 Worksheets.Add(, Worksheets(Worksheets.Count)).Name = "Jobs in Progress"
 
 
 'Formats the new spreadsheets
     'Commissions Earned sheet
-    Worksheets("Commissions Earned").Cells(1, 1) = "Commissions Earned"
-    Worksheets("Commissions Earned").Cells(2, 1) = "Customer"
-    Worksheets("Commissions Earned").Cells(2, 2) = "JobID"
-    Worksheets("Commissions Earned").Cells(2, 3) = "System Size"
-    Worksheets("Commissions Earned").Cells(2, 4) = "Earned"
-    Worksheets("Commissions Earned").Cells(2, 5) = "Paid"
-    Worksheets("Commissions Earned").Cells(2, 6) = "Due"
-
-    'Formats the main header
-    With Worksheets("Commissions Earned").Range("A1:F1")
-        .HorizontalAlignment = xlLeft
-        .Font.Bold = True
-        .Interior.Color = RGB(0, 77, 0)
-        .Font.Color = RGB(255, 255, 255)
-    End With
-
-    'Formats the column headers
-    With Worksheets("Commissions Earned").Range("A2:F2")
-        .HorizontalAlignment = xlLeft
-        .Font.Bold = True
-        .Interior.Color = RGB(0, 0, 0)
-        .Font.Color = RGB(255, 255, 255)
-    End With
+    
 
     'Clawbacks Pending sheet
     Worksheets("Clawbacks Pending").Cells(1, 1) = "Clawbacks Pending"
@@ -194,7 +172,7 @@ Worksheets.Add(, Worksheets(Worksheets.Count)).Name = "Jobs in Progress"
         sale_amount_row = 2
         
         Do
-            If Sheets("Financial Data").Cells(sale_amount_row, 2) = rep_name Then
+            If Sheets("Financial Data").Cells(sale_amount_row, 2) = rep_name AND sheets("Financial Data").cells(sale_amount_row, 7) = job_id Then
                 sale_amount = sale_amount + Sheets("Financial Data").Cells(sale_amount_row, 5)
                 sale_amount_row = sale_amount_row + 1
             Else
@@ -270,5 +248,41 @@ Worksheets.Add(, Worksheets(Worksheets.Count)).Name = "Jobs in Progress"
     
     rep_row = rep_row + 1
 Loop Until Sheets("RepList").Cells(rep_row, 2) = ""
+
+End Sub
+
+sub commissions_earned()
+
+Worksheets.Add(, Worksheets(Worksheets.Count)).Name = "Commissions Earned"
+
+Worksheets("Commissions Earned").Cells(1, 1) = "Commissions Earned"
+    Worksheets("Commissions Earned").Cells(2, 1) = "Customer"
+    Worksheets("Commissions Earned").Cells(2, 2) = "JobID"
+    Worksheets("Commissions Earned").Cells(2, 3) = "System Size"
+    Worksheets("Commissions Earned").Cells(2, 4) = "Earned"
+    Worksheets("Commissions Earned").Cells(2, 5) = "Paid"
+    Worksheets("Commissions Earned").Cells(2, 6) = "Due"
+
+    'Formats the main header
+    With Worksheets("Commissions Earned").Range("A1:F1")
+        .HorizontalAlignment = xlLeft
+        .Font.Bold = True
+        .Interior.Color = RGB(0, 77, 0)
+        .Font.Color = RGB(255, 255, 255)
+    End With
+
+    'Formats the column headers
+    With Worksheets("Commissions Earned").Range("A2:F2")
+        .HorizontalAlignment = xlLeft
+        .Font.Bold = True
+        .Interior.Color = RGB(0, 0, 0)
+        .Font.Color = RGB(255, 255, 255)
+    End With
+
+End Sub
+
+Sub clawbacks_pending()
+Worksheets.Add(, Worksheets(Worksheets.Count)).Name = "Clawbacks Pending"
+
 
 End Sub
