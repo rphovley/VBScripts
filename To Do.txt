@@ -25,4 +25,5 @@ Tomorrow
 	
 	PAUL	
 	figure out how to format override breakdown for entire history
+	Create a script to sum each overrideID to provide an idea of where the master list is at for accuracy
 	
