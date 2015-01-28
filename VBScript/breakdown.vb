@@ -96,24 +96,28 @@ Do
     jobs_in_jeopardy_row = 3
     jobs_in_progress_row = 3
 
-    rep = Sheets("RepList").Cells(rep_row, repList_rep_col)
-    rep_name = Sheets("RepList").Cells(rep_row, repList_repname_col)
-	rep_ID = sheets("RepList").cells(rep_row, repList_repID_col)
-	rate = Sheets("RepList").cells(rep_row, repList_rate_col)
+    with Sheets("RepList")
+	    rep      = .Cells(rep_row, repList_rep_col)
+	    rep_name = .Cells(rep_row, repList_repname_col)
+		rep_ID   = .cells(rep_row, repList_repID_col)
+		rate     = .cells(rep_row, repList_rate_col)
+	end with
     
     'cycles through the accounts
     Do
         If Sheets("Current Data").Cells(current_data_row, current_rep_col) = rep Then
         
-			'assigns values to the variables reported on
-			job_id = Sheets("Current Data").Cells(current_data_row, current_jobID_col)
-			customer = Sheets("Current Data").Cells(current_data_row, current_customer_col)
-			system_size = Sheets("Current Data").Cells(current_data_row, current_systemsize_col)
-			
-			job_in_jeopardy = Sheets("Current Data").Cells(current_data_row, current_jeopardy_col)
-			cancellation = Sheets("Current Data").Cells(current_data_row, current_cancellation_col)
-			installed = Sheets("Current Data").Cells(current_data_row, current_installed_col)
-			in_progress = Sheets("Current Data").Cells(current_data_row, current_inprogress_col)
+        	with Sheets("Current Data")
+				'assigns values to the variables reported on
+				job_id      = .Cells(current_data_row, current_jobID_col)
+				customer    = .Cells(current_data_row, current_customer_col)
+				system_size = .Cells(current_data_row, current_systemsize_col)
+				
+				job_in_jeopardy = .Cells(current_data_row, current_jeopardy_col)
+				cancellation    = .Cells(current_data_row, current_cancellation_col)
+				installed       = .Cells(current_data_row, current_installed_col)
+				in_progress     = .Cells(current_data_row, current_inprogress_col)
+			end with
 			
 			status = Sheets("Current Data").Cells(current_data_row, current_status_col)
 
