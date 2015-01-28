@@ -11,7 +11,7 @@ Dim cancellation As String
 Dim installed As String
 Dim in_progress As String
 Dim sale_amount As Currency
-Dim earned As Currency
+Dim system_value As Currency
 Dim status As String
 Dim rate As Currency
 
@@ -26,6 +26,7 @@ Dim clawbacks_pending_row As Integer
 Dim jobs_in_jeopardy_row As Integer
 Dim jobs_in_progress_row As Integer
 Dim rep_row As Integer
+
 'Column counters
 dim financial_customer_col as integer
 dim financial_repID_col as integer
@@ -80,17 +81,17 @@ financial_payment_col = 5
 rep_row = 2
 Do
 'Creates the new tabs
-	Call format_sheet("Commissions Earned", "Earned", "Paid", "Due")
+	Call format_sheet("Commissions Earned", "System Value", "Paid", "Due")
 
-    Call format_sheet("Clawbacks Pending", "Earned", "Paid but Never Clawed Back", "Due to Evolve")
+    Call format_sheet("Clawbacks Pending", "System Value", "Paid but Never Clawed Back", "Due to Evolve")
     
     Call format_sheet("Jobs in Jeopardy", "Status", "Paid", "High Probability of Cancelling")
     
-    Call format_sheet("Jobs in Progress", "Potentially Earned", "Paid", "Potentially Due")
+    Call format_sheet("Jobs in Progress", "System Value", "Paid", "Potentially Due")
     
     Call format_sheet("Other", "Col4", "Col5", "Col6")
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''
-    financial_data_row = 2
+    
     current_data_row = 2
     commissions_earned_row = 3
     clawbacks_pending_row = 3
@@ -123,17 +124,8 @@ Do
 			status = Sheets("Current Data").Cells(current_data_row, current_status_col)
 
 			'code for calculating earned based on rep.
-			earned = 0
-			with sheets("Financial Data")
-				do until (IsEmpty(.cells(financial_data_row, financial_repID_col)))
-					if .cells(financial_data_row, financial_repID_col) = rep_ID AND .cells(financial_data_row, financial_jobID_col) = job_id then
-						earned = system_size * rate
-						financial_data_row = financial_data_row + 1
-					Else
-						financial_data_row = financial_data_row + 1
-					End if
-				Loop
-			end with
+			system_value = system_size * rate
+
         
 			'code for summing the amount paid for the account
 			Dim sale_amount_row As Integer
@@ -156,9 +148,9 @@ Do
 					.Cells(commissions_earned_row, report_customer_col) = customer
 					.Cells(commissions_earned_row, report_jobID_col) = job_id
 					.Cells(commissions_earned_row, report_systemsize_col) = system_size
-					.Cells(commissions_earned_row, report_col4) = earned
+					.Cells(commissions_earned_row, report_col4) = system_value
 					.Cells(commissions_earned_row, report_col5) = sale_amount
-					.Cells(commissions_earned_row, report_col6) = earned - sale_amount
+					.Cells(commissions_earned_row, report_col6) = system_value - sale_amount
 				end with
 				
 				commissions_earned_row = commissions_earned_row + 1
@@ -167,9 +159,9 @@ Do
 					.Cells(clawbacks_pending_row, report_customer_col) = customer
 					.Cells(clawbacks_pending_row, report_jobID_col) = job_id
 					.Cells(clawbacks_pending_row, report_systemsize_col) = system_size
-					.Cells(clawbacks_pending_row, report_col4) = earned
+					.Cells(clawbacks_pending_row, report_col4) = system_value
 					.Cells(clawbacks_pending_row, report_col5) = sale_amount
-					.Cells(clawbacks_pending_row, report_col6) = earned - sale_amount
+					.Cells(clawbacks_pending_row, report_col6) = sale_amount
 				end with
 				
 				clawbacks_pending_row = clawbacks_pending_row + 1
@@ -189,9 +181,9 @@ Do
 					.Cells(jobs_in_progress_row, report_customer_col) = customer
 					.Cells(jobs_in_progress_row, report_jobID_col) = job_id
 					.Cells(jobs_in_progress_row, report_systemsize_col) = system_size
-					.Cells(jobs_in_progress_row, report_col4) = earned
+					.Cells(jobs_in_progress_row, report_col4) = system_value
 					.Cells(jobs_in_progress_row, report_col5) = sale_amount
-					.Cells(jobs_in_progress_row, report_col6) = earned - sale_amount
+					.Cells(jobs_in_progress_row, report_col6) = system_value - sale_amount
 				end with
             
 				jobs_in_progress_row = jobs_in_progress_row + 1
