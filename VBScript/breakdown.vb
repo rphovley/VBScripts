@@ -44,6 +44,12 @@ dim financial_kW_col as integer
 		dim repList_repname_col as integer
 		dim repList_repID_col as integer
 		dim repList_rate_col as integer
+			dim report_customer_col as integer
+			dim report_jobID_col as integer
+			dim report_systemsize_col as integer
+			dim report_col4 as integer
+			dim report_col5 as integer
+			dim report_col6 as integer
 
 set financial_customer_col = 3
 set financial_jobID_col = 7
@@ -63,6 +69,12 @@ set financial_payment_col = 5
 		set repList_rep_col = 2
 		set repList_repname_col = 1
 		set repList_repID_col = 3
+			set report_customer_col = 1
+			set report_jobID_col = 2
+			set report_systemsize_col = 3
+			set report_col4	= 4
+			set report_col5 = 5
+			set report_col6 = 6
 
 rep_row = 2
 Do
@@ -91,25 +103,25 @@ Do
     
     'cycles through the accounts
     Do
-        If Sheets("Current Data").Cells(current_data_row, 17) = rep Then
+        If Sheets("Current Data").Cells(current_data_row, current_rep_col) = rep Then
         
 			'assigns values to the variables reported on
-			job_id = Sheets("Current Data").Cells(current_data_row, 2)
-			customer = Sheets("Current Data").Cells(current_data_row, 1)
-			system_size = Sheets("Current Data").Cells(current_data_row, 3)
+			job_id = Sheets("Current Data").Cells(current_data_row, current_jobID_col)
+			customer = Sheets("Current Data").Cells(current_data_row, current_customer_col)
+			system_size = Sheets("Current Data").Cells(current_data_row, current_systemsize_col)
 			
-			job_in_jeopardy = Sheets("Current Data").Cells(current_data_row, 19)
-			cancellation = Sheets("Current Data").Cells(current_data_row, 20)
-			installed = Sheets("Current Data").Cells(current_data_row, 21)
-			in_progress = Sheets("Current Data").Cells(current_data_row, 22)
+			job_in_jeopardy = Sheets("Current Data").Cells(current_data_row, current_jeopardy_col)
+			cancellation = Sheets("Current Data").Cells(current_data_row, current_cancellation_col)
+			installed = Sheets("Current Data").Cells(current_data_row, current_installed_col)
+			in_progress = Sheets("Current Data").Cells(current_data_row, current_inprogress_col)
 			
-			status = Sheets("Current Data").Cells(current_data_row, 4)
+			status = Sheets("Current Data").Cells(current_data_row, current_status_col)
 
 			'code for calculating earned based on rep.
 			with sheets("Financial Data")
-				do until (IsEmpty(.cells(financial_data_row, 2)))
-					if .cells(financial_data_row, 2) = rep_ID AND .cells(financial_data_row, 3) = customer then
-						earned = system_size * sheets("RepList").cells(rep_row, rate_col)
+				do until (IsEmpty(.cells(financial_data_row, financial_repID_col)))
+					if .cells(financial_data_row, financial_repID_col) = rep_ID AND .cells(financial_data_row, financial_customer_col) = customer then
+						earned = system_size * sheets("RepList").cells(rep_row, repList_rate_col)
 						financial_data_row = financial_data_row + 1
 					Else
 						financial_data_row = financial_data_row + 1
@@ -120,58 +132,60 @@ Do
 			'code for summing the amount paid for the account
 			Dim sale_amount_row As Integer
 			sale_amount_row = 2
-        
-			Do
-				If Sheets("Financial Data").Cells(sale_amount_row, 2) = rep_name AND sheets("Financial Data").cells(sale_amount_row, 7) = job_id Then
-					sale_amount = sale_amount + Sheets("Financial Data").Cells(sale_amount_row, 5)
-					sale_amount_row = sale_amount_row + 1
-				Else
-					sale_amount_row = sale_amount_row + 1
-				End If
-			Loop Until Sheets("Financial Data").Cells(sale_amount_row, 3) = ""
+			
+			with sheets("Financial Data")
+				Do until (IsEmpty(.cells(sale_amount_row,financial_customer_col)
+					If .Cells(sale_amount_row, financial_repID_col) = rep_ID AND .cells(sale_amount_row, financial_jobID_col) = job_id Then
+						sale_amount = sale_amount + .Cells(sale_amount_row, financial_payment_col)
+						sale_amount_row = sale_amount_row + 1
+					Else
+						sale_amount_row = sale_amount_row + 1
+					End If
+				Loop
+			end with
 
 			'Determines which reporting sheet the account goes to
 			If installed = "TRUE" Or installed = "True" Then
 				with sheets("Commissions Earned")
-					.Cells(commissions_earned_row, 1) = customer
-					.Cells(commissions_earned_row, 2) = job_id
-					.Cells(commissions_earned_row, 3) = system_size
-					.Cells(commissions_earned_row, 4) = earned
-					.Cells(commissions_earned_row, 5) = sale_amount
-					.Cells(commissions_earned_row, 6) = earned - sale_amount
+					.Cells(commissions_earned_row, report_customer_col) = customer
+					.Cells(commissions_earned_row, report_jobID_col) = job_id
+					.Cells(commissions_earned_row, report_systemsize_col) = system_size
+					.Cells(commissions_earned_row, report_col4) = earned
+					.Cells(commissions_earned_row, report_col5) = sale_amount
+					.Cells(commissions_earned_row, report_col6) = earned - sale_amount
 				end with
 				
 				commissions_earned_row = commissions_earned_row + 1
 			ElseIf cancellation = "TRUE" Or cancellation = "True" Then
 				with sheets("Clawbacks Pending")
-					.Cells(clawbacks_pending_row, 1) = customer
-					.Cells(clawbacks_pending_row, 2) = job_id
-					.Cells(clawbacks_pending_row, 3) = system_size
-					.Cells(clawbacks_pending_row, 4) = earned
-					.Cells(clawbacks_pending_row, 5) = sale_amount
-					.Cells(clawbacks_pending_row, 6) = earned - sale_amount
+					.Cells(clawbacks_pending_row, report_customer_col) = customer
+					.Cells(clawbacks_pending_row, report_jobID_col) = job_id
+					.Cells(clawbacks_pending_row, report_systemsize_col) = system_size
+					.Cells(clawbacks_pending_row, report_col4) = earned
+					.Cells(clawbacks_pending_row, report_col5) = sale_amount
+					.Cells(clawbacks_pending_row, report_col6) = earned - sale_amount
 				end with
 				
 				clawbacks_pending_row = clawbacks_pending_row + 1
 			ElseIf job_in_jeopardy = "TRUE" Or job_in_jeopardy = "True" Then
 				with sheets("Jobs in Jeopardy")
-					.Cells(jobs_in_jeopardy_row, 1) = customer
-					.Cells(jobs_in_jeopardy_row, 2) = job_id
-					.Cells(jobs_in_jeopardy_row, 3) = system_size
-					.Cells(jobs_in_jeopardy_row, 4) = status
-					.Cells(jobs_in_jeopardy_row, 5) = sale_amount
-					.Cells(jobs_in_jeopardy_row, 6) = 0 - sale_amount
+					.Cells(jobs_in_jeopardy_row, report_customer_col) = customer
+					.Cells(jobs_in_jeopardy_row, report_jobID_col) = job_id
+					.Cells(jobs_in_jeopardy_row, report_systemsize_col) = system_size
+					.Cells(jobs_in_jeopardy_row, report_col4) = status
+					.Cells(jobs_in_jeopardy_row, report_col5) = sale_amount
+					.Cells(jobs_in_jeopardy_row, report_col6) = 0 - sale_amount
 				end with
             
 				jobs_in_jeopardy_row = jobs_in_jeopardy_row + 1
 			ElseIf in_progress = "TRUE" Or in_progress = "True" Then
 				with sheets("Jobs in Progress")
-					.Cells(jobs_in_progress_row, 1) = customer
-					.Cells(jobs_in_progress_row, 2) = job_id
-					.Cells(jobs_in_progress_row, 3) = system_size
-					.Cells(jobs_in_progress_row, 4) = earned
-					.Cells(jobs_in_progress_row, 5) = sale_amount
-					.Cells(jobs_in_progress_row, 6) = earned - sale_amount
+					.Cells(jobs_in_progress_row, report_customer_col) = customer
+					.Cells(jobs_in_progress_row, report_jobID_col) = job_id
+					.Cells(jobs_in_progress_row, report_systemsize_col) = system_size
+					.Cells(jobs_in_progress_row, report_col4) = earned
+					.Cells(jobs_in_progress_row, report_col5) = sale_amount
+					.Cells(jobs_in_progress_row, report_col6) = earned - sale_amount
 				end with
             
 				jobs_in_progress_row = jobs_in_progress_row + 1
