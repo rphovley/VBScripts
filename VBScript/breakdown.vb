@@ -13,6 +13,7 @@ Dim in_progress As String
 Dim sale_amount As Currency
 Dim earned As Currency
 Dim status As String
+Dim rate As Currency
 
 
 'row counter variable
@@ -51,43 +52,43 @@ dim financial_kW_col as integer
 			dim report_col5 as integer
 			dim report_col6 as integer
 
-set financial_customer_col = 3
-set financial_jobID_col = 7
-set financial_kW_col = 4
-set financial_repID_col = 2
-set financial_payment_col = 5
-	set current_customer_col = 1
-	set current_jobID_col = 2
-	set current_systemsize_col = 3
-	set current_status_col = 4
-	set current_rep_col = 17
-	set current_jeopardy_col = 19
-	set current_cancellation_col = 20
-	set current_installed_col = 21
-	set current_inprogress_col = 22
-		set repList_rate_col = 5
-		set repList_rep_col = 2
-		set repList_repname_col = 1
-		set repList_repID_col = 3
-			set report_customer_col = 1
-			set report_jobID_col = 2
-			set report_systemsize_col = 3
-			set report_col4	= 4
-			set report_col5 = 5
-			set report_col6 = 6
+financial_customer_col = 3
+financial_jobID_col = 7
+financial_kW_col = 4
+financial_repID_col = 2
+financial_payment_col = 5
+    current_customer_col = 1
+    current_jobID_col = 2
+    current_systemsize_col = 3
+    current_status_col = 4
+    current_rep_col = 17
+    current_jeopardy_col = 19
+    current_cancellation_col = 20
+    current_installed_col = 21
+    current_inprogress_col = 22
+        repList_rate_col = 5
+        repList_rep_col = 2
+        repList_repname_col = 1
+        repList_repID_col = 3
+            report_customer_col = 1
+            report_jobID_col = 2
+            report_systemsize_col = 3
+            report_col4 = 4
+            report_col5 = 5
+            report_col6 = 6
 
 rep_row = 2
 Do
 'Creates the new tabs
-	call format_sheet "Commissions Earned" "Earned" "Paid" "Due"
+	Call format_sheet("Commissions Earned", "Earned", "Paid", "Due")
 
-	call format_sheet "Clawbacks Pending" "Earned" "Paid but Never Clawed Back" "Due to Evolve"
-	
-	call format_sheet "Jobs in Jeopardy" "Status" "Paid" "High Probability of Cancelling"
-	
-	call format_sheet "Jobs in Progress" "Potentially Earned" "Paid" "Potentially Due"
-	
-	call format_sheet "Other" "Col4" "Col5" "Col6"
+    Call format_sheet("Clawbacks Pending", "Earned", "Paid but Never Clawed Back", "Due to Evolve")
+    
+    Call format_sheet("Jobs in Jeopardy", "Status", "Paid", "High Probability of Cancelling")
+    
+    Call format_sheet("Jobs in Progress", "Potentially Earned", "Paid", "Potentially Due")
+    
+    Call format_sheet("Other", "Col4", "Col5", "Col6")
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''
     financial_data_row = 2
     current_data_row = 2
@@ -122,10 +123,11 @@ Do
 			status = Sheets("Current Data").Cells(current_data_row, current_status_col)
 
 			'code for calculating earned based on rep.
+			earned = 0
 			with sheets("Financial Data")
 				do until (IsEmpty(.cells(financial_data_row, financial_repID_col)))
-					if .cells(financial_data_row, financial_repID_col) = rep_ID AND .cells(financial_data_row, financial_customer_col) = customer then
-						earned = system_size * sheets("RepList").cells(rep_row, repList_rate_col)
+					if .cells(financial_data_row, financial_repID_col) = rep_ID AND .cells(financial_data_row, financial_jobID_col) = job_id then
+						earned = system_size * rate
 						financial_data_row = financial_data_row + 1
 					Else
 						financial_data_row = financial_data_row + 1
@@ -136,9 +138,9 @@ Do
 			'code for summing the amount paid for the account
 			Dim sale_amount_row As Integer
 			sale_amount_row = 2
-			
+			sale_amount = 0
 			with sheets("Financial Data")
-				Do until (IsEmpty(.cells(sale_amount_row,financial_customer_col)
+				Do until (IsEmpty(.cells(sale_amount_row,financial_repID_col)))
 					If .Cells(sale_amount_row, financial_repID_col) = rep_ID AND .cells(sale_amount_row, financial_jobID_col) = job_id Then
 						sale_amount = sale_amount + .Cells(sale_amount_row, financial_payment_col)
 						sale_amount_row = sale_amount_row + 1
@@ -217,8 +219,12 @@ Do
     With Worksheets("Jobs in Progress").Range("A:F")
         .EntireColumn.AutoFit
     End With
+	
+	With Worksheets("Other").Range("A:F")
+		.EntireColumn.AutoFit
+	End With
     
-    ThisWorkbook.Sheets(Array("Commissions Earned", "Clawbacks Pending", "Jobs in Jeopardy", "Jobs in Progress")).Move
+    ThisWorkbook.Sheets(Array("Commissions Earned", "Clawbacks Pending", "Jobs in Jeopardy", "Jobs in Progress", "Other")).Move
     ActiveWorkbook.SaveAs ("C:\users\ezra\desktop\" & "Finance Report" & "\" & rep & ".xlsx")
     ActiveWorkbook.Close
     
@@ -228,7 +234,7 @@ Loop Until Sheets("RepList").Cells(rep_row, 2) = ""
 
 End Sub
 
-Sub format_sheet(ByVal sheetName As String, ByVal Col4 As String, ByVal Col5 As String, By Val Col6 As String)
+Sub format_sheet(ByVal sheetName As String, ByVal Col4 As String, ByVal Col5 As String, ByVal Col6 As String)
 
 Worksheets.Add(, Worksheets(Worksheets.Count)).Name = sheetName
 
