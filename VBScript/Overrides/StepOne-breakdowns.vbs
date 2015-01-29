@@ -134,7 +134,7 @@ masterrow = 2
     End With
 
     'Adjusts column width of the new tab
-    With Worksheets(Rep).Range("B1:F1")
+    With Worksheets(Rep).Range("B1:K1")
         .EntireColumn.AutoFit
     End With
 
