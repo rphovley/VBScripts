@@ -228,9 +228,11 @@ Do
     End With
     
     With Worksheets("Jobs Installed")
-		.cells(commissions_earned_row, report_col4).Formula = "=SUM(" & .cells(3, report_col4) & ":" & .cells(commissions_earned_row - 1, report_col4) & ")"
-		.cells(commissions_earned_row, report_col5).Formula = "=SUM(" & .cells(3, report_col5) & ":" & .cells(commissions_earned_row - 1, report_col5) & ")"
-		.cells(commissions_earned_row, report_col6).Formula = "=SUM(" & .cells(3, report_col6) & ":" & .cells(commissions_earned_row - 1, report_col6) & ")"
+		.cells(commissions_earned_row, report_systemsize_col) = "Total:"
+		.cells(commissions_earned_row, report_col4).Formula = "=Sum(" & Range(cells(3, report_col4), cells(commissions_earned_row - 1, report_col4)).Address() & ")"
+		.cells(commissions_earned_row, report_col5).Formula = "=Sum(" & Range(cells(3, report_col5), cells(commissions_earned_row - 1, report_col5)).Address() & ")"
+		.cells(commissions_earned_row, report_col6).Formula = "=Sum(" & Range(cells(3, report_col6), cells(commissions_earned_row - 1, report_col6)).Address() & ")"
+
         .Range("A:F").EntireColumn.AutoFit
 		For x = 3 to commissions_earned_row
 			if .cells(x, report_col4) < 0 then
@@ -246,9 +248,11 @@ Do
     End With
     
     With Worksheets("Clawbacks Pending")
-		.cells(clawbacks_pending_row, report_col4).Formula = "=SUM(" & .cells(3, report_col4) & ":" & .cells(clawbacks_pending_row - 1, report_col4) & ")"
-		.cells(clawbacks_pending_row, report_col5).Formula = "=SUM(" & .cells(3, report_col5) & ":" & .cells(clawbacks_pending_row - 1, report_col5) & ")"
-		.cells(clawbacks_pending_row, report_col6).Formula = "=SUM(" & .cells(3, report_col6) & ":" & .cells(clawbacks_pending_row - 1, report_col6) & ")"
+		.cells(clawbacks_pending_row, report_systemsize_col) = "Total:"
+		.cells(clawbacks_pending_row, report_col4).Formula = "=Sum(" & Range(cells(3, report_col4), cells(clawbacks_pending_row - 1, report_col4)).Address() & ")"
+		.cells(clawbacks_pending_row, report_col5).Formula = "=Sum(" & Range(cells(3, report_col5), cells(clawbacks_pending_row - 1, report_col5)).Address() & ")"
+		.cells(clawbacks_pending_row, report_col6).Formula = "=Sum(" & Range(cells(3, report_col6), cells(clawbacks_pending_row - 1, report_col6)).Address() & ")"
+
         .Range("A:F").EntireColumn.AutoFit
 		For x = 3 to clawbacks_pending_row
 			if .cells(x, report_col4) < 0 then
@@ -264,8 +268,10 @@ Do
     End With
     
     With Worksheets("Jobs in Jeopardy")
-		.cells(jobs_in_jeopardy_row, report_col5).Formula = "=SUM(" & .cells(3, report_col5) & ":" & .cells(jobs_in_jeopardy_row - 1, report_col5) & ")"
-		.cells(jobs_in_jeopardy_row, report_col6).Formula = "=SUM(" & .cells(3, report_col6) & ":" & .cells(jobs_in_jeopardy_row - 1, report_col6) & ")"
+		.cells(jobs_in_jeopardy_row, report_systemsize_col) = "Total:"
+		.cells(jobs_in_jeopardy_row, report_col5).Formula = "=Sum(" & Range(cells(3, report_col5), cells(jobs_in_jeopardy_row - 1, report_col5)).Address() & ")"
+		.cells(jobs_in_jeopardy_row, report_col6).Formula = "=Sum(" & Range(cells(3, report_col6), cells(jobs_in_jeopardy_row - 1, report_col6)).Address() & ")"
+
         .Range("A:F").EntireColumn.AutoFit
 		For x = 3 to jobs_in_jeopardy_row
 			if .cells(x, report_col4) < 0 then
@@ -281,9 +287,11 @@ Do
     End With
     
     With Worksheets("Jobs in Progress")
-		.cells(jobs_in_progress_row, report_col4).Formula = "=SUM(" & .cells(3, report_col4) & ":" & .cells(jobs_in_progress_row - 1, report_col4) & ")"
-		.cells(jobs_in_progress_row, report_col5).Formula = "=SUM(" & .cells(3, report_col5) & ":" & .cells(jobs_in_progress_row - 1, report_col5) & ")"
-		.cells(jobs_in_progress_row, report_col6).Formula = "=SUM(" & .cells(3, report_col6) & ":" & .cells(jobs_in_progress_row - 1, report_col6) & ")"
+		.cells(jobs_in_progress_row, report_systemsize_col) = "Total:"
+		.cells(jobs_in_progress_row, report_col4).Formula = "=Sum(" & Range(cells(3, report_col4), cells(jobs_in_progress_row - 1, report_col4)).Address() & ")"
+		.cells(jobs_in_progress_row, report_col5).Formula = "=Sum(" & Range(cells(3, report_col5), cells(jobs_in_progress_row - 1, report_col5)).Address() & ")"
+		.cells(jobs_in_progress_row, report_col6).Formula = "=Sum(" & Range(cells(3, report_col6), cells(jobs_in_progress_row - 1, report_col6)).Address() & ")"
+
         .Range("A:F").EntireColumn.AutoFit
 		For x = 3 to jobs_in_progress_row
 			if .cells(x, report_col4) < 0 then
@@ -299,8 +307,10 @@ Do
     End With
     
     With Worksheets("Other")
-		.cells(other_row, report_col4).Formula = "=SUM(" & .cells(3, report_col4) & ":" & .cells(other_row - 1, report_col4) & ")"
-		.cells(other_row, report_col5).Formula = "=SUM(" & .cells(3, report_col5) & ":" & .cells(other_row - 1, report_col5) & ")"
+		.cells(other_row, report_col4, report_systemsize_col) = "Total:"
+		.cells(other_row, report_col4).Formula = "=Sum(" & Range(cells(3, report_col4), cells(other_row - 1, report_col4)).Address() & ")"
+		.cells(other_row, report_col5).Formula = "=Sum(" & Range(cells(3, report_col5), cells(other_row - 1, report_col5)).Address() & ")"
+
         .Range("A:F").EntireColumn.AutoFit
 		For x = 3 to other_row
 			if .cells(x, report_col4) < 0 then
