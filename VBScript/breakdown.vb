@@ -26,7 +26,7 @@ Dim jobs_in_jeopardy_row As Integer
 Dim jobs_in_progress_row As Integer
 Dim rep_row As Integer
 dim other_row as integer
-
+Dim financial_row as integer
 'Column counters
 dim financial_customer_col as integer
 dim financial_repID_col as integer
@@ -197,14 +197,13 @@ Do
     Loop Until Sheets("Current Data").Cells(current_data_row, 2) = ""
     
 	'Loop for the "Other" sheet
-	Dim financial_row as integer
+	
 	financial_row = 2
 	With Sheets("Financial Data")
-		Do until (IsEmpty(.cells(financial_row, financial_customer_col)))
-			if .cells(financial_row, financial_jobID_col) = "Sunnova" then
-				if .cells(financial_row, financial_repID_col) = rep_ID then
+		Do until (IsEmpty(.cells(financial_row, financial_repID_col)))
+			if .cells(financial_row, financial_repID_col) = rep_ID then
 					customer = .cells(financial_row, financial_customer_col)
-					job_id = "Sunnova"
+					job_id = .cells(financial_row, financial_jobID_col)
 					system_size = .cells(financial_row, financial_kW_col)
 					system_value = system_size * rate
 					sale_amount = .cells(financial_row, financial_payment_col)
@@ -218,32 +217,11 @@ Do
 					End With
 					
 					other_row = other_row + 1
-
-				End if
 				
 				financial_row = financial_row + 1
-				
-			ElseIf .cells(financial_row, financial_jobID_col) = "" then
-				if .cells(financial_row, financial_repID_col) = rep_ID then
-					customer = .cells(financial_row, financial_customer_col)
-					job_id = ""
-					system_size = .cells(financial_row, financial_kW_col)
-					system_value = system_size * rate
-					sale_amount = .cells(financial_row, financial_payment_col)
-					
-					With sheets("Other")
-						.cells(other_row, report_customer_col) = customer
-						.cells(other_row, report_jobID_col) = job_id
-						.cells(other_row, report_systemsize_col) = system_size
-						.cells(other_row, report_col4) = system_value
-						.cells(other_row, report_col5) = sale_amount
-					End With
-					
-					other_row = other_row + 1
-
-				End if
-				
-				financial_row = financial_row + 1
+			Else
+			
+                financial_row = financial_row + 1
 				
 			End if
 		Loop
