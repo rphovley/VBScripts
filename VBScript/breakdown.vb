@@ -307,7 +307,7 @@ Do
     End With
     
     With Worksheets("Other")
-		.cells(other_row, report_col4, report_systemsize_col) = "Total:"
+		.cells(other_row, report_systemsize_col) = "Total:"
 		.cells(other_row, report_col4).Formula = "=Sum(" & Range(cells(3, report_col4), cells(other_row - 1, report_col4)).Address() & ")"
 		.cells(other_row, report_col5).Formula = "=Sum(" & Range(cells(3, report_col5), cells(other_row - 1, report_col5)).Address() & ")"
 
