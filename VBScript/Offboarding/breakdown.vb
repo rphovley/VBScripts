@@ -205,7 +205,8 @@ Do
                 If .Cells(financial_row, financial_jobID_col) = "Sunnova" Or .Cells(financial_row, financial_jobID_col) = "" Then
                     If .Cells(financial_row, 1) = "Pending" Then
                         customer = .Cells(financial_row, financial_customer_col)
-                        job_id = .Cells(financial_row, financial_jobID_col)
+                        job_id = 0
+						'.Cells(financial_row, financial_jobID_col)
                         system_size = .Cells(financial_row, financial_kW_col)
                         system_value = system_size * rate
                         sale_amount = .Cells(financial_row, financial_payment_col)
@@ -221,7 +222,8 @@ Do
                     Else
                         customer = .Cells(financial_row, financial_customer_col)
                         job_id = .Cells(financial_row, financial_jobID_col)
-                        system_size = .Cells(financial_row, financial_kW_col)
+                        system_size = 0
+						'.Cells(financial_row, financial_kW_col)
                         system_value = system_size * rate
                         sale_amount = .Cells(financial_row, financial_payment_col)
                         
