@@ -89,7 +89,7 @@ Do
     
     Call format_sheet("Jobs in Progress", "System Value", "Paid", "Potentially Due")
     
-    Call format_sheet("Other", "System Value", "Amount", "")
+    Call format_sheet("Other", "System Value", "Amount", "Pending")
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''
     
     current_data_row = 2
@@ -203,20 +203,36 @@ Do
         Do Until (IsEmpty(.Cells(financial_row, financial_repID_col)))
             If .Cells(financial_row, financial_repID_col) = rep_ID Then
                 If .Cells(financial_row, financial_jobID_col) = "Sunnova" Or .Cells(financial_row, financial_jobID_col) = "" Then
-                    customer = .Cells(financial_row, financial_customer_col)
-                    job_id = .Cells(financial_row, financial_jobID_col)
-                    system_size = .Cells(financial_row, financial_kW_col)
-                    system_value = system_size * rate
-                    sale_amount = .Cells(financial_row, financial_payment_col)
+                    If .Cells(financial_row, 1) = "Pending" Then
+                        customer = .Cells(financial_row, financial_customer_col)
+                        job_id = .Cells(financial_row, financial_jobID_col)
+                        system_size = .Cells(financial_row, financial_kW_col)
+                        system_value = system_size * rate
+                        sale_amount = .Cells(financial_row, financial_payment_col)
+                        
+                        With Sheets("Other")
+                            .Cells(other_row, report_customer_col) = customer
+                            .Cells(other_row, report_jobID_col) = job_id
+                            .Cells(other_row, report_systemsize_col) = system_size
+                            .Cells(other_row, report_col4) = system_value
+                            .Cells(other_row, report_col6) = sale_amount
+                        End With
                     
-                    With Sheets("Other")
-                        .Cells(other_row, report_customer_col) = customer
-                        .Cells(other_row, report_jobID_col) = job_id
-                        .Cells(other_row, report_systemsize_col) = system_size
-                        .Cells(other_row, report_col4) = system_value
-                        .Cells(other_row, report_col5) = sale_amount
-                    End With
-                    
+                    Else
+                        customer = .Cells(financial_row, financial_customer_col)
+                        job_id = .Cells(financial_row, financial_jobID_col)
+                        system_size = .Cells(financial_row, financial_kW_col)
+                        system_value = system_size * rate
+                        sale_amount = .Cells(financial_row, financial_payment_col)
+                        
+                        With Sheets("Other")
+                            .Cells(other_row, report_customer_col) = customer
+                            .Cells(other_row, report_jobID_col) = job_id
+                            .Cells(other_row, report_systemsize_col) = system_size
+                            .Cells(other_row, report_col4) = system_value
+                            .Cells(other_row, report_col5) = sale_amount
+                        End With
+                    End If
                     other_row = other_row + 1
                 End If
                 
@@ -228,106 +244,109 @@ Do
     End With
     
     With Worksheets("Jobs Installed")
-		.cells(commissions_earned_row, report_systemsize_col) = "Total:"
-		.cells(commissions_earned_row, report_col4).Formula = "=Sum(" & Range(cells(3, report_col4), cells(commissions_earned_row - 1, report_col4)).Address() & ")"
-		.cells(commissions_earned_row, report_col5).Formula = "=Sum(" & Range(cells(3, report_col5), cells(commissions_earned_row - 1, report_col5)).Address() & ")"
-		.cells(commissions_earned_row, report_col6).Formula = "=Sum(" & Range(cells(3, report_col6), cells(commissions_earned_row - 1, report_col6)).Address() & ")"
+        .Cells(commissions_earned_row, report_systemsize_col) = "Total:"
+        .Cells(commissions_earned_row, report_col4).Formula = "=Sum(" & Range(Cells(3, report_col4), Cells(commissions_earned_row - 1, report_col4)).Address() & ")"
+        .Cells(commissions_earned_row, report_col5).Formula = "=Sum(" & Range(Cells(3, report_col5), Cells(commissions_earned_row - 1, report_col5)).Address() & ")"
+        .Cells(commissions_earned_row, report_col6).Formula = "=Sum(" & Range(Cells(3, report_col6), Cells(commissions_earned_row - 1, report_col6)).Address() & ")"
 
         .Range("A:F").EntireColumn.AutoFit
-		For x = 3 to commissions_earned_row
-			if .cells(x, report_col4) < 0 then
-				.cells(x, report_col4).Font.ColorIndex = 3
-			End if
-			if .cells(x, report_col5) < 0 then
-				.cells(x, report_col5).Font.ColorIndex = 3
-			End if
-			if .cells(x, report_col6) < 0 then
-				.cells(x, report_col6).Font.ColorIndex = 3
-			End if
-		Next x
+        For x = 3 To commissions_earned_row
+            If .Cells(x, report_col4) < 0 Then
+                .Cells(x, report_col4).Font.ColorIndex = 3
+            End If
+            If .Cells(x, report_col5) < 0 Then
+                .Cells(x, report_col5).Font.ColorIndex = 3
+            End If
+            If .Cells(x, report_col6) < 0 Then
+                .Cells(x, report_col6).Font.ColorIndex = 3
+            End If
+        Next x
     End With
     
     With Worksheets("Clawbacks Pending")
-		.cells(clawbacks_pending_row, report_systemsize_col) = "Total:"
-		.cells(clawbacks_pending_row, report_col4).Formula = "=Sum(" & Range(cells(3, report_col4), cells(clawbacks_pending_row - 1, report_col4)).Address() & ")"
-		.cells(clawbacks_pending_row, report_col5).Formula = "=Sum(" & Range(cells(3, report_col5), cells(clawbacks_pending_row - 1, report_col5)).Address() & ")"
-		.cells(clawbacks_pending_row, report_col6).Formula = "=Sum(" & Range(cells(3, report_col6), cells(clawbacks_pending_row - 1, report_col6)).Address() & ")"
+        .Cells(clawbacks_pending_row, report_systemsize_col) = "Total:"
+        .Cells(clawbacks_pending_row, report_col4).Formula = "=Sum(" & Range(Cells(3, report_col4), Cells(clawbacks_pending_row - 1, report_col4)).Address() & ")"
+        .Cells(clawbacks_pending_row, report_col5).Formula = "=Sum(" & Range(Cells(3, report_col5), Cells(clawbacks_pending_row - 1, report_col5)).Address() & ")"
+        .Cells(clawbacks_pending_row, report_col6).Formula = "=Sum(" & Range(Cells(3, report_col6), Cells(clawbacks_pending_row - 1, report_col6)).Address() & ")"
 
         .Range("A:F").EntireColumn.AutoFit
-		For x = 3 to clawbacks_pending_row
-			if .cells(x, report_col4) < 0 then
-				.cells(x, report_col4).Font.ColorIndex = 3
-			End if
-			if .cells(x, report_col5) < 0 then
-				.cells(x, report_col5).Font.ColorIndex = 3
-			End if
-			if .cells(x, report_col6) < 0 then
-				.cells(x, report_col6).Font.ColorIndex = 3
-			End if
-		Next x
+        For x = 3 To clawbacks_pending_row
+            If .Cells(x, report_col4) < 0 Then
+                .Cells(x, report_col4).Font.ColorIndex = 3
+            End If
+            If .Cells(x, report_col5) < 0 Then
+                .Cells(x, report_col5).Font.ColorIndex = 3
+            End If
+            If .Cells(x, report_col6) < 0 Then
+                .Cells(x, report_col6).Font.ColorIndex = 3
+            End If
+        Next x
     End With
     
     With Worksheets("Jobs in Jeopardy")
-		.cells(jobs_in_jeopardy_row, report_systemsize_col) = "Total:"
-		.cells(jobs_in_jeopardy_row, report_col5).Formula = "=Sum(" & Range(cells(3, report_col5), cells(jobs_in_jeopardy_row - 1, report_col5)).Address() & ")"
-		.cells(jobs_in_jeopardy_row, report_col6).Formula = "=Sum(" & Range(cells(3, report_col6), cells(jobs_in_jeopardy_row - 1, report_col6)).Address() & ")"
+        .Cells(jobs_in_jeopardy_row, report_systemsize_col) = "Total:"
+        .Cells(jobs_in_jeopardy_row, report_col5).Formula = "=Sum(" & Range(Cells(3, report_col5), Cells(jobs_in_jeopardy_row - 1, report_col5)).Address() & ")"
+        .Cells(jobs_in_jeopardy_row, report_col6).Formula = "=Sum(" & Range(Cells(3, report_col6), Cells(jobs_in_jeopardy_row - 1, report_col6)).Address() & ")"
 
         .Range("A:F").EntireColumn.AutoFit
-		For x = 3 to jobs_in_jeopardy_row
-			if .cells(x, report_col4) < 0 then
-				.cells(x, report_col4).Font.ColorIndex = 3
-			End if
-			if .cells(x, report_col5) < 0 then
-				.cells(x, report_col5).Font.ColorIndex = 3
-			End if
-			if .cells(x, report_col6) < 0 then
-				.cells(x, report_col6).Font.ColorIndex = 3
-			End if
-		Next x
+        For x = 3 To jobs_in_jeopardy_row
+            If .Cells(x, report_col4) < 0 Then
+                .Cells(x, report_col4).Font.ColorIndex = 3
+            End If
+            If .Cells(x, report_col5) < 0 Then
+                .Cells(x, report_col5).Font.ColorIndex = 3
+            End If
+            If .Cells(x, report_col6) < 0 Then
+                .Cells(x, report_col6).Font.ColorIndex = 3
+            End If
+        Next x
     End With
     
     With Worksheets("Jobs in Progress")
-		.cells(jobs_in_progress_row, report_systemsize_col) = "Total:"
-		.cells(jobs_in_progress_row, report_col4).Formula = "=Sum(" & Range(cells(3, report_col4), cells(jobs_in_progress_row - 1, report_col4)).Address() & ")"
-		.cells(jobs_in_progress_row, report_col5).Formula = "=Sum(" & Range(cells(3, report_col5), cells(jobs_in_progress_row - 1, report_col5)).Address() & ")"
-		.cells(jobs_in_progress_row, report_col6).Formula = "=Sum(" & Range(cells(3, report_col6), cells(jobs_in_progress_row - 1, report_col6)).Address() & ")"
+        .Cells(jobs_in_progress_row, report_systemsize_col) = "Total:"
+        .Cells(jobs_in_progress_row, report_col4).Formula = "=Sum(" & Range(Cells(3, report_col4), Cells(jobs_in_progress_row - 1, report_col4)).Address() & ")"
+        .Cells(jobs_in_progress_row, report_col5).Formula = "=Sum(" & Range(Cells(3, report_col5), Cells(jobs_in_progress_row - 1, report_col5)).Address() & ")"
+        .Cells(jobs_in_progress_row, report_col6).Formula = "=Sum(" & Range(Cells(3, report_col6), Cells(jobs_in_progress_row - 1, report_col6)).Address() & ")"
 
         .Range("A:F").EntireColumn.AutoFit
-		For x = 3 to jobs_in_progress_row
-			if .cells(x, report_col4) < 0 then
-				.cells(x, report_col4).Font.ColorIndex = 3
-			End if
-			if .cells(x, report_col5) < 0 then
-				.cells(x, report_col5).Font.ColorIndex = 3
-			End if
-			if .cells(x, report_col6) < 0 then
-				.cells(x, report_col6).Font.ColorIndex = 3
-			End if
-		Next x
+        For x = 3 To jobs_in_progress_row
+            If .Cells(x, report_col4) < 0 Then
+                .Cells(x, report_col4).Font.ColorIndex = 3
+            End If
+            If .Cells(x, report_col5) < 0 Then
+                .Cells(x, report_col5).Font.ColorIndex = 3
+            End If
+            If .Cells(x, report_col6) < 0 Then
+                .Cells(x, report_col6).Font.ColorIndex = 3
+            End If
+        Next x
     End With
     
     With Worksheets("Other")
-		.cells(other_row, report_systemsize_col) = "Total:"
-		.cells(other_row, report_col4).Formula = "=Sum(" & Range(cells(3, report_col4), cells(other_row - 1, report_col4)).Address() & ")"
-		.cells(other_row, report_col5).Formula = "=Sum(" & Range(cells(3, report_col5), cells(other_row - 1, report_col5)).Address() & ")"
+        .Cells(other_row, report_systemsize_col) = "Total:"
+        .Cells(other_row, report_col4).Formula = "=Sum(" & Range(Cells(3, report_col4), Cells(other_row - 1, report_col4)).Address() & ")"
+        .Cells(other_row, report_col5).Formula = "=Sum(" & Range(Cells(3, report_col5), Cells(other_row - 1, report_col5)).Address() & ")"
+        .Cells(other_row, report_col6).Formula = "=Sum(" & Range(Cells(3, report_col6), Cells(other_row - 1, report_col6)).Address() & ")"
 
         .Range("A:F").EntireColumn.AutoFit
-		For x = 3 to other_row
-			if .cells(x, report_col4) < 0 then
-				.cells(x, report_col4).Font.ColorIndex = 3
-			End if
-			if .cells(x, report_col5) < 0 then
-				.cells(x, report_col5).Font.ColorIndex = 3
-			End if
-			if .cells(x, report_col6) < 0 then
-				.cells(x, report_col6).Font.ColorIndex = 3
-			End if
-		Next x
+        For x = 3 To other_row
+            If .Cells(x, report_col4) < 0 Then
+                .Cells(x, report_col4).Font.ColorIndex = 3
+            End If
+            If .Cells(x, report_col5) < 0 Then
+                .Cells(x, report_col5).Font.ColorIndex = 3
+            End If
+            If .Cells(x, report_col6) < 0 Then
+                .Cells(x, report_col6).Font.ColorIndex = 3
+            End If
+        Next x
     End With
     
     ThisWorkbook.Sheets(Array("Jobs Installed", "Clawbacks Pending", "Jobs in Jeopardy", "Jobs in Progress", "Other")).Move
     ActiveWorkbook.SaveAs ("C:\users\ezra\desktop\" & "Finance Report" & "\" & rep & ".xlsx")
     ActiveWorkbook.Close
+    
+    Call email(rep)
     
     rep_row = rep_row + 1
     
@@ -383,7 +402,30 @@ Sub email(ByVal rep As String)
             .CC = ""
             .BCC = ""
             .Subject = "Sales Report"
-            .Body = "The attached report shows an update on your accounts."
+            .Body = "Hello," & vbNewLine & vbNewLine _
+            & "The following attachment is a list of all your jobs with Evolve Solar with how much you received per job and when." & vbNewLine & vbNewLine _
+            & "Also, the following is a description of how to read the attachment." & vbNewLine & vbNewLine _
+            & "'Jobs Installed'" & vbNewLine & vbNewLine _
+            & Chr(149) & "This shows all SolarCity jobs that have hit installation and how much you've been paid." & vbNewLine _
+            & Chr(149) & "The 'Due': If Black- That means we owe the following amount. If Red- You were overpaid (most likely from downsizing) and will be taken from future installs." & vbNewLine & vbNewLine _
+            & "'Clawbacks Pending'" & vbNewLine & vbNewLine _
+            & Chr(149) & "This shows all CANCELLED jobs." & vbNewLine _
+            & Chr(149) & "If there is a number (black) in the column 'Due to Evolve,' that money is still owed to Evolve and will be taken from future installs." & vbNewLine & vbNewLine _
+            & "'Jobs in Jeopardy'" & vbNewLine & vbNewLine _
+            & Chr(149) & "This shows all jobs that are in jeopardy and shows the amount that IF cancelled, the money is owed back to Evolve." & vbNewLine & vbNewLine _
+            & "'Jobs in Progress'" & vbNewLine & vbNewLine _
+            & Chr(149) & "This shows all jobs that are still in progress but have yet to hit installation." & vbNewLine _
+            & Chr(149) & "The 'Paid' column shows how much you've been paid per job." & vbNewLine _
+            & Chr(149) & "The 'Potentially Due' column shows how much money can still be made once the account hits installation." & vbNewLine & vbNewLine _
+            & "'Other'" & vbNewLine & vbNewLine _
+            & Chr(149) & "This shows all other payments that have occurred, example, Overrides, special advances, reimbursements, rent, etc." & vbNewLine _
+            & Chr(149) & "The 'Pending' column means that these line items have not yet hit your paycheck. Reasons being is either you have a negative balance with Evolve, etc." & vbNewLine _
+            & Chr(149) & "If the 'Pending' column is positive, Evolve owes you the money and if the account is negative, you still owe Evolve." & vbNewLine & vbNewLine _
+            & "We are happy to talk with you about this (Please do not respond to this email. Use the financial inquiry below). As you know, we are in development to make this information live online and updated weekly. Since the web version is not yet available, but close, we are sending personal emails to each of you as we promised we would get this information to you by this week." & vbNewLine & vbNewLine _
+            & "Thank you," & vbNewLine & vbNewLine _
+            & "The Finance Department" & vbNewLine & vbNewLine _
+            & "http://goo.gl/forms/j0fQXnf5ov"
+            
             .Attachments.Add ("C:\users\ezra\desktop\" & "Finance Report" & "\" & rep & ".xlsx")
             '.Display
             .Send
@@ -392,10 +434,7 @@ Sub email(ByVal rep As String)
 
         Set OutMail = Nothing
         Set OutApp = Nothing
-        
-    Loop Until Sheets("Reps").Cells(reprow, repcol) = ""
-
-    End If
     
 End Sub
+
 
