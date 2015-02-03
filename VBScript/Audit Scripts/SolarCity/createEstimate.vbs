@@ -19,6 +19,9 @@
 'Works with the "SolarCity Audit.xlsm" file in the Historical Breakdowns folder'
 Sub createEstimate()
 
+	'initialze variables from above'
+	initVar
+
 	'dim the row vars for both tabs'
 	Dim MasterReportRow, ReportRow As Integer
 
@@ -32,9 +35,16 @@ Sub createEstimate()
 	Do Until isEmpty(Sheets("Master Report").Cells(MasterReportRow, 1).Value)
 	
 		'Collect Data from Master Report and Determine what should be paid out to us in the Master Report'
-		dataFromMasterReport = determinePayout(dataFromMasterReport, MasterReportRow)
+		Set dataFromMasterReport = determinePayout(dataFromMasterReport, MasterReportRow)
+		
 		'print out what should be paid out in the Report Tab'
-	 	printData dataFromMasterReport
+	 	printData dataFromMasterReport, ReportRow
+
+	 	'In order to reset the values in a collection the values have to be removed first, this function does that'
+		Set dataFromMasterReport = refreshCollection(dataFromMasterReport)
+
+	 	MasterReportRow = MasterReportRow + 1
+	 	ReportRow       = ReportRow + 1
 	Loop
 
 
@@ -47,25 +57,23 @@ End Sub
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 'Determine what should be paid out to us in the Master Report'
-Function determinePayout(ByRef dataFromMasterReport As Collection, ByVal MasterReportRow As Integer)
-	Dim jobID, kW, Status, date
+Function determinePayout(ByRef dataFromMasterReport As Collection, ByVal MasterReportRow As Integer) As Collection
 
 	'Collection data from Master Report'
-	dataFromMasterReport = setCollection(dataFromMasterReport, MasterReportRow)
+	Set	dataFromMasterReport = setCollection(dataFromMasterReport, MasterReportRow)
 
 	'We make some decision based on what we find in the report'
 
 	'This is returning the collection to the calling sub'
 	
-	determinePayout = dataFromMasterReport
+	Set determinePayout = dataFromMasterReport
 End Function
 
 'Set Collection Values for the data from the Master Report'
-Function setCollection(ByRef dataFromMasterReport As Collection, ByVal MasterReportRow As Integer)
-	Dim jobID, kW, Status, date
+Function setCollection(ByRef dataFromMasterReport As Collection, ByVal MasterReportRow As Integer) As Collection
 
 	With Sheets("Master Report")
-		dataFromMasterReport.Add .Cells(MasterReportRow, masJobIdCol) dJOBID
+		dataFromMasterReport.Add .Cells(MasterReportRow, masJobIdCol), dJOBID
 	    dataFromMasterReport.Add .Cells(MasterReportRow, maskWCol), dKW
 	    dataFromMasterReport.Add .Cells(MasterReportRow, masStatusCol), dSTATUS
 	    dataFromMasterReport.Add .Cells(MasterReportRow, masDateCol), dDATE
@@ -75,12 +83,25 @@ Function setCollection(ByRef dataFromMasterReport As Collection, ByVal MasterRep
 	End With
 
 	'this is returning the collection from the calling function'
-	setCollection = dataFromMasterReport
+	Set setCollection = dataFromMasterReport
 
 End Function
 
+'In order to reset the values in a collection the values have to be removed first, this function does that'
+Function refreshCollection(ByRef dataFromMasterReport As Collection) As Collection
+	
+	dataFromMasterReport.Remove dJOBID
+    dataFromMasterReport.Remove dKW
+    dataFromMasterReport.Remove dSTATUS
+    dataFromMasterReport.Remove dDATE
+    dataFromMasterReport.Remove dFINAL
+    dataFromMasterReport.Remove dCANCELLED
+    dataFromMasterReport.Remove dINSTALL
+
+	Set refreshCollection = dataFromMasterReport
+End Function
 'Sub to print out data gathered into the Report Tab'
-Sub printData(ByRef dataFromMasterReport)
+Sub printData(ByRef dataFromMasterReport, ByVal ReportRow As Integer)
 	
 	With Sheets("Report")
 		.Cells(ReportRow, repJobIdCol).Value  = dataFromMasterReport.Item(dJOBID)
