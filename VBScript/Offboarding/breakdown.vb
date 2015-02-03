@@ -14,7 +14,7 @@ Dim sale_amount As Currency
 Dim system_value As Currency
 Dim status As String
 Dim rate As Currency
-dim payout_percent as double
+Dim payout_percent As Double
 
 
 'row counter variable
@@ -43,7 +43,7 @@ Dim financial_kW_col As Integer
     Dim current_cancellation_col As Integer
     Dim current_installed_col As Integer
     Dim current_inprogress_col As Integer
-	dim payout_percent_col as integer
+    Dim payout_percent_col As Integer
         Dim repList_rep_col As Integer
         Dim repList_repname_col As Integer
         Dim repList_repID_col As Integer
@@ -100,7 +100,7 @@ Do
     jobs_in_jeopardy_row = 3
     jobs_in_progress_row = 3
     other_row = 3
-	payout_percent_col = 26
+    payout_percent_col = 26
 
     With Sheets("RepList")
         rep = .Cells(rep_row, repList_rep_col)
@@ -118,7 +118,7 @@ Do
                 job_id = .Cells(current_data_row, current_jobID_col)
                 customer = .Cells(current_data_row, current_customer_col)
                 system_size = .Cells(current_data_row, current_systemsize_col)
-				payout_percent = .cells(current_data_row, payout_percent_col)
+                payout_percent = .Cells(current_data_row, payout_percent_col)
                 
                 job_in_jeopardy = .Cells(current_data_row, current_jeopardy_col)
                 cancellation = .Cells(current_data_row, current_cancellation_col)
@@ -129,11 +129,11 @@ Do
             status = Sheets("Current Data").Cells(current_data_row, current_status_col)
 
             'code for calculating earned based on rep.
-			If payout_percent <> "" or payout_percent = 0 then
-				system_value = system_size * rate * payout_percent
-			Else
-				system_value = system_size * rate * 1
-			End if
+            If payout_percent <> "" Or payout_percent = 0 Then
+                system_value = system_size * rate * payout_percent
+            Else
+                system_value = system_size * rate * 1
+            End If
 
         
             'code for summing the amount paid for the account
@@ -214,7 +214,7 @@ Do
                     If .Cells(financial_row, 1) = "Pending" Then
                         customer = .Cells(financial_row, financial_customer_col)
                         job_id = 0
-						'.Cells(financial_row, financial_jobID_col)
+                        '.Cells(financial_row, financial_jobID_col)
                         system_size = .Cells(financial_row, financial_kW_col)
                         system_value = system_size * rate
                         sale_amount = .Cells(financial_row, financial_payment_col)
@@ -231,7 +231,7 @@ Do
                         customer = .Cells(financial_row, financial_customer_col)
                         job_id = .Cells(financial_row, financial_jobID_col)
                         system_size = 0
-						'.Cells(financial_row, financial_kW_col)
+                        '.Cells(financial_row, financial_kW_col)
                         system_value = system_size * rate
                         sale_amount = .Cells(financial_row, financial_payment_col)
                         
@@ -353,7 +353,7 @@ Do
     End With
     
     ThisWorkbook.Sheets(Array("Jobs Installed", "Clawbacks Pending", "Jobs in Jeopardy", "Jobs in Progress", "Other")).Move
-    ActiveWorkbook.SaveAs ("C:\users\ezra\desktop\" & "Finance Report" & "\" & rep & ".xlsx")
+    ActiveWorkbook.SaveAs ("Y:\Evolve Admin\Finance\Historical Breakdowns\Offboarding" & "Reports" & "\" & rep & ".xlsx")
     ActiveWorkbook.Close
     
     Call email(rep)
@@ -436,7 +436,7 @@ Sub email(ByVal rep As String)
             & "The Finance Department" & vbNewLine & vbNewLine _
             & "http://goo.gl/forms/j0fQXnf5ov"
             
-            .Attachments.Add ("C:\users\ezra\desktop\" & "Finance Report" & "\" & rep & ".xlsx")
+            .Attachments.Add ("Y:\Evolve Admin\Finance\Historical Breakdowns\Offboarding" & "Reports" & "\" & rep & ".xlsx")
             '.Display
             .Send
         End With
@@ -446,5 +446,7 @@ Sub email(ByVal rep As String)
         Set OutApp = Nothing
     
 End Sub
+
+
 
 
