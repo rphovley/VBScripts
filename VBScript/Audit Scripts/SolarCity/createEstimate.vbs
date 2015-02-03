@@ -1,6 +1,7 @@
 	'Columns for the "Report Tab"'
 	Dim repJobIdCol, repDateCol, repkWCol, repStatusCol, _
-	 repOldNewCol, repEstCol, repActCol, repCheckCol As Integer
+	 repOldNewCol, repPaidOutCol, repCurValCol, repEstCol, _
+	 repActCol, repCheckCol As Integer
 
 	'Columns for the "Master Report" Tab'
 	Dim masJobIdCol, masDateCol, maskWCol, masStatusCol, _
@@ -121,14 +122,16 @@ End Sub
 Sub initVar()
 
      'Columns for the "Report Tab"'
-	 repJobIdCol  = 1
-	 repDateCol   = 2
-	 repkWCol     = 3
-	 repStatusCol = 4
-	 repOldNewCol = 5
-	 repEstCol    = 6
-	 repActCol    = 7
-	 repCheckCol  = 8
+	 repJobIdCol   = 1
+	 repDateCol    = 2
+	 repkWCol      = 3
+	 repStatusCol  = 4
+	 repOldNewCol  = 5
+	 repPaidOutCol = 6
+	 repCurValCol  = 7
+	 repEstCol     = 8
+	 repActCol     = 9
+	 repCheckCol   = 10
 
 
 	 'Columns for the "Master Report" Tab'
