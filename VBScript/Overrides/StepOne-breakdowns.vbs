@@ -1,4 +1,4 @@
-Private Sub cmdRun_Click()
+Private Sub Override_History()
 
 'Make main set of variables
 Dim Rep As String
@@ -15,13 +15,13 @@ Dim iStatus As String
 Dim SubStatus As String
 Dim OverrideType As String
 Dim ReportDate As Date
-Dim previous_month as string
-Dim current_month as string
+Dim previous_month As String
+Dim grand_total As Currency
 
 ReportDate = InputBox("Input this friday's date as mm/dd/yyyy")
 
 'Make row counter variables
-Dim masterrow As Integer
+Dim masterrow As Long
 Dim reportrow As Integer
 Dim reprow As Integer
 
@@ -43,128 +43,136 @@ month_col = 9
 
 
 'must be outside of all loops so that it doesn't reset
-reprow = 1
+reprow = 2
 
 'Main part of code that loops through the reps
-Do Until Sheets("Reps").Cells(reprow, 1) = ""
+Do
 'Set starting row for the row counters for each loop/rep
 reportrow = 4
 masterrow = 2
 
-previous_month = ""
-current_month = "May 2014"
+previous_month = "May 2014"
+
 
     'Sets the Rep as the new rep to be done
     Rep = Sheets("Reps").Cells(reprow, 1)
     'Creates a new tab with the same name as the rep
     Worksheets.Add(, Worksheets(Worksheets.Count)).Name = Rep
-	
-	With sheets(Rep)
-			.Cells(1, 4) = "Name:"
-			.Cells(1, 5) = Rep
-			.Cells(2, 4) = "Date:"
-			.Cells(2, 5) = ReportDate
-	End With
-	
-	'Formats the Name and Date delineators
-	With Worksheets(Rep).Range(Sheets(Rep).Cells(1, 3), Sheets(Rep).Cells(2, 3))
-		.HorizontalAlignment = xlRight
-		.Font.Bold = True
-	End With
-	
-	Do until previous_month = ""
-	masterrow = 2
-	'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-		'Formats the new spreadsheet
-		With
-			.Cells(reportrow, repCol) = "Rep"
-			.Cells(reportrow, customerCol) = "Customer"
-			.Cells(reportrow, kWCol) = "kW"
-			.Cells(reportrow, rateCol) = "Rate/kW"
-			.Cells(reportrow, totalCol) = "Total"
-			.Cells(reportrow, reasonCol) = "Type"
-			.Cells(reportrow, jobIDCol) = "Job ID"
-			.Cells(reportrow, statusCol) = "Status"
-			.Cells(reportrow, subStatusCol) = "SubStatus"
-			.Cells(reportrow, overTypeCol) = "OverrideType"
-		End With
+    
+    With Sheets(Rep)
+            .Cells(1, 4) = "Name:"
+            .Cells(1, 5) = Rep
+            .Cells(2, 4) = "Date Created:"
+            .Cells(2, 5) = ReportDate
+    End With
+    
+    'Formats the Name and Date delineators
+    With Worksheets(Rep).Range(Sheets(Rep).Cells(1, 4), Sheets(Rep).Cells(2, 4))
+        .HorizontalAlignment = xlRight
+        .Font.Bold = True
+    End With
+   
+    Do Until previous_month = ""
+        grand_total = 0
+    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+        'Formats the new spreadsheet
+        With Sheets(Rep)
+            .Cells(reportrow - 1, 2) = previous_month
+            .Cells(reportrow, repCol) = "Rep"
+            .Cells(reportrow, customerCol) = "Customer"
+            .Cells(reportrow, kWCol) = "kW"
+            .Cells(reportrow, rateCol) = "Rate/kW"
+            .Cells(reportrow, totalCol) = "Total"
+            .Cells(reportrow, reasonCol) = "Type"
+            .Cells(reportrow, jobIDCol) = "Job ID"
+            .Cells(reportrow, statusCol) = "Status"
+            .Cells(reportrow, subStatusCol) = "SubStatus"
+            .Cells(reportrow, overTypeCol) = "OverrideType"
+        End With
 
-		'Formats the column headers
-		With Worksheets(Rep).Range(cells(reportrow, repCol),cells(reportrow, overTypeCol))
-			.HorizontalAlignment = xlCenter
-			.Font.Bold = True
-			.Interior.Color = RGB(0, 102, 204)
-			.Font.Color = RGB(255, 255, 255)
-		End With
+        'Formats the column headers
+        With Worksheets(Rep).Range(Cells(reportrow - 1, repCol).Address, Cells(reportrow, overTypeCol).Address)
+                .HorizontalAlignment = xlCenter
+                .Font.Bold = True
+                .Interior.Color = RGB(0, 102, 204)
+                .Font.Color = RGB(255, 255, 255)
+        End With
 
-		Do until previous_month = ""
-			
-			If Sheets("Master Sheet").Cells(masterrow, 2) = Rep Then
-				
-				If sheets("Master Sheet").cells(masterrow, month_col) = previous_month then
-					'Gives values to the variables to be put into the created worksheet
-					With Sheets("Master Sheet")
-					  subRep = .Cells(masterrow, 4)
-					  customer = .Cells(masterrow, 6)
-					  kW = .Cells(masterrow, 15)
-					  Rate = .Cells(masterrow, 14)
-					  Total = .Cells(masterrow, 16)
-					  Reason = .Cells(masterrow, 10)
-					  JobID = .Cells(masterrow, 7)
-					  iStatus = .Cells(masterrow, 11)
-					  SubStatus = .Cells(masterrow, 12)
-					  OverrideType = .Cells(masterrow, 13)
-					End With
+        Do
+            
+            If Sheets("Master Sheet").Cells(masterrow, 2) = Rep Then
+                
+                If Sheets("Master Sheet").Cells(masterrow, month_col) = previous_month Then
+                    'Gives values to the variables to be put into the created worksheet
+                    With Sheets("Master Sheet")
+                      subRep = .Cells(masterrow, 4)
+                      customer = .Cells(masterrow, 6)
+                      kW = .Cells(masterrow, 15)
+                      Rate = .Cells(masterrow, 14)
+                      Total = .Cells(masterrow, 16)
+                      Reason = .Cells(masterrow, 10)
+                      JobID = .Cells(masterrow, 7)
+                      iStatus = .Cells(masterrow, 11)
+                      SubStatus = .Cells(masterrow, 12)
+                      OverrideType = .Cells(masterrow, 13)
+                      grand_total = grand_total + Total
+                    End With
+                    
+                    reportrow = reportrow + 1
+                    
+                    'Inputs data into the rep's report
+                    Sheets(Rep).Cells(reportrow, repCol) = subRep
+                    Sheets(Rep).Cells(reportrow, customerCol) = customer
+                    Sheets(Rep).Cells(reportrow, kWCol) = kW
+                    Sheets(Rep).Cells(reportrow, rateCol) = Rate
+                    Sheets(Rep).Cells(reportrow, totalCol) = Total
+                    If Total < 0 Then
+                        With Sheets(Rep).Cells(reportrow, totalCol)
+                            .Font.Color = RGB(255, 0, 0)
+                        End With
+                    End If
+                    Sheets(Rep).Cells(reportrow, reasonCol) = Reason
+                    Sheets(Rep).Cells(reportrow, jobIDCol) = JobID
+                    Sheets(Rep).Cells(reportrow, statusCol) = iStatus
+                    Sheets(Rep).Cells(reportrow, subStatusCol) = SubStatus
+                    Sheets(Rep).Cells(reportrow, overTypeCol) = OverrideType
 
-					'Inputs data into the rep's report
-					Sheets(Rep).Cells(reportrow, repCol) = subRep
-					Sheets(Rep).Cells(reportrow, customerCol) = customer
-					Sheets(Rep).Cells(reportrow, kWCol) = kW
-					Sheets(Rep).Cells(reportrow, rateCol) = Rate
-					Sheets(Rep).Cells(reportrow, totalCol) = Total
-					Sheets(Rep).Cells(reportrow, reasonCol) = Reason
-					Sheets(Rep).Cells(reportrow, jobIDCol) = JobID
-					Sheets(Rep).Cells(reportrow, statusCol) = iStatus
-					Sheets(Rep).Cells(reportrow, subStatusCol) = SubStatus
-					Sheets(Rep).Cells(reportrow, overTypeCol) = OverrideType
+                Else
+                    previous_month = Sheets("Master Sheet").Cells(masterrow, month_col)
+                    Exit Do
+                End If
+                masterrow = masterrow + 1
+            Else
+                masterrow = masterrow + 1
+                Exit Do
+            End If
+        Loop
+        
+        'Sums the totals for each customer into a grand total for the rep
+        Worksheets(Rep).Cells(reportrow + 1, 5) = "Total:"
+        Worksheets(Rep).Cells(reportrow + 1, 6) = grand_total
+        'Formats the grand total cells
+        With Worksheets(Rep).Cells(reportrow + 1, 5)
+            .Font.Color = RGB(255, 255, 255)
+            .Interior.Color = RGB(0, 0, 0)
+            .Font.Bold = True
+            .HorizontalAlignment = xlRight
+        End With
+        'Places border around the grand total
+        With Worksheets(Rep).Range(Sheets(Rep).Cells(reportrow + 1, 5), Sheets(Rep).Cells(reportrow + 1, 6))
+            .Borders(xlEdgeLeft).LineStyle = xlContinuous
+            .Borders(xlEdgeTop).LineStyle = xlContinuous
+            .Borders(xlEdgeRight).LineStyle = xlContinuous
+            .Borders(xlEdgeBottom).LineStyle = xlContinuous
+        End With
+        
+        reportrow = reportrow + 4
+        If Sheets("Master Sheet").Cells(masterrow, 2) <> Rep Then
+            Exit Do
+        End If
+    Loop
 
-					'Report row counter only moves if data was copied into the rep's spreadsheet
-					reportrow = reportrow + 1
-				Else
-					previous_month = Sheets("Master Sheet").cells(masterrow, month_col)
-					Exit Do
-				End If
-				masterrow = masterrow + 1
-			Else
-				masterrow = masterrow + 1
-			End If
-		Loop
-		
-		previous_month = current_month
-		current_month = sheets("Master Sheet").cells(masterrow, month_col).value
-		
-		'Sums the totals for each customer into a grand total for the rep
-		Worksheets(Rep).Cells(reportrow + 1, 5) = "Total:"
-		Worksheets(Rep).Cells(reportrow + 1, 6).Formula = "=Sum(" & Range(Cells(5, 6), Cells(reportrow, 6)).Address() & ")"
-		'Formats the grand total cells
-		With Worksheets(Rep).Cells(reportrow + 1, 5)
-			.Font.Color = RGB(255, 255, 255)
-			.Interior.Color = RGB(0, 0, 0)
-			.Font.Bold = True
-			.HorizontalAlignment = xlRight
-		End With
-		'Places border around the grand total
-		With Worksheets(Rep).Range(Sheets(Rep).Cells(reportrow + 1, 5), Sheets(Rep).Cells(reportrow + 1, 6))
-			.Borders(xlEdgeLeft).LineStyle = xlContinuous
-			.Borders(xlEdgeTop).LineStyle = xlContinuous
-			.Borders(xlEdgeRight).LineStyle = xlContinuous
-			.Borders(xlEdgeBottom).LineStyle = xlContinuous
-		End With
-		
-		reportrow = reportrow + 2
-    Loop 
-
-	''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     'Adjusts column width of the new tab
     With Worksheets(Rep).Range("B1:K1")
         .EntireColumn.AutoFit
@@ -178,6 +186,9 @@ current_month = "May 2014"
     'ActiveWorkbook.SaveAs ("C:\users\Rodney\desktop\" & "Payroll Breakdown\" & Rep & ".xlsx")
     'ActiveWorkbook.Close
 
-Loop
+Loop Until Sheets("Reps").Cells(reprow, 1) = ""
 
 End Sub
+
+
+
