@@ -1,29 +1,21 @@
-Develop script for out boarding to send out full pay report
-	5th Tab
-		Columns/what will it look like?
-	lump Jobs for reps (sum)
-	Treat blanks/sunnova different (if statement, no sum)
-	Use Columns
+	+December Override Master.xlsm
+		-Go over each column
 
-Develop script for full override report
+	+Google Map Master
+		- 
+	+Master Report
+		- 
 
-Redevelop Overrides
-	
-	develop outline for New Backends
-	New Backends script
-	
-	develop outline for Cancellations
-	Cancellations script
-	
+-Develop script for out boarding to send out full pay report
 
+-Develop script for full override report
 
-Tomorrow
-	EZRA
-	Clean the code
-	Figure out paid section
-	else statement for "Other" Sheet
+-Redevelop Overrides
 	
-	PAUL	
-	figure out how to format override breakdown for entire history
-	Create a script to sum each overrideID to provide an idea of where the master list is at for accuracy
+	+develop outline for New Backends
+	+New Backends script
+	
+	+develop outline for Cancellations
+	+Cancellations script
+	
 	

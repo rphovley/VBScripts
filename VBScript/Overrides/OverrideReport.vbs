@@ -119,11 +119,11 @@ Sub determineStatus(ByVal bookName As String, ByVal sheetName As String, ByVal c
         'Translate status into what payment is deserved'
         If isBackend_New(sStatus, SubStatus) Then
             'full payment for backend'
-            earned = rateCol_pay * kWCol_pay
+            earned = rate * kW
         Else
             If isReady(sStatus, SubStatus) Then
                 '50% if frontend'
-                earned = rateCol_pay * kWCol_pay / 2
+                earned = rate * kW / 2
             Else
                 'nothing for all else'
                 earned = 0
@@ -146,6 +146,7 @@ Sub setOverrideLineInfo(ByVal sheetName As String, ByVal currentRow_pay As Integ
         paid     = .Cells(currentRow_pay, paidCol_pay).Value
     End With
 End Sub
+
 'Prints out overrideID to report'
 Sub printReport(ByVal sheetName As String, ByVal currentRow As Integer, ByVal currentRow_report As Integer)
 	With Worksheets(sheetName)
