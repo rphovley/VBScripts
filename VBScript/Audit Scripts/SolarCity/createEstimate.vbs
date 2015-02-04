@@ -51,7 +51,7 @@ Sub createEstimate()
 		'Collect Data from Master Report and Determine what should be paid out to us in the Master Report'
 		Set dataFromMasterReport = determinePayout(dataFromMasterReport, MasterReportRow)
 		
-		Call check_structure(ReportRow, repDateCol, repOldNewCol, repkWCol, MasterReportRow, masCancelledCol)
+		Call check_structure(dataFromMasterReport, ReportRow, repDateCol, repOldNewCol, repkWCol, MasterReportRow, masCancelledCol)
 		
 		'set what was paid out in the commissions sheet'
 		alreadyPaid = whatWasPaid(dataFromMasterReport.Item(dJOBID), commishWorkbook, boostRow)
@@ -181,12 +181,12 @@ Sub initVar()
 End Sub
 
 'Checks which payout structure this account falls under
-Sub check_structure(ByVal ReportRow, ByVal repDateCol, ByVal repOldNewCol,ByVal kWCol, ByVal MasterReportRow, ByVal masCancelledCol)
+Sub check_structure(ByRef dataFromMasterReport As Collection, ByVal ReportRow, ByVal repDateCol, ByVal repOldNewCol,ByVal kWCol, ByVal MasterReportRow, ByVal masCancelledCol)
     With Sheets("Report")
 		kW = .cells(ReportRow, repkWCol).Value
         If .Cells(ReportRow, repDateCol) < 41974 Then
             .Cells(ReportRow, repOldNewCol) = "Old"
-            Call old_payout_structure
+            Call old_payout_structure dataFromMasterReport
         Else
             .Cells(ReportRow, repOldNewCol) = "New"
             Call new_payout_structure (MasterReportRow, masFinalCol, masInstallCol, ReportRow, repCurValCol, kW, masCancelledCol)
