@@ -311,3 +311,18 @@ Sub estimated_payment(ByVal ReportRow, ByVal repPaidOutCol, byVal repCurValCol, 
 	End With
 	
 End Sub
+
+Sub check_payments(ByVal ReportRow, ByVal repEstCol, byVal repActCol, byVal repCheckCol)
+
+	With Sheets("Report")
+		If .cells(ReportRow, repEstCol) = .cells(ReportRow, repActCol) then
+			.cells(ReportRow, repCheckCol) = "TRUE"
+		Else
+			.cells(ReportRow, repCheckCol) = "FALSE"
+			.cells(ReportRow, repCheckCol).Interior.color = RGB(255,0,0)
+		End If
+	End With
+
+End Sub
+
+
