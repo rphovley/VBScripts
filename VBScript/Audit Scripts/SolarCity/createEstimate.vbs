@@ -20,7 +20,7 @@
 'Works with the "SolarCity Audit.xlsm" file in the Historical Breakdowns folder'
 Sub createEstimate()
 
-	'initialze variables from above'
+	'initialize variables from above'
 	initVar
 
 	'dim the row vars for both tabs'
@@ -40,7 +40,9 @@ Sub createEstimate()
 		
 		'print out what should be paid out in the Report Tab'
 	 	printData dataFromMasterReport, ReportRow
-
+		
+		Call check_structure(ReportRow, repDateCol, repOldNewCol)
+		
 	 	'In order to reset the values in a collection the values have to be removed first, this function does that'
 		Set dataFromMasterReport = refreshCollection(dataFromMasterReport)
 
@@ -151,5 +153,32 @@ Sub initVar()
 	 dFINAL     = "Final"
 	 dINSTALL   = "Installed"
 	 dCANCELLED = "Cancelled"
+
+End Sub
+
+'Checks which payout structure this account falls under
+Sub check_structure(ByVal ReportRow, ByVal repDateCol, ByVal repOldNewCol)
+    With Sheets("Report")
+        If .Cells(ReportRow, repDateCol) < 41974 Then
+            .Cells(ReportRow, repOldNewCol) = "Old"
+            Call old_payout_structure
+        Else
+            .Cells(ReportRow, repOldNewCol) = "New"
+            Call new_payout_structure
+        End If
+    End With
+End Sub
+
+'Sub for New Payout Structure
+Sub new_payout_structure()
+
+
+
+End Sub
+
+'Sub for Old payout structure
+Sub old_payout_structure()
+
+
 
 End Sub
