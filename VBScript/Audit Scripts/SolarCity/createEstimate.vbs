@@ -196,7 +196,7 @@ End Sub
 
 'Sub for New Payout Structure
 Sub new_payout_structure(ByVal MasterReportRow, ByVal masFinalCol, ByVal masInstallCol, ByVal ReportRow, ByVal repCurValCol, ByVal kW, ByVal masCancelledCol)
-		full_value = kW * 500 * 1.5
+		full_value = kW * 500 * 1.0
 		booster = kW * 500 * .5
 		cancel_value = 0
 	With Sheets("Master Report")
