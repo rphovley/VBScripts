@@ -303,3 +303,11 @@ Function convertToName(ByVal Path As String) As String
 
 
 End Function
+
+Sub estimated_payment(ByVal ReportRow, ByVal repPaidOutCol, byVal repCurValCol, byVal repEstCol)
+	
+	With Sheets("Report")
+		.cells(ReportRow, repEstCol) = .cells(ReportRow, repCurValCol) - .cells(ReportRow, repPaidOutCol)
+	End With
+	
+End Sub
