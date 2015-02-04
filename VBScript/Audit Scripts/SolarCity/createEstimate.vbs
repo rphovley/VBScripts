@@ -5,11 +5,11 @@
 
 	'Columns for the "Master Report" Tab'
 	Dim masJobIdCol, masDateCol, maskWCol, masStatusCol, _
-	 masFinalCol, masInstallCol, masCancelledCol As Integer
+	 masFinalCol, masInstallCol, masInstallDateCol, masCancelledCol As Integer
 
 
 	 'Collection KEYS'
-	Dim dJOBID, dKW, dSTATUS, dALREADYPAID, dDATE, dFINAL, dINSTALL, dCANCELLED AS String
+	Dim dJOBID, dKW, dSTATUS, dALREADYPAID, dDATE, dFINAL, dINSTALL, dINSTALLDATE, dCANCELLED AS String
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''Main Sub for Estimate'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -96,6 +96,7 @@ Function setCollection(ByRef dataFromMasterReport As Collection, ByVal MasterRep
 	    dataFromMasterReport.Add .Cells(MasterReportRow, masDateCol), dDATE
 	    dataFromMasterReport.Add .Cells(MasterReportRow, masFinalCol), dFINAL
 	    dataFromMasterReport.Add .Cells(MasterReportRow, masCancelledCol), dCANCELLED
+	    dataFromMasterReport.Add .Cells(MasterReportRow, masInstallDateCol), dINSTALLDATE
 	    dataFromMasterReport.Add .Cells(MasterReportRow, masInstallCol), dINSTALL
 	End With
 
@@ -113,6 +114,7 @@ Function refreshCollection(ByRef dataFromMasterReport As Collection) As Collecti
     dataFromMasterReport.Remove dDATE
     dataFromMasterReport.Remove dFINAL
     dataFromMasterReport.Remove dCANCELLED
+    dataFromMasterReport.Remove dINSTALLDATE
     dataFromMasterReport.Remove dINSTALL
 
 	Set refreshCollection = dataFromMasterReport
@@ -152,13 +154,14 @@ Sub initVar()
 
 
 	 'Columns for the "Master Report" Tab'
-	 masJobIdCol     = 2
-	 masDateCol      = 7
-	 maskWCol        = 3
-	 masStatusCol    = 4
-	 masFinalCol     = 8
-	 masCancelledCol = 19
-	 masInstallCol   = 20
+	 masJobIdCol       = 2
+	 masDateCol        = 7
+	 maskWCol          = 3
+	 masStatusCol      = 4
+	 masFinalCol       = 8
+	 masInstallDateCol = 9
+	 masCancelledCol   = 19
+	 masInstallCol     = 20
 
 	 'Collection Keys'
 	 dJOBID       = "jobID"
@@ -168,6 +171,7 @@ Sub initVar()
 	 dDATE        = "Date"
 	 dFINAL       = "Final"
 	 dINSTALL     = "Installed"
+	 dINSTALLDATE = "dateInstalled"
 	 dCANCELLED   = "Cancelled"
 
 End Sub
