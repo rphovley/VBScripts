@@ -9,7 +9,7 @@
 
 
 	 'Collection KEYS'
-	Dim dJOBID, dKW, dSTATUS, dDATE, dFINAL, dINSTALL, dCANCELLED AS String
+	Dim dJOBID, dKW, dSTATUS, dALREADYPAID, dDATE, dFINAL, dINSTALL, dCANCELLED AS String
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''Main Sub for Estimate'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -24,11 +24,18 @@ Sub createEstimate()
 	initVar
 
 	'dim the row vars for both tabs'
-	Dim MasterReportRow, ReportRow As Integer
+	Dim MasterReportRow, ReportRow, boostRow As Integer
+	Dim alreadyPaid As Double
+	Dim commishWorkbook As String
 
 	MasterReportRow = 2
 	ReportRow       = 2
+	alreadyPaid     = 0
+ 
+ 	'get workbook name of the commission workbook'
+    commishWorkbook = convertToName(Application.GetOpenFilename())
 
+    boostRow = InputBox("What is the starting row in the 'Accounting Summary' tab for the boost payments?", "Boost Payments Row")
 	'used to pass information back and forth from functions'
 	Dim dataFromMasterReport As New Collection
 
@@ -38,13 +45,20 @@ Sub createEstimate()
 		'Collect Data from Master Report and Determine what should be paid out to us in the Master Report'
 		Set dataFromMasterReport = determinePayout(dataFromMasterReport, MasterReportRow)
 		
-		'print out what should be paid out in the Report Tab'
-	 	printData dataFromMasterReport, ReportRow
 		
+		
+		'set what was paid out in the commissions sheet'
+		alreadyPaid = whatWasPaid(dataFromMasterReport.Item(dJOBID), commishWorkbook, boostRow)
+		dataFromMasterReport.Add alreadyPaid, dALREADYPAID
+
 		Call check_structure(ReportRow, repDateCol, repOldNewCol)
 		
+		'print out what should be paid out in the Report Tab'
+	 	printData dataFromMasterReport, ReportRow
+
 	 	'In order to reset the values in a collection the values have to be removed first, this function does that'
 		Set dataFromMasterReport = refreshCollection(dataFromMasterReport)
+		dataFromMasterReport.Remove dALREADYPAID
 
 	 	MasterReportRow = MasterReportRow + 1
 	 	ReportRow       = ReportRow + 1
@@ -107,10 +121,11 @@ End Function
 Sub printData(ByRef dataFromMasterReport, ByVal ReportRow As Integer)
 	
 	With Sheets("Report")
-		.Cells(ReportRow, repJobIdCol).Value  = dataFromMasterReport.Item(dJOBID)
-		.Cells(ReportRow, repDateCol).Value   = dataFromMasterReport.Item(dDATE)
-		.Cells(ReportRow, repkWCol).Value     = dataFromMasterReport.Item(dKW)
-		.Cells(ReportRow, repStatusCol).Value = dataFromMasterReport.Item(dSTATUS)
+		.Cells(ReportRow, repJobIdCol).Value   = dataFromMasterReport.Item(dJOBID)
+		.Cells(ReportRow, repDateCol).Value    = dataFromMasterReport.Item(dDATE)
+		.Cells(ReportRow, repkWCol).Value      = dataFromMasterReport.Item(dKW)
+		.Cells(ReportRow, repStatusCol).Value  = dataFromMasterReport.Item(dSTATUS)
+		.Cells(ReportRow, repPaidOutCol).Value = dataFromMasterReport.Item(dALREADYPAID)
 		' .Cells(ReportRow, repOldNewCol).Value = dataFromMasterReport.Item(dOLDNEw)
 		' .Cells(ReportRow, repEstCol).Value    = dataFromMasterReport.Item(dEST)
 		' .Cells(ReportRow, repActCol).Value    = dataFromMasterReport.Item(dACT)
@@ -146,13 +161,14 @@ Sub initVar()
 	 masInstallCol   = 20
 
 	 'Collection Keys'
-	 dJOBID     = "jobID"
-	 dKW        = "kW"
-	 dSTATUS    = "Status"
-	 dDATE      = "Date"
-	 dFINAL     = "Final"
-	 dINSTALL   = "Installed"
-	 dCANCELLED = "Cancelled"
+	 dJOBID       = "jobID"
+	 dKW          = "kW"
+	 dSTATUS      = "Status"
+	 dALREADYPAID = "AlreadyPaid"
+	 dDATE        = "Date"
+	 dFINAL       = "Final"
+	 dINSTALL     = "Installed"
+	 dCANCELLED   = "Cancelled"
 
 End Sub
 
@@ -182,3 +198,85 @@ Sub old_payout_structure()
 
 
 End Sub
+
+'Function to return the amount that was paid out by Solar City for a specific JobID'
+Function whatWasPaid(ByVal jobID As String, ByVal Workbook As String, ByVal boostRow As Integer) As Double
+	'variables for tab names'
+	Dim firsts, seconds, finals, pos, neg, acc As String
+		firsts  = "1st_Payment"
+		seconds = "2nd_Payment"
+		finals  = "Final_Payment"
+		pos     = "Pos_Payment"
+		neg     = "Neg_Payment"
+		acc     = "Accounting Summary"
+
+	'Columns First Payment Tab'
+	Dim firstDateCol, firstJobIDCol, firstKWCol, firstPaymentCol, firstPayDateCol As Integer
+		firstDateCol    = 3
+		firstJobIDCol   = 4
+		firstKWCol      = 6
+		firstPaymentCol = 21
+		firstPayDateCol = 22
+
+	'Columns Other Payment Tabs'
+	Dim othDateCol, othJobIDCol, othKWCol, othPaymentCol, othPayDateCol As Integer
+		othDateCol    = 3
+		othJobIDCol   = 4
+		othKWCol      = 7
+		othPaymentCol = 22
+		othPayDateCol = 23
+
+	'Boost Payment Columns'
+	Dim booJobIDCol, booPaymentCol As Integer
+		booJobIDCol   = 2
+		booPaymentCol = 7
+
+	'Row counter'
+	Dim currentRow As Integer
+	'value that will be returned'
+	Dim paymentAmount As Double
+	paymentAmount = 0
+	
+
+		'loops through each tab and gets the payment amount for the related jobID'
+		paymentAmount = tabLoop(Workbook, firsts, jobID, firstJobIDCol, firstPaymentCol, paymentAmount)
+		paymentAmount = tabLoop(Workbook, seconds, jobID, othJobIDCol, othPaymentCol, paymentAmount)
+		paymentAmount = tabLoop(Workbook, finals, jobID, othJobIDCol, othPaymentCol, paymentAmount)
+		paymentAmount = tabLoop(Workbook, pos, jobID, othJobIDCol, othPaymentCol, paymentAmount)
+		paymentAmount = tabLoop(Workbook, neg, jobID, othJobIDCol, othPaymentCol, paymentAmount)
+		paymentAmount = tabLoop(Workbook, acc, jobID, booJobIDCol, booPaymentCol, paymentAmount)
+
+	whatWasPaid = paymentAmount
+
+End Function
+
+'loops through each tab and gets the payment amount for the related jobID'
+Function tabLoop(ByVal Workbook As String, ByVal SheetName As String,  jobID As String, ByVal jobIDCol As Integer, byVal paymentCol As Integer, byVal paymentAmount As Double) As Double
+	'Go through the Payment Tab and find any relevant payments'
+	Dim currentRow As Integer
+	currentRow = 1
+
+	With Workbooks(WorkbooK).Sheets(SheetName)
+		Do Until isEmpty(.Cells(currentRow, 1))
+			If .Cells(currentRow, jobIDCol).Value = jobID Then
+				paymentAmount = paymentAmount + .Cells(currentRow, paymentCol)
+			End IF
+			currentRow = currentRow + 1
+		Loop
+	End With
+
+	tabLoop = paymentAmount
+End Function
+
+'function to convert a filepath to a fileName'
+Function convertToName(ByVal Path As String) As String
+
+     For Each wbk1 In Workbooks
+        If (wbk1.Path & "\" & wbk1.Name = Path) Then
+            convertToName = wbk1.Name
+            Exit For
+        End If
+    Next
+
+
+End Function
