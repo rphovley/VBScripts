@@ -9,20 +9,13 @@
 
 
 	 'Collection KEYS'
-<<<<<<< HEAD
 	Dim dJOBID, dKW, dSTATUS, dALREADYPAID, dDATE, dFINAL, dINSTALL, dINSTALLDATE, dCANCELLED AS String
-=======
-<<<<<<< HEAD
-	Dim dJOBID, dKW, dSTATUS, dDATE, dFINAL, dINSTALL, dCANCELLED AS String
 	
 	Dim full_value as currency
 	dim booster as currency
 	dim cancel_value as currency
 	Dim kW as double
-=======
-	Dim dJOBID, dKW, dSTATUS, dALREADYPAID, dDATE, dFINAL, dINSTALL, dCANCELLED AS String
->>>>>>> origin/master
->>>>>>> origin/master
+
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''Main Sub for Estimate'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -58,17 +51,11 @@ Sub createEstimate()
 		'Collect Data from Master Report and Determine what should be paid out to us in the Master Report'
 		Set dataFromMasterReport = determinePayout(dataFromMasterReport, MasterReportRow)
 		
-		
-<<<<<<< HEAD
 		Call check_structure(ReportRow, repDateCol, repOldNewCol, repkWCol, MasterReportRow, masCancelledCol)
-=======
 		
 		'set what was paid out in the commissions sheet'
 		alreadyPaid = whatWasPaid(dataFromMasterReport.Item(dJOBID), commishWorkbook, boostRow)
 		dataFromMasterReport.Add alreadyPaid, dALREADYPAID
-
-		Call check_structure(ReportRow, repDateCol, repOldNewCol)
->>>>>>> origin/master
 		
 		'print out what should be paid out in the Report Tab'
 	 	printData dataFromMasterReport, ReportRow
@@ -171,24 +158,14 @@ Sub initVar()
 
 
 	 'Columns for the "Master Report" Tab'
-<<<<<<< HEAD
 	 masJobIdCol       = 2
 	 masDateCol        = 7
 	 maskWCol          = 3
 	 masStatusCol      = 4
 	 masFinalCol       = 8
 	 masInstallDateCol = 9
-	 masCancelledCol   = 19
-	 masInstallCol     = 20
-=======
-	 masJobIdCol     = 2
-	 masDateCol      = 7
-	 maskWCol        = 3
-	 masStatusCol    = 4
-	 masFinalCol     = 8
-	 masCancelledCol = 20
-	 masInstallCol   = 21
->>>>>>> origin/master
+	 masCancelledCol   = 20
+	 masInstallCol     = 21
 
 	 'Collection Keys'
 	 dJOBID       = "jobID"
