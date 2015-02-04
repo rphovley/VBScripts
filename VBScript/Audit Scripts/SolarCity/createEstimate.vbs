@@ -354,6 +354,25 @@ Function convertToName(ByVal Path As String) As String
             Exit For
         End If
     Next
+End Function
 
+Sub estimated_payment(ByVal ReportRow, ByVal repPaidOutCol, byVal repCurValCol, byVal repEstCol)
+	
+	With Sheets("Report")
+		.cells(ReportRow, repEstCol) = .cells(ReportRow, repCurValCol) - .cells(ReportRow, repPaidOutCol)
+	End With
+	
+End Sub
 
-End Function<<<<<<< HEAD
+Sub check_payments(ByVal ReportRow, ByVal repEstCol, byVal repActCol, byVal repCheckCol)
+
+	With Sheets("Report")
+		If .cells(ReportRow, repEstCol) = .cells(ReportRow, repActCol) then
+			.cells(ReportRow, repCheckCol) = "TRUE"
+		Else
+			.cells(ReportRow, repCheckCol) = "FALSE"
+			.cells(ReportRow, repCheckCol).Interior.color = RGB(255,0,0)
+		End If
+	End With
+
+End Sub
