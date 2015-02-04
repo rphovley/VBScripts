@@ -9,7 +9,20 @@
 
 
 	 'Collection KEYS'
+<<<<<<< HEAD
 	Dim dJOBID, dKW, dSTATUS, dALREADYPAID, dDATE, dFINAL, dINSTALL, dINSTALLDATE, dCANCELLED AS String
+=======
+<<<<<<< HEAD
+	Dim dJOBID, dKW, dSTATUS, dDATE, dFINAL, dINSTALL, dCANCELLED AS String
+	
+	Dim full_value as currency
+	dim booster as currency
+	dim cancel_value as currency
+	Dim kW as double
+=======
+	Dim dJOBID, dKW, dSTATUS, dALREADYPAID, dDATE, dFINAL, dINSTALL, dCANCELLED AS String
+>>>>>>> origin/master
+>>>>>>> origin/master
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''Main Sub for Estimate'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -46,12 +59,16 @@ Sub createEstimate()
 		Set dataFromMasterReport = determinePayout(dataFromMasterReport, MasterReportRow)
 		
 		
+<<<<<<< HEAD
+		Call check_structure(ReportRow, repDateCol, repOldNewCol, repkWCol, MasterReportRow, masCancelledCol)
+=======
 		
 		'set what was paid out in the commissions sheet'
 		alreadyPaid = whatWasPaid(dataFromMasterReport.Item(dJOBID), commishWorkbook, boostRow)
 		dataFromMasterReport.Add alreadyPaid, dALREADYPAID
 
 		Call check_structure(ReportRow, repDateCol, repOldNewCol)
+>>>>>>> origin/master
 		
 		'print out what should be paid out in the Report Tab'
 	 	printData dataFromMasterReport, ReportRow
@@ -154,6 +171,7 @@ Sub initVar()
 
 
 	 'Columns for the "Master Report" Tab'
+<<<<<<< HEAD
 	 masJobIdCol       = 2
 	 masDateCol        = 7
 	 maskWCol          = 3
@@ -162,6 +180,15 @@ Sub initVar()
 	 masInstallDateCol = 9
 	 masCancelledCol   = 19
 	 masInstallCol     = 20
+=======
+	 masJobIdCol     = 2
+	 masDateCol      = 7
+	 maskWCol        = 3
+	 masStatusCol    = 4
+	 masFinalCol     = 8
+	 masCancelledCol = 20
+	 masInstallCol   = 21
+>>>>>>> origin/master
 
 	 'Collection Keys'
 	 dJOBID       = "jobID"
@@ -177,22 +204,37 @@ Sub initVar()
 End Sub
 
 'Checks which payout structure this account falls under
-Sub check_structure(ByVal ReportRow, ByVal repDateCol, ByVal repOldNewCol)
+Sub check_structure(ByVal ReportRow, ByVal repDateCol, ByVal repOldNewCol,ByVal kWCol, ByVal MasterReportRow, ByVal masCancelledCol)
     With Sheets("Report")
+		kW = .cells(ReportRow, repkWCol).Value
         If .Cells(ReportRow, repDateCol) < 41974 Then
             .Cells(ReportRow, repOldNewCol) = "Old"
             Call old_payout_structure
         Else
             .Cells(ReportRow, repOldNewCol) = "New"
-            Call new_payout_structure
+            Call new_payout_structure (MasterReportRow, masFinalCol, masInstallCol, ReportRow, repCurValCol, kW, masCancelledCol)
         End If
     End With
 End Sub
 
 'Sub for New Payout Structure
-Sub new_payout_structure()
-
-
+Sub new_payout_structure(ByVal MasterReportRow, ByVal masFinalCol, ByVal masInstallCol, ByVal ReportRow, ByVal repCurValCol, ByVal kW, ByVal masCancelledCol)
+		full_value = kW * 500 * 1.5
+		booster = kW * 500 * .5
+		cancel_value = 0
+	With Sheets("Master Report")
+		If .cells(MasterReportRow, masCancelledCol) <> "" then
+			Sheets("Report").cells(ReportRow, repCurValCol) = cancel_value
+		Else
+			If .cells(MasterReportRow, masFinalCol) <> "" And .cells(MasterReportRow, masInstallCol) <> "" then
+				Sheets("Report").cells(ReportRow, repCurValCol) = full_value
+			ElseIf .cells(MasterReportRow, masFinalCol) <> "" And .cells(MasterReportRow, masInstallCol) = "" then
+				Sheets("Report").cells(ReportRow, repCurValCol) = booster	
+			Else
+				Sheets("Report").cells(ReportRow, repCurValCol) = cancel_value
+			End If
+		End If
+	End With
 
 End Sub
 
