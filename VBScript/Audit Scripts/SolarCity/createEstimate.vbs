@@ -216,12 +216,66 @@ Sub new_payout_structure(ByVal MasterReportRow, ByVal masFinalCol, ByVal masInst
 End Sub
 
 'Sub for Old payout structure
-Sub old_payout_structure()
+Sub old_payout_structure(ByRef dataFromMasterReport As Collection)
+	Dim paymentAmount As Double
+	Dim todaysDate As Date
+	Dim diffClosed, diffInstall, dateCreated As Integer
+	Const MIN_DATE = #2/28/2014#
+	Const MAX_DATE = #5/1/2014#
+	todaysDate = Date()
 
 
+	'Days between created date (closed won) and todays date'
+	dateCreated = dataFromMasterReport.Item(dDATE)
+	diffClosed = DateDiff("d", todaysDate, dateCreated)
+
+	'Days between install date and todays date'
+	diffInstall = DateDiff("d", todaysDate, dataFromMasterReport.Item(dINSTALLDATE))
+
+	'Should this be a final payment die to install?'
+	If diffInstall > 30 Then
+		'Should be at final payment'
+		'checks to see if it should be paid out at $600 per kW'
+		If dateCreated > MIN_DATE AND dateCreated < MAX_DATE Then
+			paymentAmount = dataFromMasterReport.Item(dKW) * 600
+		Else
+			paymentAmount = dataFromMasterReport.Item(dKW) * 500
+		End If
+	Else
+		If diffClosed > 180 Then
+			'Should be at final payment'
+			'checks to see if it should be paid out at $600 per kW'
+			If dateCreated > MIN_DATE AND dateCreated < MAX_DATE Then
+				paymentAmount = dataFromMasterReport.Item(dKW) * 600
+			Else
+				paymentAmount = dataFromMasterReport.Item(dKW) * 500
+			End If
+		ElseIf diffClosed > 90 Then
+			'Should be at 2nd payment'
+			'checks to see if it should be paid out at $600 per kW'
+			If dateCreated > MIN_DATE AND dateCreated < MAX_DATE Then
+				paymentAmount = dataFromMasterReport.Item(dKW) * 600 * .75
+			Else
+				paymentAmount = dataFromMasterReport.Item(dKW) * 500 * .75
+			End If
+		ElseIF diffClosed > 30 Then
+			'Should be at 1st payment'
+			'checks to see if it should be paid out at $600 per kW'
+			If dateCreated > MIN_DATE AND dateCreated < MAX_DATE Then
+				paymentAmount = dataFromMasterReport.Item(dKW) * 600 * .5
+			Else
+				paymentAmount = dataFromMasterReport.Item(dKW) * 500 * .5
+			End If
+		End If
+
+		Sheets("Report").cells(ReportRow, repCurValCol) = paymentAmount
+
+	End If
+
+
+	
 
 End Sub
-
 'Function to return the amount that was paid out by Solar City for a specific JobID'
 Function whatWasPaid(ByVal jobID As String, ByVal Workbook As String, ByVal boostRow As Integer) As Double
 	'variables for tab names'
