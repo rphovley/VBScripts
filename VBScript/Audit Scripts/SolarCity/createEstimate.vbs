@@ -5,7 +5,7 @@
 
 	'Columns for the "Master Report" Tab'
 	Dim masJobIdCol, masDateCol, maskWCol, masStatusCol, _
-	 masFinalCol, masInstallCol, masInstallDateCol, masCancelledCol As Integer
+	 masFinalCol, masInstallCol, masInstallDateCol, masCancelledCol, masPermitCol As Integer
 
 
 	 'Collection KEYS'
@@ -162,6 +162,7 @@ Sub initVar()
 	 masDateCol        = 7
 	 maskWCol          = 3
 	 masStatusCol      = 4
+	 masPermitCol      = 5
 	 masFinalCol       = 8
 	 masInstallDateCol = 9
 	 masCancelledCol   = 20
