@@ -1,15 +1,15 @@
 	'Columns for the "Report Tab"'
 	Dim repJobIdCol, repDateCol, repkWCol, repStatusCol, _
 	 repOldNewCol, repPaidOutCol, repCurValCol, repEstCol, _
-	 repActCol, repCheckCol As Integer
+	 repActCol, repCheckCol, repPermitCol As Integer
 
 	'Columns for the "Master Report" Tab'
 	Dim masJobIdCol, masDateCol, maskWCol, masStatusCol, _
-	 masFinalCol, masInstallCol, masInstallDateCol, masCancelledCol As Integer
+	 masFinalCol, masInstallCol, masInstallDateCol, masCancelledCol, masPermitCol As Integer
 
 
 	 'Collection KEYS'
-	Dim dJOBID, dKW, dSTATUS, dALREADYPAID, dDATE, dFINAL, dINSTALL, dINSTALLDATE, dCANCELLED AS String
+	Dim dJOBID, dKW, dSTATUS, dPERMITSTATUS, dALREADYPAID, dDATE, dFINAL, dINSTALL, dINSTALLDATE, dCANCELLED AS String
 	
 	Dim full_value as currency
 	dim booster as currency
@@ -97,6 +97,7 @@ Function setCollection(ByRef dataFromMasterReport As Collection, ByVal MasterRep
 		dataFromMasterReport.Add .Cells(MasterReportRow, masJobIdCol), dJOBID
 	    dataFromMasterReport.Add .Cells(MasterReportRow, maskWCol), dKW
 	    dataFromMasterReport.Add .Cells(MasterReportRow, masStatusCol), dSTATUS
+		dataFromMasterReport.Add .Cells(MasterReportRow, masPermitCol), dPERMITSTATUS
 	    dataFromMasterReport.Add .Cells(MasterReportRow, masDateCol), dDATE
 	    dataFromMasterReport.Add .Cells(MasterReportRow, masFinalCol), dFINAL
 	    dataFromMasterReport.Add .Cells(MasterReportRow, masCancelledCol), dCANCELLED
@@ -115,6 +116,7 @@ Function refreshCollection(ByRef dataFromMasterReport As Collection) As Collecti
 	dataFromMasterReport.Remove dJOBID
     dataFromMasterReport.Remove dKW
     dataFromMasterReport.Remove dSTATUS
+	dataFromMasterReport.Remove dPERMITSTATUS
     dataFromMasterReport.Remove dDATE
     dataFromMasterReport.Remove dFINAL
     dataFromMasterReport.Remove dCANCELLED
@@ -131,6 +133,7 @@ Sub printData(ByRef dataFromMasterReport, ByVal ReportRow As Integer)
 		.Cells(ReportRow, repDateCol).Value    = dataFromMasterReport.Item(dDATE)
 		.Cells(ReportRow, repkWCol).Value      = dataFromMasterReport.Item(dKW)
 		.Cells(ReportRow, repStatusCol).Value  = dataFromMasterReport.Item(dSTATUS)
+		.Cells(ReportRow, repPermitCol).Value  = dataFromMasterReport.Item(dPERMITSTATUS)
 		.Cells(ReportRow, repPaidOutCol).Value = dataFromMasterReport.Item(dALREADYPAID)
 		' .Cells(ReportRow, repOldNewCol).Value = dataFromMasterReport.Item(dOLDNEw)
 		' .Cells(ReportRow, repEstCol).Value    = dataFromMasterReport.Item(dEST)
@@ -149,12 +152,13 @@ Sub initVar()
 	 repDateCol    = 2
 	 repkWCol      = 3
 	 repStatusCol  = 4
-	 repOldNewCol  = 5
-	 repPaidOutCol = 6
-	 repCurValCol  = 7
-	 repEstCol     = 8
-	 repActCol     = 9
-	 repCheckCol   = 10
+	 repPermitCol  = 5
+	 repOldNewCol  = 6
+	 repPaidOutCol = 7
+	 repCurValCol  = 8
+	 repEstCol     = 9
+	 repActCol     = 10
+	 repCheckCol   = 11
 
 
 	 'Columns for the "Master Report" Tab'
@@ -162,6 +166,7 @@ Sub initVar()
 	 masDateCol        = 7
 	 maskWCol          = 3
 	 masStatusCol      = 4
+	 masPermitCol      = 5
 	 masFinalCol       = 8
 	 masInstallDateCol = 9
 	 masCancelledCol   = 20
@@ -171,6 +176,7 @@ Sub initVar()
 	 dJOBID       = "jobID"
 	 dKW          = "kW"
 	 dSTATUS      = "Status"
+	 dPERMITSTATUS= "PermitStatus"
 	 dALREADYPAID = "AlreadyPaid"
 	 dDATE        = "Date"
 	 dFINAL       = "Final"
@@ -187,6 +193,7 @@ Sub check_structure(ByRef dataFromMasterReport As Collection, ByVal ReportRow, B
         If .Cells(ReportRow, repDateCol) < 41974 Then
             .Cells(ReportRow, repOldNewCol) = "Old"
             Call old_payout_structure(dataFromMasterReport, reportRow)
+            Call old_payout_structure (dataFromMasterReport)
         Else
             .Cells(ReportRow, repOldNewCol) = "New"
             Call new_payout_structure (MasterReportRow, masFinalCol, masInstallCol, ReportRow, repCurValCol, kW, masCancelledCol)
@@ -203,12 +210,18 @@ Sub new_payout_structure(ByVal MasterReportRow, ByVal masFinalCol, ByVal masInst
 		If .cells(MasterReportRow, masCancelledCol) <> "" then
 			Sheets("Report").cells(ReportRow, repCurValCol) = cancel_value
 		Else
-			If .cells(MasterReportRow, masFinalCol) <> "" And .cells(MasterReportRow, masInstallCol) <> "" then
-				Sheets("Report").cells(ReportRow, repCurValCol) = full_value
-			ElseIf .cells(MasterReportRow, masFinalCol) <> "" And .cells(MasterReportRow, masInstallCol) = "" then
-				Sheets("Report").cells(ReportRow, repCurValCol) = booster	
+			If Sheets("Report").cells(ReportRow, repStatusCol) = "Cancelled" Or Sheets("Report").cells(ReportRow, repStatusCol) = "Sales" then
+				If Sheets("Report").cells(ReportRow, repPermitCol) = "Account Cancelled" , "Customer Uncertain" , "Customer Unresponsive" , "On Hold" , "Pending NOC" , "Pending Save" then
+					Sheets("Report").cells(ReportRow, repCurValCol) = - Sheets("Report").cells(ReportRow, repPaidOutCol)
+				End If			
 			Else
-				Sheets("Report").cells(ReportRow, repCurValCol) = cancel_value
+				If .cells(MasterReportRow, masFinalCol) <> "" And .cells(MasterReportRow, masInstallCol) <> "" then
+					Sheets("Report").cells(ReportRow, repCurValCol) = full_value
+				ElseIf .cells(MasterReportRow, masFinalCol) <> "" And .cells(MasterReportRow, masInstallCol) = "" then
+					Sheets("Report").cells(ReportRow, repCurValCol) = booster	
+				Else
+					Sheets("Report").cells(ReportRow, repCurValCol) = cancel_value
+				End If
 			End If
 		End If
 	End With
