@@ -208,21 +208,15 @@ Sub new_payout_structure(ByVal MasterReportRow, ByVal masFinalCol, ByVal masInst
 		booster = kW * 500 * .5
 		cancel_value = 0
 	With Sheets("Master Report")
-		If .cells(MasterReportRow, masCancelledCol) <> "" then
+		If isJobCancelled = false then
 			Sheets("Report").cells(ReportRow, repCurValCol) = cancel_value
 		Else
-			If Sheets("Report").cells(ReportRow, repStatusCol) = "Cancelled" Or Sheets("Report").cells(ReportRow, repStatusCol) = "Sales" then
-				If Sheets("Report").cells(ReportRow, repPermitCol) = "Account Cancelled" , "Customer Uncertain" , "Customer Unresponsive" , "On Hold" , "Pending NOC" , "Pending Save" then
-					Sheets("Report").cells(ReportRow, repCurValCol) = - Sheets("Report").cells(ReportRow, repPaidOutCol)
-				End If			
+			If .cells(MasterReportRow, masFinalCol) <> "" And .cells(MasterReportRow, masInstallCol) <> "" then
+				Sheets("Report").cells(ReportRow, repCurValCol) = full_value
+			ElseIf .cells(MasterReportRow, masFinalCol) <> "" And .cells(MasterReportRow, masInstallCol) = "" then
+				Sheets("Report").cells(ReportRow, repCurValCol) = booster	
 			Else
-				If .cells(MasterReportRow, masFinalCol) <> "" And .cells(MasterReportRow, masInstallCol) <> "" then
-					Sheets("Report").cells(ReportRow, repCurValCol) = full_value
-				ElseIf .cells(MasterReportRow, masFinalCol) <> "" And .cells(MasterReportRow, masInstallCol) = "" then
-					Sheets("Report").cells(ReportRow, repCurValCol) = booster	
-				Else
-					Sheets("Report").cells(ReportRow, repCurValCol) = cancel_value
-				End If
+				Sheets("Report").cells(ReportRow, repCurValCol) = cancel_value
 			End If
 		End If
 	End With
@@ -410,4 +404,4 @@ Function isJobCancelled(ByRef Status As String) As Boolean
             Exit For
         End If
     Next permitStatus
-
+End Function
