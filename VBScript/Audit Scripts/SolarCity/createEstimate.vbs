@@ -192,8 +192,11 @@ Sub check_structure(ByRef dataFromMasterReport As Collection, ByVal ReportRow, B
 		kW = .cells(ReportRow, repkWCol).Value
         If .Cells(ReportRow, repDateCol) < 41974 Then
             .Cells(ReportRow, repOldNewCol) = "Old"
+<<<<<<< HEAD
             Call old_payout_structure(dataFromMasterReport, reportRow)
+=======
             Call old_payout_structure (dataFromMasterReport)
+>>>>>>> origin/master
         Else
             .Cells(ReportRow, repOldNewCol) = "New"
             Call new_payout_structure (MasterReportRow, masFinalCol, masInstallCol, ReportRow, repCurValCol, kW, masCancelledCol)
@@ -394,3 +397,19 @@ Sub check_payments(ByVal ReportRow, ByVal repEstCol, byVal repActCol, byVal repC
 	End With
 
 End Sub
+
+'is status a cancelled status'
+Function isJobCancelled(ByRef Status As String) As Boolean
+
+    Dim isArray As Variant
+    isArray = Array("Customer Uncertain", "Customer Unresponsive", _
+        "Job Disqualified", "On Hold", "Cancelled")
+    
+    For Each permitStatus In isArray
+    
+        If permitStatus = Status Then
+            isJobCancelled = True
+            Exit For
+        End If
+    Next permitStatus
+
