@@ -197,13 +197,13 @@ Sub check_structure(ByRef dataFromMasterReport As Collection, ByVal ReportRow, B
 
         Else
             .Cells(ReportRow, repOldNewCol) = "New"
-            Call new_payout_structure (MasterReportRow, masFinalCol, masInstallCol, ReportRow, repCurValCol, kW, masCancelledCol)
+            Call new_payout_structure (MasterReportRow, masFinalCol, masInstallCol, ReportRow, repCurValCol, kW, masCancelledCol, dataFromMasterReport)
         End If
     End With
 End Sub
 
 'Sub for New Payout Structure
-Sub new_payout_structure(ByVal MasterReportRow, ByVal masFinalCol, ByVal masInstallCol, ByVal ReportRow, ByVal repCurValCol, ByVal kW, ByVal masCancelledCol)
+Sub new_payout_structure(ByVal MasterReportRow, ByVal masFinalCol, ByVal masInstallCol, ByVal ReportRow, ByVal repCurValCol, ByVal kW, ByVal masCancelledCol, ByRef dataFromMasterReport as collection)
 		full_value = kW * 500 * 1.0
 		booster = kW * 500 * .5
 		cancel_value = 0
