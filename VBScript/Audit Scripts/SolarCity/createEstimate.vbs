@@ -192,11 +192,9 @@ Sub check_structure(ByRef dataFromMasterReport As Collection, ByVal ReportRow, B
 		kW = .cells(ReportRow, repkWCol).Value
         If .Cells(ReportRow, repDateCol) < 41974 Then
             .Cells(ReportRow, repOldNewCol) = "Old"
-<<<<<<< HEAD
+
             Call old_payout_structure(dataFromMasterReport, reportRow)
-=======
-            Call old_payout_structure (dataFromMasterReport)
->>>>>>> origin/master
+
         Else
             .Cells(ReportRow, repOldNewCol) = "New"
             Call new_payout_structure (MasterReportRow, masFinalCol, masInstallCol, ReportRow, repCurValCol, kW, masCancelledCol)
