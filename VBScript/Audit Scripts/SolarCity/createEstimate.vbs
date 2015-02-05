@@ -39,9 +39,9 @@ Sub createEstimate()
 	alreadyPaid     = 0
  
  	'get workbook name of the commission workbook'
-    commishWorkbook = convertToName(Application.GetOpenFilename())
+    'commishWorkbook = convertToName(Application.GetOpenFilename())
 
-    boostRow = InputBox("What is the starting row in the 'Accounting Summary' tab for the boost payments?", "Boost Payments Row")
+    'boostRow = InputBox("What is the starting row in the 'Accounting Summary' tab for the boost payments?", "Boost Payments Row")
 	'used to pass information back and forth from functions'
 	Dim dataFromMasterReport As New Collection
 
@@ -54,7 +54,7 @@ Sub createEstimate()
 		Call check_structure(dataFromMasterReport, ReportRow, repDateCol, repOldNewCol, repkWCol, MasterReportRow, masCancelledCol)
 		
 		'set what was paid out in the commissions sheet'
-		alreadyPaid = whatWasPaid(dataFromMasterReport.Item(dJOBID), commishWorkbook, boostRow)
+		'alreadyPaid = whatWasPaid(dataFromMasterReport.Item(dJOBID), commishWorkbook, boostRow)
 		dataFromMasterReport.Add alreadyPaid, dALREADYPAID
 		
 		'print out what should be paid out in the Report Tab'
@@ -186,7 +186,7 @@ Sub check_structure(ByRef dataFromMasterReport As Collection, ByVal ReportRow, B
 		kW = .cells(ReportRow, repkWCol).Value
         If .Cells(ReportRow, repDateCol) < 41974 Then
             .Cells(ReportRow, repOldNewCol) = "Old"
-            Call old_payout_structure dataFromMasterReport
+            Call old_payout_structure(dataFromMasterReport, reportRow)
         Else
             .Cells(ReportRow, repOldNewCol) = "New"
             Call new_payout_structure (MasterReportRow, masFinalCol, masInstallCol, ReportRow, repCurValCol, kW, masCancelledCol)
@@ -216,7 +216,7 @@ Sub new_payout_structure(ByVal MasterReportRow, ByVal masFinalCol, ByVal masInst
 End Sub
 
 'Sub for Old payout structure
-Sub old_payout_structure(ByRef dataFromMasterReport As Collection)
+Sub old_payout_structure(ByRef dataFromMasterReport As Collection, ByVal ReportRow As Integer)
 	Dim paymentAmount As Double
 	Dim todaysDate As Date
 	Dim diffClosed, diffInstall, dateCreated As Integer
@@ -229,8 +229,13 @@ Sub old_payout_structure(ByRef dataFromMasterReport As Collection)
 	dateCreated = dataFromMasterReport.Item(dDATE)
 	diffClosed = DateDiff("d", todaysDate, dateCreated)
 
+	Dim test As Date 
+	test = dataFromMasterReport.Item(dINSTALLDATE)
+
 	'Days between install date and todays date'
-	diffInstall = DateDiff("d", todaysDate, dataFromMasterReport.Item(dINSTALLDATE))
+	If dataFromMasterReport.Item(dINSTALLDATE) <> "12:00am" Then
+		diffInstall = DateDiff("d", todaysDate, dataFromMasterReport.Item(dINSTALLDATE))
+	End If
 
 	'Should this be a final payment die to install?'
 	If diffInstall > 30 Then
