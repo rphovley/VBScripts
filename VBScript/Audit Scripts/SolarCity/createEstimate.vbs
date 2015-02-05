@@ -384,7 +384,7 @@ Sub check_payments(ByVal ReportRow, ByVal repEstCol, byVal repActCol, byVal repC
 	With Sheets("Report")
 		If .cells(ReportRow, repEstCol) = .cells(ReportRow, repActCol) then
 			.cells(ReportRow, repCheckCol) = "TRUE"
-			.cells(ReportRow, repCheckCol).interior.color = RGB(0,0,0)
+			.cells(ReportRow, repCheckCol).interior.color = RGB(255,255,255)
 		Else
 			.cells(ReportRow, repCheckCol) = "FALSE"
 			.cells(ReportRow, repCheckCol).Interior.color = RGB(255,0,0)
