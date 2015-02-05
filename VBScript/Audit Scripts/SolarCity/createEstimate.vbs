@@ -203,7 +203,7 @@ Sub check_structure(ByRef dataFromMasterReport As Collection, ByVal ReportRow, B
         Else
             .Cells(ReportRow, repOldNewCol) = "New"
 
-            Call new_payout_structure (MasterReportRow, masFinalCol, masInstallCol, ReportRow, repCurValCol, kW, masCancelledCol, dataFromMasterReport)
+            Call new_payout_structure(MasterReportRow, masFinalCol, masInstallCol, ReportRow, repCurValCol, kW, masCancelledCol, dataFromMasterReport)
 
         End If
     End With
@@ -443,8 +443,8 @@ End Sub
 Function isJobCancelled(ByRef Status As String) As Boolean
 
     Dim isArray As Variant
-    isArray = Array("Customer Uncertain", "Customer Unresponsive", _
-        "Job Disqualified", "On Hold", "Account Cancelled", "Cancelled")
+    isArray = Array("Customer Uncertain", "Customer Unresponsive", "Pending Save", _
+        "Job Disqualified", "On Hold", "Account Cancelled", "Pending NOC", "Cancelled")
     
     For Each permitStatus In isArray
     
