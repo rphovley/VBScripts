@@ -208,7 +208,7 @@ Sub new_payout_structure(ByVal MasterReportRow, ByVal masFinalCol, ByVal masInst
 		booster = kW * 500 * .5
 		cancel_value = 0
 	With Sheets("Master Report")
-		If isJobCancelled = false then
+		If isJobCancelled then
 			Sheets("Report").cells(ReportRow, repCurValCol) = cancel_value
 		Else
 			If .cells(MasterReportRow, masFinalCol) <> "" And .cells(MasterReportRow, masInstallCol) <> "" then
