@@ -39,9 +39,9 @@ Sub createEstimate()
 	alreadyPaid     = 0
  
  	'get workbook name of the commission workbook'
-    'commishWorkbook = convertToName(Application.GetOpenFilename())
+    commishWorkbook = convertToName(Application.GetOpenFilename())
 
-    'boostRow = InputBox("What is the starting row in the 'Accounting Summary' tab for the boost payments?", "Boost Payments Row")
+    boostRow = InputBox("What is the starting row in the 'Accounting Summary' tab for the boost payments?", "Boost Payments Row")
 	'used to pass information back and forth from functions'
 	Dim dataFromMasterReport As New Collection
 
@@ -63,6 +63,9 @@ Sub createEstimate()
 		Call check_payments(ReportRow, repEstCol, repActCol, repCheckCol)
 	 	'In order to reset the values in a collection the values have to be removed first, this function does that'
 		Set dataFromMasterReport = refreshCollection(dataFromMasterReport)
+
+		dataFromMasterReport.Remove dALREADYPAID
+		dataFromMasterReport.Remove dACTUALPAY
 
 	 	MasterReportRow = MasterReportRow + 1
 	 	ReportRow       = ReportRow + 1
@@ -136,7 +139,7 @@ Sub printData(ByRef dataFromMasterReport, ByVal ReportRow As Integer)
 		.Cells(ReportRow, repStatusCol).Value  = dataFromMasterReport.Item(dSTATUS)
 		.Cells(ReportRow, repPermitCol).Value  = dataFromMasterReport.Item(dPERMITSTATUS)
 		.Cells(ReportRow, repPaidOutCol).Value = dataFromMasterReport.Item(dALREADYPAID)
-		.Cells(ReportRow, repEstCol).Value = dataFromMasterReport.Item(dACTUALPAY)
+		.Cells(ReportRow, repEstCol).Value     = dataFromMasterReport.Item(dACTUALPAY)
 		' .Cells(ReportRow, repOldNewCol).Value = dataFromMasterReport.Item(dOLDNEw)
 		' .Cells(ReportRow, repEstCol).Value    = dataFromMasterReport.Item(dEST)
 		' .Cells(ReportRow, repActCol).Value    = dataFromMasterReport.Item(dACT)
@@ -338,7 +341,7 @@ Function whatWasPaid(ByRef dataFromMasterReport As Collection, ByVal jobID As St
 		Set dataFromMasterReport = tabLoop(Workbook, finals, jobID, othJobIDCol, othPaymentCol, othPayDateCol, dataFromMasterReport)
 		Set dataFromMasterReport = tabLoop(Workbook, pos, jobID, othJobIDCol, othPaymentCol, othPayDateCol, dataFromMasterReport)
 		Set dataFromMasterReport = tabLoop(Workbook, neg, jobID, othJobIDCol, othPaymentCol, othPayDateCol, dataFromMasterReport)
-		Set dataFromMasterReport = tabLoop(Workbook, acc, jobID, booJobIDCol, booPaymentCol, dataFromMasterReport)
+		Set dataFromMasterReport = tabLoop(Workbook, acc, jobID, booJobIDCol, booPaymentCol, 9, dataFromMasterReport)
 
 	Set whatWasPaid = dataFromMasterReport
 
@@ -365,8 +368,9 @@ Function tabLoop(ByVal Workbook As String, ByVal SheetName As String,  jobID As 
 		Loop
 	End With
 
-	dataFromMasterReport.Add whatWasPaidOut dALREADYPAID
-	dataFromMasterReport.Add actualPayment dACTUALPAY
+	dataFromMasterReport.Add whatWasPaidOut, dALREADYPAID
+	dataFromMasterReport.Add actualPayment, dACTUALPAY
+
 	Set tabLoop = dataFromMasterReport
 End Function
 
