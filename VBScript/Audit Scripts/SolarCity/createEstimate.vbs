@@ -197,6 +197,7 @@ Sub check_structure(ByRef dataFromMasterReport As Collection, ByVal ReportRow, B
 
         Else
             .Cells(ReportRow, repOldNewCol) = "New"
+<<<<<<< HEAD
             Call new_payout_structure (dataFromMasterReport, MasterReportRow, masFinalCol, masInstallCol, ReportRow, repCurValCol, kW, masCancelledCol)
         End If
     End With
