@@ -229,10 +229,12 @@ End Sub
 'Sub for Old payout structure
 Sub old_payout_structure(ByRef dataFromMasterReport As Collection, ByVal ReportRow As Integer)
 	Dim paymentAmount As Double
-	Dim todaysDate, dateCreated, diffInstall  As Date
-	Dim diffClosed As Integer
+	Dim todaysDate, dateCreated As Date
+	Dim diffClosed, diffInstall As Integer
 	Const MIN_DATE = #2/28/2014#
 	Const MAX_DATE = #5/1/2014#
+	Const NULL_DATE = #12:00:00 AM#
+
 	todaysDate = Date()
 
 	'Days between created date (closed won) and todays date'
@@ -243,21 +245,14 @@ Sub old_payout_structure(ByRef dataFromMasterReport As Collection, ByVal ReportR
 	test = dataFromMasterReport.Item(dINSTALLDATE)
 
 	'Days between install date and todays date'
-	If dataFromMasterReport.Item(dINSTALLDATE) <> "12:00am" Then
-		diffInstall = DateDiff("d", todaysDate, dataFromMasterReport.Item(dINSTALLDATE))
+	If dataFromMasterReport.Item(dINSTALLDATE) <> NULL_DATE Then
+		diffInstall = DateDiff("d",todaysDate , dataFromMasterReport.Item(dINSTALLDATE))
 	End If
 
+	'Is it Cancelled?'
+	If isJobCancelled(dataFromMasterReport.Item(dPERMITSTATUS)) <> False Then
 	'Should this be a final payment die to install?'
-	If diffInstall > 30 Then
-		'Should be at final payment'
-		'checks to see if it should be paid out at $600 per kW'
-		If dateCreated > MIN_DATE AND dateCreated < MAX_DATE Then
-			paymentAmount = dataFromMasterReport.Item(dKW) * 600
-		Else
-			paymentAmount = dataFromMasterReport.Item(dKW) * 500
-		End If
-	Else
-		If diffClosed > 180 Then
+		If Abs(diffInstall) > 30 Then
 			'Should be at final payment'
 			'checks to see if it should be paid out at $600 per kW'
 			If dateCreated > MIN_DATE AND dateCreated < MAX_DATE Then
@@ -265,29 +260,38 @@ Sub old_payout_structure(ByRef dataFromMasterReport As Collection, ByVal ReportR
 			Else
 				paymentAmount = dataFromMasterReport.Item(dKW) * 500
 			End If
-		ElseIf diffClosed > 90 Then
-			'Should be at 2nd payment'
-			'checks to see if it should be paid out at $600 per kW'
-			If dateCreated > MIN_DATE AND dateCreated < MAX_DATE Then
-				paymentAmount = dataFromMasterReport.Item(dKW) * 600 * .75
-			Else
-				paymentAmount = dataFromMasterReport.Item(dKW) * 500 * .75
+		Else
+			If Abs(diffClosed) > 180 Then
+				'Should be at final payment'
+				'checks to see if it should be paid out at $600 per kW'
+				If dateCreated > MIN_DATE AND dateCreated < MAX_DATE Then
+					paymentAmount = dataFromMasterReport.Item(dKW) * 600
+				Else
+					paymentAmount = dataFromMasterReport.Item(dKW) * 500
+				End If
+			ElseIf Abs(diffClosed) > 90 Then
+				'Should be at 2nd payment'
+				'checks to see if it should be paid out at $600 per kW'
+				If dateCreated > MIN_DATE AND dateCreated < MAX_DATE Then
+					paymentAmount = dataFromMasterReport.Item(dKW) * 600 * .75
+				Else
+					paymentAmount = dataFromMasterReport.Item(dKW) * 500 * .75
+				End If
+			ElseIF Abs(diffClosed) > 30 Then
+				'Should be at 1st payment'
+				'checks to see if it should be paid out at $600 per kW'
+				If dateCreated > MIN_DATE AND dateCreated < MAX_DATE Then
+					paymentAmount = dataFromMasterReport.Item(dKW) * 600 * .5
+				Else
+					paymentAmount = dataFromMasterReport.Item(dKW) * 500 * .5
+				End If
 			End If
-		ElseIF diffClosed > 30 Then
-			'Should be at 1st payment'
-			'checks to see if it should be paid out at $600 per kW'
-			If dateCreated > MIN_DATE AND dateCreated < MAX_DATE Then
-				paymentAmount = dataFromMasterReport.Item(dKW) * 600 * .5
-			Else
-				paymentAmount = dataFromMasterReport.Item(dKW) * 500 * .5
-			End If
-		End If
 
-		Sheets("Report").cells(ReportRow, repCurValCol) = paymentAmount
+		End If
 
 	End If
 
-
+	Sheets("Report").cells(ReportRow, repCurValCol) = paymentAmount
 	
 
 End Sub
@@ -398,7 +402,7 @@ Function isJobCancelled(ByRef Status As String) As Boolean
 
     Dim isArray As Variant
     isArray = Array("Customer Uncertain", "Customer Unresponsive", _
-        "Job Disqualified", "On Hold", "Cancelled")
+        "Job Disqualified", "On Hold", "Account Cancelled", "Cancelled")
     
     For Each permitStatus In isArray
     
