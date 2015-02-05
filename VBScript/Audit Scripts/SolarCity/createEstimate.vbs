@@ -209,12 +209,18 @@ Sub new_payout_structure(ByVal MasterReportRow, ByVal masFinalCol, ByVal masInst
 		If .cells(MasterReportRow, masCancelledCol) <> "" then
 			Sheets("Report").cells(ReportRow, repCurValCol) = cancel_value
 		Else
-			If .cells(MasterReportRow, masFinalCol) <> "" And .cells(MasterReportRow, masInstallCol) <> "" then
-				Sheets("Report").cells(ReportRow, repCurValCol) = full_value
-			ElseIf .cells(MasterReportRow, masFinalCol) <> "" And .cells(MasterReportRow, masInstallCol) = "" then
-				Sheets("Report").cells(ReportRow, repCurValCol) = booster	
+			If Sheets("Report").cells(ReportRow, repStatusCol) = "Cancelled" Or Sheets("Report").cells(ReportRow, repStatusCol) = "Sales" then
+				If Sheets("Report").cells(ReportRow, repPermitCol) = "Account Cancelled" , "Customer Uncertain" , "Customer Unresponsive" , "On Hold" , "Pending NOC" , "Pending Save" then
+					Sheets("Report").cells(ReportRow, repCurValCol) = - Sheets("Report").cells(ReportRow, repPaidOutCol)
+				End If			
 			Else
-				Sheets("Report").cells(ReportRow, repCurValCol) = cancel_value
+				If .cells(MasterReportRow, masFinalCol) <> "" And .cells(MasterReportRow, masInstallCol) <> "" then
+					Sheets("Report").cells(ReportRow, repCurValCol) = full_value
+				ElseIf .cells(MasterReportRow, masFinalCol) <> "" And .cells(MasterReportRow, masInstallCol) = "" then
+					Sheets("Report").cells(ReportRow, repCurValCol) = booster	
+				Else
+					Sheets("Report").cells(ReportRow, repCurValCol) = cancel_value
+				End If
 			End If
 		End If
 	End With
