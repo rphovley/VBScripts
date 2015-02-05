@@ -9,7 +9,7 @@
 
 
 	 'Collection KEYS'
-	Dim dJOBID, dKW, dSTATUS, dPERMITSTATUS, dALREADYPAID, dDATE, dFINAL, dINSTALL, dINSTALLDATE, dCANCELLED AS String
+	Dim dJOBID, dKW, dSTATUS, dPERMITSTATUS, dALREADYPAID, dDATE, dFINAL, dINSTALL, dINSTALLDATE, dCANCELLED, dACTUALPAY AS String
 	
 	Dim full_value as currency
 	dim booster as currency
@@ -54,8 +54,8 @@ Sub createEstimate()
 		Call check_structure(dataFromMasterReport, ReportRow, repDateCol, repOldNewCol, repkWCol, MasterReportRow, masCancelledCol)
 		
 		'set what was paid out in the commissions sheet'
-		'alreadyPaid = whatWasPaid(dataFromMasterReport.Item(dJOBID), commishWorkbook, boostRow)
-		dataFromMasterReport.Add alreadyPaid, dALREADYPAID
+		Set dataFromMasterReport = whatWasPaid(dataFromMasterReport ,dataFromMasterReport.Item(dJOBID), commishWorkbook, boostRow)
+		
 		
 		'print out what should be paid out in the Report Tab'
 	 	printData dataFromMasterReport, ReportRow
@@ -63,7 +63,6 @@ Sub createEstimate()
 		Call check_payments(ReportRow, repEstCol, repActCol, repCheckCol)
 	 	'In order to reset the values in a collection the values have to be removed first, this function does that'
 		Set dataFromMasterReport = refreshCollection(dataFromMasterReport)
-		dataFromMasterReport.Remove dALREADYPAID
 
 	 	MasterReportRow = MasterReportRow + 1
 	 	ReportRow       = ReportRow + 1
@@ -126,6 +125,7 @@ Function refreshCollection(ByRef dataFromMasterReport As Collection) As Collecti
 
 	Set refreshCollection = dataFromMasterReport
 End Function
+
 'Sub to print out data gathered into the Report Tab'
 Sub printData(ByRef dataFromMasterReport, ByVal ReportRow As Integer)
 	
@@ -136,6 +136,7 @@ Sub printData(ByRef dataFromMasterReport, ByVal ReportRow As Integer)
 		.Cells(ReportRow, repStatusCol).Value  = dataFromMasterReport.Item(dSTATUS)
 		.Cells(ReportRow, repPermitCol).Value  = dataFromMasterReport.Item(dPERMITSTATUS)
 		.Cells(ReportRow, repPaidOutCol).Value = dataFromMasterReport.Item(dALREADYPAID)
+		.Cells(ReportRow, repEstCol).Value = dataFromMasterReport.Item(dACTUALPAY)
 		' .Cells(ReportRow, repOldNewCol).Value = dataFromMasterReport.Item(dOLDNEw)
 		' .Cells(ReportRow, repEstCol).Value    = dataFromMasterReport.Item(dEST)
 		' .Cells(ReportRow, repActCol).Value    = dataFromMasterReport.Item(dACT)
@@ -250,7 +251,7 @@ Sub old_payout_structure(ByRef dataFromMasterReport As Collection, ByVal ReportR
 	End If
 
 	'Is it Cancelled?'
-	If isJobCancelled(dataFromMasterReport.Item(dPERMITSTATUS)) <> False Then
+	If Not isJobCancelled(dataFromMasterReport.Item(dPERMITSTATUS)) <> False Then
 	'Should this be a final payment die to install?'
 		If Abs(diffInstall) > 30 Then
 			'Should be at final payment'
@@ -293,10 +294,10 @@ Sub old_payout_structure(ByRef dataFromMasterReport As Collection, ByVal ReportR
 
 	Sheets("Report").cells(ReportRow, repCurValCol) = paymentAmount
 	
-
 End Sub
+
 'Function to return the amount that was paid out by Solar City for a specific JobID'
-Function whatWasPaid(ByVal jobID As String, ByVal Workbook As String, ByVal boostRow As Integer) As Double
+Function whatWasPaid(ByRef dataFromMasterReport As Collection, ByVal jobID As String, ByVal Workbook As String, ByVal boostRow As Integer) As Collection
 	'variables for tab names'
 	Dim firsts, seconds, finals, pos, neg, acc As String
 		firsts  = "1st_Payment"
@@ -329,39 +330,44 @@ Function whatWasPaid(ByVal jobID As String, ByVal Workbook As String, ByVal boos
 
 	'Row counter'
 	Dim currentRow As Integer
-	'value that will be returned'
-	Dim paymentAmount As Double
-	paymentAmount = 0
 	
 
 		'loops through each tab and gets the payment amount for the related jobID'
-		paymentAmount = tabLoop(Workbook, firsts, jobID, firstJobIDCol, firstPaymentCol, paymentAmount)
-		paymentAmount = tabLoop(Workbook, seconds, jobID, othJobIDCol, othPaymentCol, paymentAmount)
-		paymentAmount = tabLoop(Workbook, finals, jobID, othJobIDCol, othPaymentCol, paymentAmount)
-		paymentAmount = tabLoop(Workbook, pos, jobID, othJobIDCol, othPaymentCol, paymentAmount)
-		paymentAmount = tabLoop(Workbook, neg, jobID, othJobIDCol, othPaymentCol, paymentAmount)
-		paymentAmount = tabLoop(Workbook, acc, jobID, booJobIDCol, booPaymentCol, paymentAmount)
+		Set dataFromMasterReport = tabLoop(Workbook, firsts, jobID, firstJobIDCol, firstPaymentCol, firstPayDateCol, dataFromMasterReport)
+		Set dataFromMasterReport = tabLoop(Workbook, seconds, jobID, othJobIDCol, othPaymentCol, othPayDateCol, dataFromMasterReport)
+		Set dataFromMasterReport = tabLoop(Workbook, finals, jobID, othJobIDCol, othPaymentCol, othPayDateCol, dataFromMasterReport)
+		Set dataFromMasterReport = tabLoop(Workbook, pos, jobID, othJobIDCol, othPaymentCol, othPayDateCol, dataFromMasterReport)
+		Set dataFromMasterReport = tabLoop(Workbook, neg, jobID, othJobIDCol, othPaymentCol, othPayDateCol, dataFromMasterReport)
+		Set dataFromMasterReport = tabLoop(Workbook, acc, jobID, booJobIDCol, booPaymentCol, dataFromMasterReport)
 
-	whatWasPaid = paymentAmount
+	Set whatWasPaid = dataFromMasterReport
 
 End Function
 
 'loops through each tab and gets the payment amount for the related jobID'
-Function tabLoop(ByVal Workbook As String, ByVal SheetName As String,  jobID As String, ByVal jobIDCol As Integer, byVal paymentCol As Integer, byVal paymentAmount As Double) As Double
+Function tabLoop(ByVal Workbook As String, ByVal SheetName As String,  jobID As String, ByVal jobIDCol As Integer, byVal paymentCol As Integer, byVal paymentDateCol, ByRef dataFromMasterReport As Collection) As Collection
 	'Go through the Payment Tab and find any relevant payments'
 	Dim currentRow As Integer
 	currentRow = 1
 
+	Dim whatWasPaidOut, actualPayment As Double
+
 	With Workbooks(WorkbooK).Sheets(SheetName)
 		Do Until isEmpty(.Cells(currentRow, 1))
 			If .Cells(currentRow, jobIDCol).Value = jobID Then
-				paymentAmount = paymentAmount + .Cells(currentRow, paymentCol)
+				If .Cells(currentRow, paymentDateCol).Value < 42036 Then
+					whatWasPaidOut = whatWasPaidOut + .Cells(currentRow, paymentCol)
+				Else
+					actualPayment = actualPayment + .Cells(currentRow, paymentCol)
+				End If
 			End IF
 			currentRow = currentRow + 1
 		Loop
 	End With
 
-	tabLoop = paymentAmount
+	dataFromMasterReport.Add whatWasPaidOut dALREADYPAID
+	dataFromMasterReport.Add actualPayment dACTUALPAY
+	Set tabLoop = dataFromMasterReport
 End Function
 
 'function to convert a filepath to a fileName'
