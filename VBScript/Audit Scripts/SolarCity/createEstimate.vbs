@@ -197,18 +197,18 @@ Sub check_structure(ByRef dataFromMasterReport As Collection, ByVal ReportRow, B
 
         Else
             .Cells(ReportRow, repOldNewCol) = "New"
-            Call new_payout_structure (MasterReportRow, masFinalCol, masInstallCol, ReportRow, repCurValCol, kW, masCancelledCol)
+            Call new_payout_structure (dataFromMasterReport, MasterReportRow, masFinalCol, masInstallCol, ReportRow, repCurValCol, kW, masCancelledCol)
         End If
     End With
 End Sub
 
 'Sub for New Payout Structure
-Sub new_payout_structure(ByVal MasterReportRow, ByVal masFinalCol, ByVal masInstallCol, ByVal ReportRow, ByVal repCurValCol, ByVal kW, ByVal masCancelledCol)
+Sub new_payout_structure(ByRef dataFromMasterReport As Collection, ByVal MasterReportRow, ByVal masFinalCol, ByVal masInstallCol, ByVal ReportRow, ByVal repCurValCol, ByVal kW, ByVal masCancelledCol)
 		full_value = kW * 500 * 1.0
 		booster = kW * 500 * .5
 		cancel_value = 0
 	With Sheets("Master Report")
-		If isJobCancelled then
+		If isJobCancelled(dataFromMasterReport.Item(dPERMITSTATUS)) then
 			Sheets("Report").cells(ReportRow, repCurValCol) = cancel_value
 		Else
 			If .cells(MasterReportRow, masFinalCol) <> "" And .cells(MasterReportRow, masInstallCol) <> "" then
@@ -226,12 +226,11 @@ End Sub
 'Sub for Old payout structure
 Sub old_payout_structure(ByRef dataFromMasterReport As Collection, ByVal ReportRow As Integer)
 	Dim paymentAmount As Double
-	Dim todaysDate As Date
-	Dim diffClosed, diffInstall, dateCreated As Integer
+	Dim todaysDate, dateCreated, diffInstall  As Date
+	Dim diffClosed As Integer
 	Const MIN_DATE = #2/28/2014#
 	Const MAX_DATE = #5/1/2014#
 	todaysDate = Date()
-
 
 	'Days between created date (closed won) and todays date'
 	dateCreated = dataFromMasterReport.Item(dDATE)
