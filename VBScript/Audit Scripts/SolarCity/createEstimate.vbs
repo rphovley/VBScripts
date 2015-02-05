@@ -176,6 +176,7 @@ Sub initVar()
 	 dJOBID       = "jobID"
 	 dKW          = "kW"
 	 dSTATUS      = "Status"
+	 dPERMITSTATUS= "PermitStatus"
 	 dALREADYPAID = "AlreadyPaid"
 	 dDATE        = "Date"
 	 dFINAL       = "Final"
