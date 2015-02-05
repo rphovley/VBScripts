@@ -60,6 +60,7 @@ Sub createEstimate()
 		'print out what should be paid out in the Report Tab'
 	 	printData dataFromMasterReport, ReportRow
 		Call estimated_payment(ReportRow, repPaidOutCol, repCurValCol, repEstCol)
+		Call check_payments(ReportRow, repEstCol, repActCol, repCheckCol)
 	 	'In order to reset the values in a collection the values have to be removed first, this function does that'
 		Set dataFromMasterReport = refreshCollection(dataFromMasterReport)
 		dataFromMasterReport.Remove dALREADYPAID
