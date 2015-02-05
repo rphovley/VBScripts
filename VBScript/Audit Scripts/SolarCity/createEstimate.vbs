@@ -139,7 +139,7 @@ Sub printData(ByRef dataFromMasterReport, ByVal ReportRow As Integer)
 		.Cells(ReportRow, repStatusCol).Value  = dataFromMasterReport.Item(dSTATUS)
 		.Cells(ReportRow, repPermitCol).Value  = dataFromMasterReport.Item(dPERMITSTATUS)
 		.Cells(ReportRow, repPaidOutCol).Value = dataFromMasterReport.Item(dALREADYPAID)
-		.Cells(ReportRow, repEstCol).Value     = dataFromMasterReport.Item(dACTUALPAY)
+		.Cells(ReportRow, repActCol).Value     = dataFromMasterReport.Item(dACTUALPAY)
 		' .Cells(ReportRow, repOldNewCol).Value = dataFromMasterReport.Item(dOLDNEw)
 		' .Cells(ReportRow, repEstCol).Value    = dataFromMasterReport.Item(dEST)
 		' .Cells(ReportRow, repActCol).Value    = dataFromMasterReport.Item(dACT)
@@ -374,7 +374,7 @@ Function whatWasPaid(ByRef dataFromMasterReport As Collection, ByVal jobID As St
 
 		dataFromMasterReport.Add whatWasPaidOut, dALREADYPAID
 		dataFromMasterReport.Add actualPayment, dACTUALPAY
-		
+
 	Set whatWasPaid = dataFromMasterReport
 
 End Function
@@ -384,13 +384,13 @@ Function tabLoop(ByVal Workbook As String, ByVal SheetName As String,  jobID As 
 	'Go through the Payment Tab and find any relevant payments'
 	Dim currentRow As Integer
 	currentRow = 1
-
+	Const PAYOUTDATE = #2/1/2015#
 	Dim whatWasPaidOut, actualPayment As Double
 
 	With Workbooks(WorkbooK).Sheets(SheetName)
 		Do Until isEmpty(.Cells(currentRow, 1))
 			If .Cells(currentRow, jobIDCol).Value = jobID Then
-				If .Cells(currentRow, paymentDateCol).Value < 42036 Then
+				If .Cells(currentRow, paymentDateCol).Value < PAYOUTDATE Then
 					whatWasPaidOut = whatWasPaidOut + .Cells(currentRow, paymentCol)
 				Else
 					actualPayment = actualPayment + .Cells(currentRow, paymentCol)
