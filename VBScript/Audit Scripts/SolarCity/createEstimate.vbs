@@ -63,9 +63,7 @@ Sub createEstimate()
 		Call check_payments(ReportRow, repEstCol, repActCol, repCheckCol)
 	 	'In order to reset the values in a collection the values have to be removed first, this function does that'
 		Set dataFromMasterReport = refreshCollection(dataFromMasterReport)
-
-		dataFromMasterReport.Remove dALREADYPAID
-		dataFromMasterReport.Remove dACTUALPAY
+		
 
 	 	MasterReportRow = MasterReportRow + 1
 	 	ReportRow       = ReportRow + 1
@@ -125,6 +123,8 @@ Function refreshCollection(ByRef dataFromMasterReport As Collection) As Collecti
     dataFromMasterReport.Remove dCANCELLED
     dataFromMasterReport.Remove dINSTALLDATE
     dataFromMasterReport.Remove dINSTALL
+    dataFromMasterReport.Remove dALREADYPAID
+	dataFromMasterReport.Remove dACTUALPAY
 
 	Set refreshCollection = dataFromMasterReport
 End Function
@@ -333,16 +333,48 @@ Function whatWasPaid(ByRef dataFromMasterReport As Collection, ByVal jobID As St
 
 	'Row counter'
 	Dim currentRow As Integer
-	
+	Dim whatWasPaidOut, actualPayment As Double
 
 		'loops through each tab and gets the payment amount for the related jobID'
 		Set dataFromMasterReport = tabLoop(Workbook, firsts, jobID, firstJobIDCol, firstPaymentCol, firstPayDateCol, dataFromMasterReport)
-		Set dataFromMasterReport = tabLoop(Workbook, seconds, jobID, othJobIDCol, othPaymentCol, othPayDateCol, dataFromMasterReport)
-		Set dataFromMasterReport = tabLoop(Workbook, finals, jobID, othJobIDCol, othPaymentCol, othPayDateCol, dataFromMasterReport)
-		Set dataFromMasterReport = tabLoop(Workbook, pos, jobID, othJobIDCol, othPaymentCol, othPayDateCol, dataFromMasterReport)
-		Set dataFromMasterReport = tabLoop(Workbook, neg, jobID, othJobIDCol, othPaymentCol, othPayDateCol, dataFromMasterReport)
-		Set dataFromMasterReport = tabLoop(Workbook, acc, jobID, booJobIDCol, booPaymentCol, 9, dataFromMasterReport)
+		whatWasPaidOut = whatWasPaidOut + dataFromMasterReport.Item(dALREADYPAID)
+		actualPayment = actualPayment + dataFromMasterReport.Item(dACTUALPAY)
+		dataFromMasterReport.Remove dALREADYPAID
+		dataFromMasterReport.Remove dACTUALPAY
 
+		Set dataFromMasterReport = tabLoop(Workbook, seconds, jobID, othJobIDCol, othPaymentCol, othPayDateCol, dataFromMasterReport)
+		whatWasPaidOut = whatWasPaidOut + dataFromMasterReport.Item(dALREADYPAID)
+		actualPayment = actualPayment + dataFromMasterReport.Item(dACTUALPAY)
+		dataFromMasterReport.Remove dALREADYPAID
+		dataFromMasterReport.Remove dACTUALPAY
+
+		Set dataFromMasterReport = tabLoop(Workbook, finals, jobID, othJobIDCol, othPaymentCol, othPayDateCol, dataFromMasterReport)
+		whatWasPaidOut = whatWasPaidOut + dataFromMasterReport.Item(dALREADYPAID)
+		actualPayment = actualPayment + dataFromMasterReport.Item(dACTUALPAY)
+		dataFromMasterReport.Remove dALREADYPAID
+		dataFromMasterReport.Remove dACTUALPAY
+
+		Set dataFromMasterReport = tabLoop(Workbook, pos, jobID, othJobIDCol, othPaymentCol, othPayDateCol, dataFromMasterReport)
+		whatWasPaidOut = whatWasPaidOut + dataFromMasterReport.Item(dALREADYPAID)
+		actualPayment = actualPayment + dataFromMasterReport.Item(dACTUALPAY)
+		dataFromMasterReport.Remove dALREADYPAID
+		dataFromMasterReport.Remove dACTUALPAY
+
+		Set dataFromMasterReport = tabLoop(Workbook, neg, jobID, othJobIDCol, othPaymentCol, othPayDateCol, dataFromMasterReport)
+		whatWasPaidOut = whatWasPaidOut + dataFromMasterReport.Item(dALREADYPAID)
+		actualPayment = actualPayment + dataFromMasterReport.Item(dACTUALPAY)
+		dataFromMasterReport.Remove dALREADYPAID
+		dataFromMasterReport.Remove dACTUALPAY
+
+		Set dataFromMasterReport = tabLoop(Workbook, acc, jobID, booJobIDCol, booPaymentCol, 9, dataFromMasterReport)
+		whatWasPaidOut = whatWasPaidOut + dataFromMasterReport.Item(dALREADYPAID)
+		actualPayment = actualPayment + dataFromMasterReport.Item(dACTUALPAY)
+		dataFromMasterReport.Remove dALREADYPAID
+		dataFromMasterReport.Remove dACTUALPAY
+
+		dataFromMasterReport.Add whatWasPaidOut, dALREADYPAID
+		dataFromMasterReport.Add actualPayment, dACTUALPAY
+		
 	Set whatWasPaid = dataFromMasterReport
 
 End Function
