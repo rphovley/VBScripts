@@ -4,12 +4,12 @@
 	 repActCol, repCheckCol, repPermitCol As Integer
 
 	'Columns for the "Master Report" Tab'
-	Dim masJobIdCol, masDateCol, maskWCol, masStatusCol, _
+	Dim masJobIdCol, masDateCol, maskWCol, masStatusCol,  _
 	 masFinalCol, masInstallCol, masInstallDateCol, masCancelledCol, masPermitCol As Integer
 
 
 	 'Collection KEYS'
-	Dim dJOBID, dKW, dSTATUS, dPERMITSTATUS, dALREADYPAID, dDATE, dFINAL, dINSTALL, dINSTALLDATE, dCANCELLED, dACTUALPAY AS String
+	Dim dJOBID, dKW, dSTATUS, dPERMITSTATUS, dALREADYPAID, dDATE, dFINAL, dINSTALL, dINSTALLDATE, dCANCELLED, dACTUALPAY, dCOMMISHFACTOR AS String
 	
 	Dim full_value as currency
 	dim booster as currency
@@ -125,6 +125,7 @@ Function refreshCollection(ByRef dataFromMasterReport As Collection) As Collecti
     dataFromMasterReport.Remove dINSTALL
     dataFromMasterReport.Remove dALREADYPAID
 	dataFromMasterReport.Remove dACTUALPAY
+	dataFromMasterReport.Remove dCOMMISHFACTOR
 
 	Set refreshCollection = dataFromMasterReport
 End Function
@@ -188,14 +189,18 @@ Sub initVar()
 	 dINSTALL     = "Installed"
 	 dINSTALLDATE = "dateInstalled"
 	 dCANCELLED   = "Cancelled"
+	 dACTUALPAY   = "Actual Pay"
+	 dCOMMISHFACTOR = "Commision Factor"
 
 End Sub
 
 'Checks which payout structure this account falls under
 Sub check_structure(ByRef dataFromMasterReport As Collection, ByVal ReportRow, ByVal repDateCol, ByVal repOldNewCol,ByVal kWCol, ByVal MasterReportRow, ByVal masCancelledCol)
+    Const PAYOUT_CHANGE = #12/1/2014#
+
     With Sheets("Report")
 		kW = .cells(ReportRow, repkWCol).Value
-        If .Cells(ReportRow, repDateCol) < 41974 Then
+        If .Cells(ReportRow, repDateCol).Value < PAYOUT_CHANGE Then
             .Cells(ReportRow, repOldNewCol) = "Old"
 
             Call old_payout_structure(dataFromMasterReport, reportRow)
@@ -211,8 +216,8 @@ End Sub
 
 'Sub for New Payout Structure
 Sub new_payout_structure(ByVal MasterReportRow, ByVal masFinalCol, ByVal masInstallCol, ByVal ReportRow, ByVal repCurValCol, ByVal kW, ByVal masCancelledCol, ByRef dataFromMasterReport as collection)
-		full_value = kW * 500 * 1.0
-		booster = kW * 500 * .5
+		full_value = kW * 500 * 1.0 * dataFromMasterReport.Item(dCOMMISHFACTOR)
+		booster = kW * 500 * .5 * dataFromMasterReport.Item(dCOMMISHFACTOR)
 		cancel_value = 0
 	With Sheets("Master Report")
 		If isJobCancelled(dataFromMasterReport.Item(dPERMITSTATUS)) then
@@ -311,20 +316,22 @@ Function whatWasPaid(ByRef dataFromMasterReport As Collection, ByVal jobID As St
 		acc     = "Accounting Summary"
 
 	'Columns First Payment Tab'
-	Dim firstDateCol, firstJobIDCol, firstKWCol, firstPaymentCol, firstPayDateCol As Integer
+	Dim firstDateCol, firstJobIDCol, firstKWCol, firstPaymentCol, firstPayDateCol, firstCommishCol As Integer
 		firstDateCol    = 3
 		firstJobIDCol   = 4
 		firstKWCol      = 6
 		firstPaymentCol = 21
 		firstPayDateCol = 22
+		firstCommishCol = 25
 
 	'Columns Other Payment Tabs'
-	Dim othDateCol, othJobIDCol, othKWCol, othPaymentCol, othPayDateCol As Integer
+	Dim othDateCol, othJobIDCol, othKWCol, othPaymentCol, othPayDateCol, othCommishCol As Integer
 		othDateCol    = 3
 		othJobIDCol   = 4
 		othKWCol      = 7
 		othPaymentCol = 22
 		othPayDateCol = 23
+		othCommishCol = 26
 
 	'Boost Payment Columns'
 	Dim booJobIDCol, booPaymentCol As Integer
@@ -333,68 +340,83 @@ Function whatWasPaid(ByRef dataFromMasterReport As Collection, ByVal jobID As St
 
 	'Row counter'
 	Dim currentRow As Integer
-	Dim whatWasPaidOut, actualPayment As Double
+	Dim whatWasPaidOut, actualPayment, commishFactor As Double
 
 		'loops through each tab and gets the payment amount for the related jobID'
-		Set dataFromMasterReport = tabLoop(Workbook, firsts, jobID, firstJobIDCol, firstPaymentCol, firstPayDateCol, dataFromMasterReport)
+		Set dataFromMasterReport = tabLoop(Workbook, firsts, jobID, firstJobIDCol, firstPaymentCol, firstPayDateCol, firstCommishCol, dataFromMasterReport)
 		whatWasPaidOut = whatWasPaidOut + dataFromMasterReport.Item(dALREADYPAID)
 		actualPayment = actualPayment + dataFromMasterReport.Item(dACTUALPAY)
+		commishFactor = dataFromMasterReport.Item(dCOMMISHFACTOR)
 		dataFromMasterReport.Remove dALREADYPAID
 		dataFromMasterReport.Remove dACTUALPAY
+		dataFromMasterReport.Remove dCOMMISHFACTOR
 
-		Set dataFromMasterReport = tabLoop(Workbook, seconds, jobID, othJobIDCol, othPaymentCol, othPayDateCol, dataFromMasterReport)
+		Set dataFromMasterReport = tabLoop(Workbook, seconds, jobID, othJobIDCol, othPaymentCol, othPayDateCol, othCommishCol, dataFromMasterReport)
 		whatWasPaidOut = whatWasPaidOut + dataFromMasterReport.Item(dALREADYPAID)
 		actualPayment = actualPayment + dataFromMasterReport.Item(dACTUALPAY)
+		commishFactor = dataFromMasterReport.Item(dCOMMISHFACTOR)
 		dataFromMasterReport.Remove dALREADYPAID
 		dataFromMasterReport.Remove dACTUALPAY
+		dataFromMasterReport.Remove dCOMMISHFACTOR
 
-		Set dataFromMasterReport = tabLoop(Workbook, finals, jobID, othJobIDCol, othPaymentCol, othPayDateCol, dataFromMasterReport)
+		Set dataFromMasterReport = tabLoop(Workbook, finals, jobID, othJobIDCol, othPaymentCol, othPayDateCol, othCommishCol, dataFromMasterReport)
 		whatWasPaidOut = whatWasPaidOut + dataFromMasterReport.Item(dALREADYPAID)
 		actualPayment = actualPayment + dataFromMasterReport.Item(dACTUALPAY)
+		commishFactor = dataFromMasterReport.Item(dCOMMISHFACTOR)
 		dataFromMasterReport.Remove dALREADYPAID
 		dataFromMasterReport.Remove dACTUALPAY
+		dataFromMasterReport.Remove dCOMMISHFACTOR
 
-		Set dataFromMasterReport = tabLoop(Workbook, pos, jobID, othJobIDCol, othPaymentCol, othPayDateCol, dataFromMasterReport)
+		Set dataFromMasterReport = tabLoop(Workbook, pos, jobID, othJobIDCol, othPaymentCol, othPayDateCol, othCommishCol, dataFromMasterReport)
 		whatWasPaidOut = whatWasPaidOut + dataFromMasterReport.Item(dALREADYPAID)
 		actualPayment = actualPayment + dataFromMasterReport.Item(dACTUALPAY)
+		commishFactor = dataFromMasterReport.Item(dCOMMISHFACTOR)
 		dataFromMasterReport.Remove dALREADYPAID
 		dataFromMasterReport.Remove dACTUALPAY
+		dataFromMasterReport.Remove dCOMMISHFACTOR
 
-		Set dataFromMasterReport = tabLoop(Workbook, neg, jobID, othJobIDCol, othPaymentCol, othPayDateCol, dataFromMasterReport)
+		Set dataFromMasterReport = tabLoop(Workbook, neg, jobID, othJobIDCol, othPaymentCol, othPayDateCol, othCommishCol, dataFromMasterReport)
 		whatWasPaidOut = whatWasPaidOut + dataFromMasterReport.Item(dALREADYPAID)
 		actualPayment = actualPayment + dataFromMasterReport.Item(dACTUALPAY)
+		commishFactor = dataFromMasterReport.Item(dCOMMISHFACTOR)
 		dataFromMasterReport.Remove dALREADYPAID
 		dataFromMasterReport.Remove dACTUALPAY
+		dataFromMasterReport.Remove dCOMMISHFACTOR
 
-		Set dataFromMasterReport = tabLoop(Workbook, acc, jobID, booJobIDCol, booPaymentCol, 9, dataFromMasterReport)
+		Set dataFromMasterReport = tabLoop(Workbook, acc, jobID, booJobIDCol, booPaymentCol, 9, 100, dataFromMasterReport)
 		whatWasPaidOut = whatWasPaidOut + dataFromMasterReport.Item(dALREADYPAID)
 		actualPayment = actualPayment + dataFromMasterReport.Item(dACTUALPAY)
+		commishFactor = dataFromMasterReport.Item(dCOMMISHFACTOR)
 		dataFromMasterReport.Remove dALREADYPAID
 		dataFromMasterReport.Remove dACTUALPAY
+		dataFromMasterReport.Remove dCOMMISHFACTOR
 
 		dataFromMasterReport.Add whatWasPaidOut, dALREADYPAID
 		dataFromMasterReport.Add actualPayment, dACTUALPAY
+		dataFromMasterReport.Add commishFactor, dCOMMISHFACTOR
 
 	Set whatWasPaid = dataFromMasterReport
 
 End Function
 
 'loops through each tab and gets the payment amount for the related jobID'
-Function tabLoop(ByVal Workbook As String, ByVal SheetName As String,  jobID As String, ByVal jobIDCol As Integer, byVal paymentCol As Integer, byVal paymentDateCol, ByRef dataFromMasterReport As Collection) As Collection
+Function tabLoop(ByVal Workbook As String, ByVal SheetName As String,  jobID As String, ByVal jobIDCol As Integer, byVal paymentCol As Integer, byVal paymentDateCol, ByVal comFactorCol As Integer, ByRef dataFromMasterReport As Collection) As Collection
 	'Go through the Payment Tab and find any relevant payments'
 	Dim currentRow As Integer
 	currentRow = 1
 	Const PAYOUTDATE = #2/1/2015#
-	Dim whatWasPaidOut, actualPayment As Double
+	Dim whatWasPaidOut, actualPayment, commishFactor As Double
 
 	With Workbooks(WorkbooK).Sheets(SheetName)
 		Do Until isEmpty(.Cells(currentRow, 1))
 			If .Cells(currentRow, jobIDCol).Value = jobID Then
+				commishFactor = .Cells(currentRow, comFactorCol)
 				If .Cells(currentRow, paymentDateCol).Value < PAYOUTDATE Then
 					whatWasPaidOut = whatWasPaidOut + .Cells(currentRow, paymentCol)
 				Else
 					actualPayment = actualPayment + .Cells(currentRow, paymentCol)
 				End If
+			Else
 			End IF
 			currentRow = currentRow + 1
 		Loop
@@ -402,6 +424,7 @@ Function tabLoop(ByVal Workbook As String, ByVal SheetName As String,  jobID As 
 
 	dataFromMasterReport.Add whatWasPaidOut, dALREADYPAID
 	dataFromMasterReport.Add actualPayment, dACTUALPAY
+	dataFromMasterReport.Add commishFactor, dCOMMISHFACTOR
 
 	Set tabLoop = dataFromMasterReport
 End Function
