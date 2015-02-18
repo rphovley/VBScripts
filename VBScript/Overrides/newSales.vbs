@@ -1,12 +1,12 @@
-'RUN MODULE 8 TO REVERSE FIRST AND LAST NAME
+'RUN supportingScript "firstName" TO REVERSE FIRST AND LAST NAME
 'OF COLUMN A IN THE REPORT AND SORT REPORT
 'BY createdOn
 Sub newSales()
-'RUN MODULE 8 TO REVERSE FIRST AND LAST NAME
+'RUN supportingScript "firstName" TO REVERSE FIRST AND LAST NAME
 'OF COLUMN A IN THE REPORT AND SORT REPORT BY
 'createdOn
 
-'CHECK OVERRIDEMONTH AND MONTHNUMBERPREV
+'CHECK OVERRIDEMONTH AND monthNumber
 
 
     'report columns'
@@ -39,9 +39,9 @@ Sub newSales()
     repName = ""
 
     'CHECK THESE
-    overrideMonth = "December"
-    overrideYear = "2014"
-    monthNumberPrev = 12
+    overrideMonth = "x"
+    overrideYear = "x"
+    monthNumber = 0
     'CHECK THESE
 
     i = 2
@@ -76,7 +76,7 @@ Sub newSales()
             x = 1
             isSale = False
 
-                If Month(report.Cells(i, theDateCol).Value) = monthNumberPrev Then
+                If Month(report.Cells(i, theDateCol).Value) = monthNumber Then
                     If report.Cells(i, StatusCol).Value <> cancel And _
                         report.Cells(i, StatusCol).Value <> Sales And _
                         report.Cells(i, StatusCol).Value <> cancelled Then
@@ -110,7 +110,7 @@ Sub newSales()
                                 'Reason
                                 histSheet.Cells(histRow, 6).Value = "New Sale"
                                 'Entry Date
-                                histSheet.Cells(histRow, 7).Value = overrideMonth
+                                histSheet.Cells(histRow, 7).Value = overrideMonth & " " & overrideYear
 
                                 On Error Resume Next
                                 x = WorksheetFunction.Match(repName, repRef.Range("A:A"), 0)
