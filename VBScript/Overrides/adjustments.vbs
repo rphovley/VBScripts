@@ -525,7 +525,7 @@ Function toHist(ByVal i As Integer, ByVal repName As String, ByVal Reason As Str
             histSheet.Cells(histRow, 6).Value = Reason
               'Entry Date
             histSheet.Cells(histRow, 7).Value = overrideMonth & " " & overrideYear
-      End If
+        End If
             toHist = False
 End Function
 
