@@ -1,0 +1,21 @@
+Weekly Payment Pseudocode:
+
+For: Wayne's payment history report
+
+WaynesPayDateAudit()
+	Needs to cycle through the reps and add up their payments as a breakdown by week and then print out these sums to a 'report' sheet.
+	Will include:
+		deposit_date ***the same as end_date***
+		end_date     ***this is pulled from the date list***
+		rep_id       ***pulled from rep id list***
+		payment_amount
+
+	Print format:
+		Date         '''#enddate#'''
+		rep_id
+		payment_amount
+
+	Calculations:
+		payment_amount needs to reset at 0.00 for each rep and each week
+		rep_id will be found from a rep_id list
+		

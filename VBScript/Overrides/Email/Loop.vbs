@@ -14,12 +14,14 @@ Sub WorksheetLoop()
       repName = Worksheets(2).Cells(I - 2, 1).Value
       repEmail = Worksheets(2).Cells(I - 2, 2).Value
       
+      MsgBox ActiveWorkbook.Worksheets(I).Name & " " & repEmail
+
       Worksheets(I).Activate
-      Mail_ActiveSheet repName, repEmail
+      EmailReps repName, repEmail
       ' Insert your code here.
       ' The following line shows how to reference a sheet within
       ' the loop by displaying the worksheet name in a dialog box.
-      MsgBox ActiveWorkbook.Worksheets(I).Name
+      
 
    Next I
 
