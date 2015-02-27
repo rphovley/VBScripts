@@ -41,12 +41,26 @@ End Sub
 'Get/Set Methods IsDocSigned booleans
 Public Property Get IsDocSigned() As Date
     IsDocSigned = pIsDocSigned
-End Property
 
-Public 
+Public Property Let IsDocSigned(value As Date)
+    If value = "Y"
+    	pIsDocSigned = True
+    Else
+    	pIsDocSigned = False
+    End IF
+End Property
+ 
 'Get/Set Methods IsFinalContract booleans
 Public Property Get IsFinalContract() As Date
     IsInstall = pIsInstall
+End Property
+
+Public Property Let IsFinalContract(value As Date)
+    If value = "Y"
+    	pIsFinalContract = True
+    Else
+    	pIsFinalContract = False
+    End If
 End Property
 
 'Get/Set Methods IsCancelled booleans
@@ -54,6 +68,24 @@ Public Property Get IsCancelled() As Date
     IsInstall = pIsInstall
 End Property
 
+
+Public Sub setIsCancelled()
+	Dim isArray As Variant
+    isArray = Array("Customer Uncertain", "Customer Unresponsive", _
+        "Job Disqualified", "On Hold")
+    
+    For Each permitStatus In isArray
+    
+    	isJobCancelled = False
+
+        If permitStatus = Me.SubStatus Then
+            
+            isJobCancelled = True
+            Exit For
+
+        End If
+    Next permitStatus
+End Sub
 
 'Get/Let Methods
 Public Property Get CreatedDate() As Date
