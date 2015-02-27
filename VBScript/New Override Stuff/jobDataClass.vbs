@@ -10,12 +10,12 @@ Private pCreatedDate As Date
 
 
 'Get/Let Methods
-Public Property Get createdDate() As Date
+Public Property Get CreatedDate() As Date
     createdDate = pCreatedDate
 End Property
 
-Public Property Let createdDate(value As Date)
-    pCreatedDate = createdDate
+Public Property Let CreatedDate(value As Date)
+    pCreatedDate = value
 End Property
 
 Public Property Get RepID() As Integer
