@@ -7,11 +7,16 @@ Private pkW As Double
 Private pAmount As Currency
 Private pRepID As Integer
 Private pCreatedDate As Date
+Private pIsInstall, pIsDocSigned, pIsFinalContract, pIsCancelled As Boolean
 
+'Get Methods booleans
+Public Property Get IsInstall() As Date
+    createdDate = pCreatedDate
+End Property
 
 'Get/Let Methods
 Public Property Get CreatedDate() As Date
-    createdDate = pCreatedDate
+    CreatedDate = pCreatedDate
 End Property
 
 Public Property Let CreatedDate(value As Date)
@@ -89,3 +94,9 @@ End Property
 Public Property Let RepEmail(value As String)
     pRepEmail = value
 End Property
+
+''''''''''''''''''''''''METHODS''''''''''''''''''''''
+Public Sub isInstall()
+    
+    
+End Sub
