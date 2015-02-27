@@ -6,15 +6,17 @@ Sub getFromMaster()
 
 	''''''''''''''''''''''''''''''Columns''''''''''''''''''''''
 	Dim customerCol, jobCol, kWCol, statusCol, subStatusCol, _
-	    createdDateCol, repEmailCol As Integer
+	    createdDateCol, repEmailCol, isDocSignedCol, isFinalContractCol As Integer
 
-	    customerCol    = 1   
-	    jobCol         = 2
-	    kWCol          = 3
-	    statusCol      = 4
-	    subStatusCol   = 5
-	    createdDateCol = 7
-	    repEmailCol    = 17
+	    customerCol        = 1   
+	    jobCol             = 2
+	    kWCol              = 3
+	    statusCol          = 4
+	    subStatusCol       = 5
+	    createdDateCol     = 7
+	    repEmailCol        = 17
+	    isDocSignedCol     = 18
+	    isFinalContractCol = 19
 
 	''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
 		Dim workBookName As String
@@ -49,14 +51,17 @@ Sub getFromMaster()
 			With inputDataSheet
 				'Get data from sheet and pass it to new Data object'
 				Set currentRep = New jobDataClass
-					currentRep.Customer    = .Cells(inputRow, customerCol).Value
-					currentRep.JobID       = .Cells(inputRow, jobCol).Value
-					currentRep.kW          = .Cells(inputRow, kWCol).Value
-					currentRep.Status      = .Cells(inputRow, statusCol).Value 
-					currentRep.SubStatus   = .Cells(inputRow, subStatusCol).Value
-					currentRep.CreatedDate = .Cells(inputRow, createdDateCol).Value
-					currentRep.RepEmail    = .Cells(inputRow, repEmailCol).Value
-
+					currentRep.Customer        = .Cells(inputRow, customerCol).Value
+					currentRep.JobID           = .Cells(inputRow, jobCol).Value
+					currentRep.kW              = .Cells(inputRow, kWCol).Value
+					currentRep.Status          = .Cells(inputRow, statusCol).Value 
+					currentRep.SubStatus       = .Cells(inputRow, subStatusCol).Value
+					currentRep.CreatedDate     = .Cells(inputRow, createdDateCol).Value
+					currentRep.RepEmail        = .Cells(inputRow, repEmailCol).Value
+					currentRep.isDocSigned     = .Cells(inputRow, isDocSignedCol).Value
+					currentRep.isFInalContract = .Cells(inputRow, isFinalContractCol).Value
+					currentRep.setIsInstall
+					currentRep.setIsCancelled
 			End With
 
 			Set inputData(inputRow - 2) = currentRep
@@ -72,6 +77,11 @@ Sub getFromMaster()
 					.Cells(inputRow, 5).Value = inputData(i).Status
 					.Cells(inputRow, 6).Value = inputData(i).SubStatus 
 					.Cells(inputRow, 7).Value = inputData(i).RepEmail
+					.Cells(inputRow, 8).Value = inputData(i).isDocSigned
+					.Cells(inputRow, 9).Value = inputData(i).isFinalContract
+					.Cells(inputRow, 10).Value = inputData(i).isInstall
+					.Cells(inputRow, 11).Value = inputData(i).isCancelled
+
 			End With
 		Next i
 
