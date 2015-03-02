@@ -13,10 +13,10 @@ Sub getFromMaster()
 	    kWCol              = 3
 	    statusCol          = 4
 	    subStatusCol       = 5
-	    createdDateCol     = 7
-	    repEmailCol        = 17
-	    isDocSignedCol     = 18
-	    isFinalContractCol = 19
+	    createdDateCol     = 6
+	    repEmailCol        = 9
+	    isDocSignedCol     = 7
+	    isFinalContractCol = 8
 
 	''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
 		Dim workBookName As String
@@ -34,9 +34,9 @@ Sub getFromMaster()
 		printRow = 2
 
 	'''''''''''''''''''''''''''''Input Object''''''''''''''''''''''
-		Dim inputData() As jobDataClass
-		Dim currentRep  As jobDataClass
-		Dim printRep    As jobDataClass
+		Dim inputData() As cJobData
+		Dim currentRep  As cJobData
+		Dim printRep    As cJobData
 
 	'''''''''''''''''''''''''''''Data Size'''''''''''''''''''''''''
 		Dim inputDataSize As Long
@@ -50,7 +50,7 @@ Sub getFromMaster()
 		For inputRow = 2 To inputDataSize
 			With inputDataSheet
 				'Get data from sheet and pass it to new Data object'
-				Set currentRep = New jobDataClass
+				Set currentRep = New cJobData
 					currentRep.Customer        = .Cells(inputRow, customerCol).Value
 					currentRep.JobID           = .Cells(inputRow, jobCol).Value
 					currentRep.kW              = .Cells(inputRow, kWCol).Value
@@ -58,8 +58,8 @@ Sub getFromMaster()
 					currentRep.SubStatus       = .Cells(inputRow, subStatusCol).Value
 					currentRep.CreatedDate     = .Cells(inputRow, createdDateCol).Value
 					currentRep.RepEmail        = .Cells(inputRow, repEmailCol).Value
-					currentRep.isDocSigned     = .Cells(inputRow, isDocSignedCol).Value
-					currentRep.isFInalContract = .Cells(inputRow, isFinalContractCol).Value
+					currentRep.setIsDocSigned(.Cells(inputRow, isDocSignedCol).Value)
+					currentRep.setIsFInalContract(.Cells(inputRow, isFinalContractCol).Value)
 					currentRep.setIsInstall
 					currentRep.setIsCancelled
 			End With
@@ -70,17 +70,17 @@ Sub getFromMaster()
 		For i = 0 To inputDataSize
 
 			With printSheet
-					.Cells(inputRow, 1).Value = inputData(i).Customer
-					.Cells(inputRow, 2).Value = inputData(i).JobID  
-					.Cells(inputRow, 3).Value = inputData(i).kW 
-					.Cells(inputRow, 4).Value = inputData(i).CreatedDate 
-					.Cells(inputRow, 5).Value = inputData(i).Status
-					.Cells(inputRow, 6).Value = inputData(i).SubStatus 
-					.Cells(inputRow, 7).Value = inputData(i).RepEmail
-					.Cells(inputRow, 8).Value = inputData(i).isDocSigned
-					.Cells(inputRow, 9).Value = inputData(i).isFinalContract
-					.Cells(inputRow, 10).Value = inputData(i).isInstall
-					.Cells(inputRow, 11).Value = inputData(i).isCancelled
+					.Cells(i + 2, 1).Value = inputData(i).Customer
+					.Cells(i + 2, 2).Value = inputData(i).JobID  
+					.Cells(i + 2, 3).Value = inputData(i).kW 
+					.Cells(i + 2, 4).Value = inputData(i).CreatedDate 
+					.Cells(i + 2, 5).Value = inputData(i).Status
+					.Cells(i + 2, 6).Value = inputData(i).SubStatus 
+					.Cells(i + 2, 7).Value = inputData(i).RepEmail
+					.Cells(i + 2, 8).Value = inputData(i).isDocSigned
+					.Cells(i + 2, 9).Value = inputData(i).isFinalContract
+					.Cells(i + 2, 10).Value = inputData(i).isInstall
+					.Cells(i + 2, 11).Value = inputData(i).isCancelled
 
 			End With
 		Next i

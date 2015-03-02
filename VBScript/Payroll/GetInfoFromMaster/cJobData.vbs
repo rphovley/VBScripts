@@ -9,8 +9,13 @@ Private pRepID As Integer
 Private pCreatedDate As Date
 Private pIsInstall, pIsDocSigned, pIsFinalContract, pIsCancelled As Boolean
 
+
 'Get/Set Methods IsInstall booleans
-Public Property Get IsInstall() As Date
+Public Property Let IsInstall(value As Boolean)
+    pIsInstall = value
+End Property
+
+Public Property Get IsInstall() As Boolean
     IsInstall = pIsInstall
 End Property
 
@@ -39,32 +44,45 @@ Public Sub setIsInstall()
 End Sub
 
 'Get/Set Methods IsDocSigned booleans
-Public Property Get IsDocSigned() As Date
-    IsDocSigned = pIsDocSigned
+Public Property Let IsDocSigned(value As Boolean)
+    pIsDocSigned = value
+End Property
 
-Public Property Let IsDocSigned(value As Date)
-    If value = "Y"
+Public Sub setIsDocSigned(ByVal value As String)
+    If UCase(value) = "Y" Then
     	pIsDocSigned = True
     Else
     	pIsDocSigned = False
     End IF
-End Property
- 
-'Get/Set Methods IsFinalContract booleans
-Public Property Get IsFinalContract() As Date
-    IsInstall = pIsInstall
+End Sub
+
+Public Property Get IsDocSigned() As Boolean
+    IsDocSigned = pIsDocSigned
 End Property
 
-Public Property Let IsFinalContract(value As Date)
-    If value = "Y"
+'Get/Set Methods IsFinalContract booleans
+Public Property Let IsFinalContract(value As Boolean)
+    pIsFinalContract = value
+End Property
+
+Public Sub setIsFinalContract(ByVal value As String)
+    If UCase(value) = "Y" Then
     	pIsFinalContract = True
     Else
     	pIsFinalContract = False
-    End If
-End Property
+    End IF
+End Sub
+
+Public Property Get IsFinalContract() As Boolean
+    IsFinalContract = pIsFinalContract
+End Sub
 
 'Get/Set Methods IsCancelled booleans
-Public Property Get IsCancelled() As Date
+Public Property Let IsCancelled(value As Boolean)
+    pIsCancelled = value
+End Property
+
+Public Property Get IsCancelled() As Boolean
     IsInstall = pIsInstall
 End Property
 
@@ -73,18 +91,21 @@ Public Sub setIsCancelled()
 	Dim isArray As Variant
     isArray = Array("Customer Uncertain", "Customer Unresponsive", _
         "Job Disqualified", "On Hold")
-    
-    For Each permitStatus In isArray
-    
-    	isJobCancelled = False
 
-        If permitStatus = Me.SubStatus Then
-            
-            isJobCancelled = True
-            Exit For
+    If Me.Status = "Cancelled" Then
+    	pIsCancelled = True
+    Else
 
-        End If
-    Next permitStatus
+	    For Each permitStatus In isArray
+
+	        If permitStatus = Me.SubStatus Then
+	            
+	            pIsCancelled = True
+	            Exit For
+
+	        End If
+	    Next permitStatus
+	End If
 End Sub
 
 'Get/Let Methods
