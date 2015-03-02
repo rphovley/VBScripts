@@ -3,91 +3,103 @@ Sub getFromMaster()
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''INITIALIZE VARIABLES''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ''''''''''''''''''''''''''''''Columns''''''''''''''''''''''
+    Dim customerCol, jobCol, kWCol, statusCol, subStatusCol, _
+        createdDateCol, repEmailCol, isDocSignedCol, isFinalContractCol As Integer
 
-	''''''''''''''''''''''''''''''Columns''''''''''''''''''''''
-	Dim customerCol, jobCol, kWCol, statusCol, subStatusCol, _
-	    createdDateCol, repEmailCol, isDocSignedCol, isFinalContractCol As Integer
+        customerCol = 1
+        jobCol = 2
+        kWCol = 3
+        statusCol = 4
+        subStatusCol = 5
+        createdDateCol = 6
+        repEmailCol = 9
+        isDocSignedCol = 7
+        isFinalContractCol = 8
+        
+    ''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
+        Dim workBookName As String
+        Dim testName As String
+        testName = "VBA Triforce (Ezra)"
+        workBookName = testName & ".xlsm"
+        'workBookName = InputBox("What is the master report's name?") & ".xlsx"
+        Dim NatesEvolution As Workbook
+        Set NatesEvolution = Workbooks(workBookName)
 
-	    customerCol        = 1   
-	    jobCol             = 2
-	    kWCol              = 3
-	    statusCol          = 4
-	    subStatusCol       = 5
-	    createdDateCol     = 6
-	    repEmailCol        = 9
-	    isDocSignedCol     = 7
-	    isFinalContractCol = 8
+    ''''''''''''''''''''''''''Create Nate's Evolution'''''''''''''
+    	createNatesEvo(workBookName)
+    	
+    ''''''''''''''''''''''''''''''Worksheets''''''''''''''''''''''
+        Dim inputDataSheet, printSheet As Worksheet
+        Set inputDataSheet = NatesEvolution.Worksheets("Nate's Evolution")
+        Set printSheet = NatesEvolution.Worksheets("Debug")
 
-	''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
-		Dim workBookName As String
-		workBookName = inputBox("What is the master report's name?") & ".xlsx"
-		Dim NatesEvolution As Workbook
-		Set NatesEvolution = Workbooks(workBookName)
+    ''''''''''''''''''''''''''''''Row Counters''''''''''''''''''''''
+        Dim inputRow, printRow As Integer
+        printRow = 2
 
-	''''''''''''''''''''''''''''''Worksheets''''''''''''''''''''''
-		Dim inputDataSheet, printSheet As Worksheet
-		Set inputDataSheet = NatesEvolution.Worksheets("Current Data")
-		Set printSheet = NatesEvolution.Worksheets("TestPrint")
+    '''''''''''''''''''''''''''''Input Object''''''''''''''''''''''
+    Dim inputData() As cJobData
+    Dim currentRep  As cJobData
 
-	''''''''''''''''''''''''''''''Row Counters''''''''''''''''''''''
-		Dim inputRow, printRow As Integer
-		printRow = 2
+    '''''''''''''''''''''''''''''Data Size'''''''''''''''''''''''''
+    Dim inputDataSize As Long
 
-	'''''''''''''''''''''''''''''Input Object''''''''''''''''''''''
-		Dim inputData() As cJobData
-		Dim currentRep  As cJobData
-		Dim printRep    As cJobData
-
-	'''''''''''''''''''''''''''''Data Size'''''''''''''''''''''''''
-		Dim inputDataSize As Long
-		inputDataSize = inputDataSheet.UsedRange.Rows.Count - 1
-		ReDim inputData(inputDataSize)
+    'inputDataSize = inputDataSheet.UsedRange.Rows.Count
+    inputDataSize = 5456
+    ReDim inputData(inputDataSize)
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''GET AND SET VALUES''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-		For inputRow = 2 To inputDataSize
-			With inputDataSheet
-				'Get data from sheet and pass it to new Data object'
-				Set currentRep = New cJobData
-					currentRep.Customer        = .Cells(inputRow, customerCol).Value
-					currentRep.JobID           = .Cells(inputRow, jobCol).Value
-					currentRep.kW              = .Cells(inputRow, kWCol).Value
-					currentRep.Status          = .Cells(inputRow, statusCol).Value 
-					currentRep.SubStatus       = .Cells(inputRow, subStatusCol).Value
-					currentRep.CreatedDate     = .Cells(inputRow, createdDateCol).Value
-					currentRep.RepEmail        = .Cells(inputRow, repEmailCol).Value
-					currentRep.setIsDocSigned(.Cells(inputRow, isDocSignedCol).Value)
-					currentRep.setIsFInalContract(.Cells(inputRow, isFinalContractCol).Value)
-					currentRep.setIsInstall
-					currentRep.setIsCancelled
-			End With
+      For inputRow = 2 To inputDataSize + 2
+            With inputDataSheet
+                'Get data from sheet and pass it to new Data object'
+                Set currentRep = New cJobData
+                    currentRep.Customer    = .Cells(inputRow, customerCol).value
+                    currentRep.JobID       = .Cells(inputRow, jobCol).value
+                    currentRep.kW          = .Cells(inputRow, kWCol).value
+                    currentRep.Status      = .Cells(inputRow, statusCol).value
+                    currentRep.SubStatus   = .Cells(inputRow, subStatusCol).value
+                    currentRep.CreatedDate = .Cells(inputRow, createdDateCol).value
+                    currentRep.RepEmail    = .Cells(inputRow, repEmailCol).value
+                    currentRep.setIsDocSigned (.Cells(inputRow, isDocSignedCol).value)
+                    currentRep.setIsFinalContract (.Cells(inputRow, isFinalContractCol).value)
+                    currentRep.setIsInstall
+                    currentRep.setIsCancelled
+            End With
 
-			Set inputData(inputRow - 2) = currentRep
-		Next inputRow
+            Set inputData(inputRow - 2) = currentRep
+        Next inputRow
+        printRow = 2
+        
+        For Each printRep In inputData
+            
+            With printSheet
+                    .Cells(printRow, 1).value  = printRep.Customer
+                    .Cells(printRow, 2).value  = printRep.JobID
+                    .Cells(printRow, 3).value  = printRep.kW
+                    .Cells(printRow, 4).value  = printRep.CreatedDate
+                    .Cells(printRow, 5).value  = printRep.Status
+                    .Cells(printRow, 6).value  = printRep.SubStatus
+                    .Cells(printRow, 7).value  = printRep.RepEmail
+                    .Cells(printRow, 8).value  = printRep.IsDocSigned
+                    .Cells(printRow, 9).value  = printRep.IsFinalContract
+                    .Cells(printRow, 10).value = printRep.IsInstall
+                    .Cells(printRow, 11).value = printRep.IsCancelled
 
-		For i = 0 To inputDataSize
-
-			With printSheet
-					.Cells(i + 2, 1).Value = inputData(i).Customer
-					.Cells(i + 2, 2).Value = inputData(i).JobID  
-					.Cells(i + 2, 3).Value = inputData(i).kW 
-					.Cells(i + 2, 4).Value = inputData(i).CreatedDate 
-					.Cells(i + 2, 5).Value = inputData(i).Status
-					.Cells(i + 2, 6).Value = inputData(i).SubStatus 
-					.Cells(i + 2, 7).Value = inputData(i).RepEmail
-					.Cells(i + 2, 8).Value = inputData(i).isDocSigned
-					.Cells(i + 2, 9).Value = inputData(i).isFinalContract
-					.Cells(i + 2, 10).Value = inputData(i).isInstall
-					.Cells(i + 2, 11).Value = inputData(i).isCancelled
-
-			End With
-		Next i
+            End With
+            
+            printRow = printRow + 1
+        Next
 
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-'''''''''''''''''''''''''''''PRINT VALUES TESt'''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''PRINT VALUES''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
 End Sub
+
+
+
+

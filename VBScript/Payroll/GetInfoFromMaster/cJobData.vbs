@@ -83,7 +83,7 @@ Public Property Let IsCancelled(value As Boolean)
 End Property
 
 Public Property Get IsCancelled() As Boolean
-    IsInstall = pIsInstall
+    IsCancelled = pIsCancelled
 End Property
 
 
