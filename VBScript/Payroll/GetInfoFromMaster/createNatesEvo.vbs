@@ -62,42 +62,49 @@ Sub createNatesEvo(ByVal workBookName As String)
 
 	'''''''''Found Job in Nate's Input''''''''''''''''''''''''''''''
 		Dim isJobFound As Boolean
-			
+	'''''''''''Date constant to consider for new jobs''''''''''''''
+   	Const NEWJOBDATE = #11/30/2014#
+
 	''''''''''''''''''TURN OFF SCREEN UPDATING''''''''''''''''''''''
 	application.screenupdating = False
 	'''''''''''''''''''''''''Print out'''''''''''''''''''''''''''''
 		For inputRow = 2 To inputDataSize + 1
 			isJobFound = True
 
-			'''''''''''''''''''Find job in Nate's Sheet'''''''''''''''
-			On Error GoTo jobIdNotFound:
-			natesJobRow = Application.WorksheetFunction.Match(masterInput.Cells(inputRow, masJobCol).Value, natesSheet.Range("E:E"), 0)
-			'natesJobrow = "=INDEX($B:$B, MATCH(" + Col_Letter(masJobCol) + CStr(inputRow) + ",$E:$E,0))"
+			''''''Determine if it is part of new pay structure'''''''
+
+			If masterInput.Cells(inputRow, masCreatedDateCol).Value >= NEWJOBDATE Then
+				'''''''''''''''''''Find job in Nate's Sheet'''''''''''''''
+				On Error GoTo jobIdNotFound:
+				natesJobRow = Application.WorksheetFunction.Match(masterInput.Cells(inputRow, masJobCol).Value, natesSheet.Range("E:E"), 0)
+				'natesJobrow = "=INDEX($B:$B, MATCH(" + Col_Letter(masJobCol) + CStr(inputRow) + ",$E:$E,0))"
 
 
-			'''''''''''''''''''Print out the Output'''''''''''''''''''
-			With printSheet
-				''''''From Master Report'''''
-				.Cells(inputRow, customerCol).Value     = masterInput.Cells(inputRow, masCustomerCol).Value
-				.Cells(inputRow, jobCol).Value          = masterInput.Cells(inputRow, masJobCol).Value
-				.Cells(inputRow, kWCol).Value           = masterInput.Cells(inputRow, masKWCol).Value
-				.Cells(inputRow, statusCol).Value       = masterInput.Cells(inputRow, masStatusCol).Value
-				.Cells(inputRow, subStatusCol).Value    = masterInput.Cells(inputRow, masSubStatusCol).Value
-				.Cells(inputRow, createdDateCol).Value  = masterInput.Cells(inputRow, masCreatedDateCol).Value				
-				.Cells(inputRow, repEmailCol).Value     = masterInput.Cells(inputRow, masRepEmailCol).Value
 
-				''From Nate's Input'''
-				if isJobFound Then
-					.Cells(inputRow, isDocSignedCol).Value     = natesSheet.Cells(natesJobRow, nateIsDocSignedCol).Value
-					'.Cells(inputRow, isDocSignedCol).Value     = "=INDEX($B:$B, MATCH(" + Col_Letter(CStr(masJobCol)) + CStr(inputRow) + ",$E:$E,0))"
-					.Cells(inputRow, isFinalContractCol).Value = natesSheet.Cells(natesJobrow, nateIsFinalContractCol).Value
-					'.Cells(inputRow, isFinalContractCol).Value = "=INDEX($C:$C, MATCH(" + Col_Letter(CStr(masJobCol)) + CStr(inputRow) + ",$E:$E,0))"
-				Else
-					.Cells(inputRow, isDocSignedCol).Value     = "N"
-					.Cells(inputRow, isFinalContractCol).Value = "N"
-				End If
+				'''''''''''''''''''Print out the Output'''''''''''''''''''
+				With printSheet
+					''''''From Master Report'''''
+					.Cells(inputRow, customerCol).Value     = masterInput.Cells(inputRow, masCustomerCol).Value
+					.Cells(inputRow, jobCol).Value          = masterInput.Cells(inputRow, masJobCol).Value
+					.Cells(inputRow, kWCol).Value           = masterInput.Cells(inputRow, masKWCol).Value
+					.Cells(inputRow, statusCol).Value       = masterInput.Cells(inputRow, masStatusCol).Value
+					.Cells(inputRow, subStatusCol).Value    = masterInput.Cells(inputRow, masSubStatusCol).Value
+					.Cells(inputRow, createdDateCol).Value  = masterInput.Cells(inputRow, masCreatedDateCol).Value				
+					.Cells(inputRow, repEmailCol).Value     = masterInput.Cells(inputRow, masRepEmailCol).Value
 
-			End With
+					''From Nate's Input'''
+					if isJobFound Then
+						.Cells(inputRow, isDocSignedCol).Value     = natesSheet.Cells(natesJobRow, nateIsDocSignedCol).Value
+						'.Cells(inputRow, isDocSignedCol).Value     = "=INDEX($B:$B, MATCH(" + Col_Letter(CStr(masJobCol)) + CStr(inputRow) + ",$E:$E,0))"
+						.Cells(inputRow, isFinalContractCol).Value = natesSheet.Cells(natesJobrow, nateIsFinalContractCol).Value
+						'.Cells(inputRow, isFinalContractCol).Value = "=INDEX($C:$C, MATCH(" + Col_Letter(CStr(masJobCol)) + CStr(inputRow) + ",$E:$E,0))"
+					Else
+						.Cells(inputRow, isDocSignedCol).Value     = "N"
+						.Cells(inputRow, isFinalContractCol).Value = "N"
+					End If
+
+				End With
+			End If
 
 		Next inputRow
 ''''''''''''''''''TURN ON SCREEN UPDATING''''''''''''''''''''''
