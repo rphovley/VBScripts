@@ -45,7 +45,7 @@ Sub getFromMaster()
 
     '''''''''''''''''''''''''''''Data Size'''''''''''''''''''''''''
     Dim inputDataSize As Long
-    	inputDataSize = inputDataSheet.UsedRange.Rows.Count
+    	inputDataSize = inputDataSheet.Cells(1,1).End(xlDown).Row - 2
     	ReDim inputData(inputDataSize)
 
    	'''''''''''Date constant to consider for new jobs''''''''''''''
@@ -60,6 +60,7 @@ Sub getFromMaster()
                 
             	'determine if the job is in the new pay structure'
                 If  .Cells(inputRow, createdDateCol).value >= NEWJOBDATE Then
+
                 	'Get data from sheet and pass it to new Data object'
 	                Set currentRep = New cJobData
 	                    currentRep.Customer    = .Cells(inputRow, customerCol).value
@@ -73,10 +74,14 @@ Sub getFromMaster()
 	                    currentRep.setIsFinalContract (.Cells(inputRow, isFinalContractCol).value)
 	                    currentRep.setIsInstall
 	                    currentRep.setIsCancelled
+
+	                ''''''''''Add currentRep to the inputData Array'''''''''''''
+	                Set inputData(inputRow - 2) = currentRep
+
                 End If
             End With
 
-            Set inputData(inputRow - 2) = currentRep
+            
         Next inputRow
         printRow = 2
         
