@@ -3,6 +3,7 @@ Sub getFromMaster()
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''INITIALIZE VARIABLES''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
     ''''''''''''''''''''''''''''''Columns''''''''''''''''''''''
     Dim customerCol, jobCol, kWCol, statusCol, subStatusCol, _
         createdDateCol, repEmailCol, isDocSignedCol, isFinalContractCol As Integer
@@ -18,24 +19,24 @@ Sub getFromMaster()
         isFinalContractCol = 8
         
     ''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
-        Dim workBookName As String
-        Dim testName As String
+    Dim workBookName As String
+    Dim testName As String
         testName = "VBA Triforce (Ezra)"
         workBookName = testName & ".xlsm"
         'workBookName = InputBox("What is the master report's name?") & ".xlsx"
-        Dim NatesEvolution As Workbook
+    Dim NatesEvolution As Workbook
         Set NatesEvolution = Workbooks(workBookName)
 
     ''''''''''''''''''''''''''Create Nate's Evolution'''''''''''''
     	createNatesEvo(workBookName)
     	
     ''''''''''''''''''''''''''''''Worksheets''''''''''''''''''''''
-        Dim inputDataSheet, printSheet As Worksheet
+    Dim inputDataSheet, printSheet As Worksheet
         Set inputDataSheet = NatesEvolution.Worksheets("Nate's Evolution")
         Set printSheet = NatesEvolution.Worksheets("Debug")
 
     ''''''''''''''''''''''''''''''Row Counters''''''''''''''''''''''
-        Dim inputRow, printRow As Integer
+    Dim inputRow, printRow As Integer
         printRow = 2
 
     '''''''''''''''''''''''''''''Input Object''''''''''''''''''''''
@@ -44,10 +45,11 @@ Sub getFromMaster()
 
     '''''''''''''''''''''''''''''Data Size'''''''''''''''''''''''''
     Dim inputDataSize As Long
+    	inputDataSize = inputDataSheet.UsedRange.Rows.Count
+    	ReDim inputData(inputDataSize)
 
-    'inputDataSize = inputDataSheet.UsedRange.Rows.Count
-    inputDataSize = 5456
-    ReDim inputData(inputDataSize)
+   	'''''''''''Date constant to consider for new jobs''''''''''''''
+   	Const NEWJOBDATE = #11/30/2014#
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''GET AND SET VALUES''''''''''''''''''''''''''''
@@ -55,19 +57,23 @@ Sub getFromMaster()
 
       For inputRow = 2 To inputDataSize + 2
             With inputDataSheet
-                'Get data from sheet and pass it to new Data object'
-                Set currentRep = New cJobData
-                    currentRep.Customer    = .Cells(inputRow, customerCol).value
-                    currentRep.JobID       = .Cells(inputRow, jobCol).value
-                    currentRep.kW          = .Cells(inputRow, kWCol).value
-                    currentRep.Status      = .Cells(inputRow, statusCol).value
-                    currentRep.SubStatus   = .Cells(inputRow, subStatusCol).value
-                    currentRep.CreatedDate = .Cells(inputRow, createdDateCol).value
-                    currentRep.RepEmail    = .Cells(inputRow, repEmailCol).value
-                    currentRep.setIsDocSigned (.Cells(inputRow, isDocSignedCol).value)
-                    currentRep.setIsFinalContract (.Cells(inputRow, isFinalContractCol).value)
-                    currentRep.setIsInstall
-                    currentRep.setIsCancelled
+                
+            	'determine if the job is in the new pay structure'
+                If  .Cells(inputRow, createdDateCol).value >= NEWJOBDATE Then
+                	'Get data from sheet and pass it to new Data object'
+	                Set currentRep = New cJobData
+	                    currentRep.Customer    = .Cells(inputRow, customerCol).value
+	                    currentRep.JobID       = .Cells(inputRow, jobCol).value
+	                    currentRep.kW          = .Cells(inputRow, kWCol).value
+	                    currentRep.Status      = .Cells(inputRow, statusCol).value
+	                    currentRep.SubStatus   = .Cells(inputRow, subStatusCol).value
+	                    currentRep.CreatedDate = .Cells(inputRow, createdDateCol).value
+	                    currentRep.RepEmail    = .Cells(inputRow, repEmailCol).value
+	                    currentRep.setIsDocSigned (.Cells(inputRow, isDocSignedCol).value)
+	                    currentRep.setIsFinalContract (.Cells(inputRow, isFinalContractCol).value)
+	                    currentRep.setIsInstall
+	                    currentRep.setIsCancelled
+                End If
             End With
 
             Set inputData(inputRow - 2) = currentRep
