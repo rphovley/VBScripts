@@ -24,7 +24,7 @@ sub payroll_main()
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 	'Load up cJobData array with information from jobs in Nate'sEvolution'
-		jobData = getjobData(workBookName)
+		jobData() = getjobData(workBookName)
 
 		'print out to the debug sheet all of the relevant job data'
 		printToDebug jobData, workBookName
