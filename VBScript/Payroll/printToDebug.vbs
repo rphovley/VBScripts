@@ -4,6 +4,29 @@ Sub printToDebug(ByRef jobData() As cJobData, ByVal workbookName As String)
 '''''''''''''''''''''''''''''INITIALIZE VARIABLES''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
+''''''''''''''''''''''''''''''Columns''''''''''''''''''''''
+    Dim customerCol, jobCol, kWCol, statusCol, subStatusCol, _
+        createdDateCol, repEmailCol, isDocSignedCol, isFinalContractCol, _
+        isInstallCol, isCancelledCol, firstPayCol, firstPayDateCol, _
+        secondPayCol, secondPayDateCol, whatWasPaidCol As Integer
+
+        customerCol        = 1
+        jobCol             = 2
+        kWCol              = 3
+        createdDateCol     = 4
+        statusCol          = 5
+        subStatusCol       = 6    
+        repEmailCol        = 7
+        isDocSignedCol     = 8
+        isFinalContractCol = 9
+        isInstallCol       = 10
+        isCancelledCol     = 11
+        firstPayCol        = 12
+        firstPayDateCol    = 13
+        secondPayCol       = 14
+        secondPayDateCol   = 15
+        whatWasPaidCol     = 16
+        
 ''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
         'workBookName = InputBox("What is the master report's name?") & ".xlsx"
     Dim NatesEvolution As Workbook
@@ -24,17 +47,22 @@ Sub printToDebug(ByRef jobData() As cJobData, ByVal workbookName As String)
 	For Each printJob In jobData
             
             With printSheet
-                    .Cells(printRow, 1).value  = printJob.Customer
-                    .Cells(printRow, 2).value  = printJob.JobID
-                    .Cells(printRow, 3).value  = printJob.kW
-                    .Cells(printRow, 4).value  = printJob.CreatedDate
-                    .Cells(printRow, 5).value  = printJob.Status
-                    .Cells(printRow, 6).value  = printJob.SubStatus
-                    .Cells(printRow, 7).value  = printJob.RepEmail
-                    .Cells(printRow, 8).value  = printJob.IsDocSigned
-                    .Cells(printRow, 9).value  = printJob.IsFinalContract
-                    .Cells(printRow, 10).value = printJob.IsInstall
-                    .Cells(printRow, 11).value = printJob.IsCancelled
+                    .Cells(printRow, customerCol).value         = printJob.Customer
+                    .Cells(printRow, jobCol).value              = printJob.JobID
+                    .Cells(printRow, kWCol).value               = printJob.kW
+                    .Cells(printRow, createdDateCol).value      = printJob.CreatedDate
+                    .Cells(printRow, statusCol).value           = printJob.Status
+                    .Cells(printRow, subStatusCol).value        = printJob.SubStatus
+                    .Cells(printRow, repEmailCol).value         = printJob.RepEmail
+                    .Cells(printRow, isDocSignedCol).value      = printJob.IsDocSigned
+                    .Cells(printRow, isFinalContractCol).value  = printJob.IsFinalContract
+                    .Cells(printRow, isInstallCol).value        = printJob.IsInstall
+                    .Cells(printRow, isCancelledCol).value      = printJob.IsCancelled
+                    .Cells(printRow, firstPayCol).value         = printJob.FirstPaymentAmount
+                    .Cells(printRow, firstPayDateCol).value     = printJob.FirstPaymentDate
+                    .Cells(printRow, secondPayCol).value        = printJob.SecondPaymentAmount
+                    .Cells(printRow, secondPayDateCol).value    = printJob.SecondPaymentDate
+                    .Cells(printRow, whatWasPaidCol).value      = printJob.WhatWasPaid
 
             End With
             

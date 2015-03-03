@@ -4,11 +4,63 @@ Private pCustomer, pJobID, pStatus, _
     pSubStatus, pRepEmail, pRepName As String
 
 Private pkW As Double
-Private pAmount As Currency
+Private pAmount, pWhatWasPaid, pFirstPaymentAmount, pSecondPaymentAmount As Currency
 Private pRepID As Integer
-Private pCreatedDate As Date
-Private pIsInstall, pIsDocSigned, pIsFinalContract, pIsCancelled As Boolean
+Private pCreatedDate, pFirstPaymentDate, pSecondPaymentDate As Date
+Private pIsInstall, pIsDocSigned, pIsFinalContract, pIsCancelled, pIsPaidInFull As Boolean
 
+'Payment Get/Set methods'
+Public Property Let IsPaidInFull(value As Boolean)
+    pIsPaidInFull = value
+End Property
+
+Public Property Get IsPaidInFull() As Boolean
+    IsPaidInFull = pIsPaidInFull
+End Property
+
+Public Property Get FirstPaymentDate() As Date
+    FirstPaymentDate = pFirstPaymentDate
+End Property
+
+Public Property Let FirstPaymentDate(value As Date)
+    pFirstPaymentDate = value
+End Property
+
+Public Property Get SecondPaymentDate() As Date
+    SecondPaymentDate = pSecondPaymentDate
+End Property
+
+Public Property Let SecondPaymentDate(value As Date)
+    pSecondPaymentDate = value
+End Property
+
+Public Property Get WhatWasPaid() As Currency
+    WhatWasPaid = pWhatWasPaid
+End Property
+
+Public Property Let WhatWasPaid(value As Currency)
+    pWhatWasPaid = value
+End Property
+
+Public Sub setWhatWasPaid()
+    pWhatWasPaid = pFirstPaymentAmount + pSecondPaymentAmount
+End Sub
+
+Public Property Get FirstPaymentAmount() As Currency
+    FirstPaymentAmount = pFirstPaymentAmount
+End Property
+
+Public Property Let FirstPaymentAmount(value As Currency)
+    pFirstPaymentAmount = value
+End Property
+
+Public Property Get SecondPaymentAmount() As Currency
+    SecondPaymentAmount = pSecondPaymentAmount
+End Property
+
+Public Property Let SecondPaymentAmount(value As Currency)
+    pSecondPaymentAmount = value
+End Property
 
 'Get/Set Methods IsInstall booleans
 Public Property Let IsInstall(value As Boolean)
