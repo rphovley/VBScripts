@@ -40,8 +40,8 @@ Sub createNatesEvo(ByVal workBookName As String)
         Set NatesEvolution = Workbooks(workBookName)
 
 	''''''''''''''''''''''''''''''Worksheets''''''''''''''''''''''
-		Dim inputDataSheet, printSheet, masterInput, natesSheet As Worksheet
-		Set inputDataSheet = NatesEvolution.Worksheets("Master Input")
+		Dim jobDataSheet, printSheet, masterInput, natesSheet As Worksheet
+		Set jobDataSheet = NatesEvolution.Worksheets("Master Input")
 		Set printSheet     = NatesEvolution.Worksheets("Nate's Evolution")
 		Set masterInput    = NatesEvolution.Worksheets("Master Input")
 		Set natesSheet     = NatesEvolution.Worksheets("Docs Signed Input")
@@ -51,14 +51,14 @@ Sub createNatesEvo(ByVal workBookName As String)
 			printRow = 2
 
 	'''''''''''''''''''''''''''''Input Object''''''''''''''''''''''
-		Dim inputData() As cJobData
+		Dim jobData() As cJobData
 		Dim currentRep  As cJobData
 		Dim printRep    As cJobData
 
 	'''''''''''''''''''''''''''''Data Size'''''''''''''''''''''''''
-		Dim inputDataSize As Long
-			inputDataSize = inputDataSheet.UsedRange.Rows.Count - 1
-			ReDim inputData(inputDataSize)
+		Dim jobDataSize As Long
+			jobDataSize = jobDataSheet.UsedRange.Rows.Count - 1
+			ReDim jobData(jobDataSize)
 
 	'''''''''Found Job in Nate's Input''''''''''''''''''''''''''''''
 		Dim isJobFound As Boolean
@@ -68,7 +68,7 @@ Sub createNatesEvo(ByVal workBookName As String)
 	''''''''''''''''''TURN OFF SCREEN UPDATING''''''''''''''''''''''
 	application.screenupdating = False
 	'''''''''''''''''''''''''Print out'''''''''''''''''''''''''''''
-		For inputRow = 2 To inputDataSize + 1
+		For inputRow = 2 To jobDataSize + 1
 			isJobFound = True
 
 			''''''Determine if it is part of new pay structure'''''''
@@ -84,25 +84,26 @@ Sub createNatesEvo(ByVal workBookName As String)
 				'''''''''''''''''''Print out the Output'''''''''''''''''''
 				With printSheet
 					''''''From Master Report'''''
-					.Cells(inputRow, customerCol).Value     = masterInput.Cells(inputRow, masCustomerCol).Value
-					.Cells(inputRow, jobCol).Value          = masterInput.Cells(inputRow, masJobCol).Value
-					.Cells(inputRow, kWCol).Value           = masterInput.Cells(inputRow, masKWCol).Value
-					.Cells(inputRow, statusCol).Value       = masterInput.Cells(inputRow, masStatusCol).Value
-					.Cells(inputRow, subStatusCol).Value    = masterInput.Cells(inputRow, masSubStatusCol).Value
-					.Cells(inputRow, createdDateCol).Value  = masterInput.Cells(inputRow, masCreatedDateCol).Value				
-					.Cells(inputRow, repEmailCol).Value     = masterInput.Cells(inputRow, masRepEmailCol).Value
+					.Cells(printRow, customerCol).Value     = masterInput.Cells(inputRow, masCustomerCol).Value
+					.Cells(printRow, jobCol).Value          = masterInput.Cells(inputRow, masJobCol).Value
+					.Cells(printRow, kWCol).Value           = masterInput.Cells(inputRow, masKWCol).Value
+					.Cells(printRow, statusCol).Value       = masterInput.Cells(inputRow, masStatusCol).Value
+					.Cells(printRow, subStatusCol).Value    = masterInput.Cells(inputRow, masSubStatusCol).Value
+					.Cells(printRow, createdDateCol).Value  = masterInput.Cells(inputRow, masCreatedDateCol).Value				
+					.Cells(printRow, repEmailCol).Value     = masterInput.Cells(inputRow, masRepEmailCol).Value
 
 					''From Nate's Input'''
 					if isJobFound Then
-						.Cells(inputRow, isDocSignedCol).Value     = natesSheet.Cells(natesJobRow, nateIsDocSignedCol).Value
+						.Cells(printRow, isDocSignedCol).Value     = natesSheet.Cells(natesJobRow, nateIsDocSignedCol).Value
 						'.Cells(inputRow, isDocSignedCol).Value     = "=INDEX($B:$B, MATCH(" + Col_Letter(CStr(masJobCol)) + CStr(inputRow) + ",$E:$E,0))"
-						.Cells(inputRow, isFinalContractCol).Value = natesSheet.Cells(natesJobrow, nateIsFinalContractCol).Value
+						.Cells(printRow, isFinalContractCol).Value = natesSheet.Cells(natesJobrow, nateIsFinalContractCol).Value
 						'.Cells(inputRow, isFinalContractCol).Value = "=INDEX($C:$C, MATCH(" + Col_Letter(CStr(masJobCol)) + CStr(inputRow) + ",$E:$E,0))"
 					Else
-						.Cells(inputRow, isDocSignedCol).Value     = "N"
-						.Cells(inputRow, isFinalContractCol).Value = "N"
+						.Cells(printRow, isDocSignedCol).Value     = "N"
+						.Cells(printRow, isFinalContractCol).Value = "N"
 					End If
 
+					printRow = printRow + 1
 				End With
 			End If
 

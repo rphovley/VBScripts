@@ -1,4 +1,4 @@
-Sub getFromMaster()
+Function getJobData(ByVal workBookName As String) As cJobData()
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''INITIALIZE VARIABLES''''''''''''''''''''''''''
@@ -19,10 +19,6 @@ Sub getFromMaster()
         isFinalContractCol = 8
         
     ''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
-    Dim workBookName As String
-    Dim testName As String
-        testName = "VBA Triforce (Ezra)"
-        workBookName = testName & ".xlsm"
         'workBookName = InputBox("What is the master report's name?") & ".xlsx"
     Dim NatesEvolution As Workbook
         Set NatesEvolution = Workbooks(workBookName)
@@ -31,8 +27,8 @@ Sub getFromMaster()
     	createNatesEvo(workBookName)
     	
     ''''''''''''''''''''''''''''''Worksheets''''''''''''''''''''''
-    Dim inputDataSheet, printSheet As Worksheet
-        Set inputDataSheet = NatesEvolution.Worksheets("Nate's Evolution")
+    Dim jobDataSheet, printSheet As Worksheet
+        Set jobDataSheet = NatesEvolution.Worksheets("Nate's Evolution")
         Set printSheet = NatesEvolution.Worksheets("Debug")
 
     ''''''''''''''''''''''''''''''Row Counters''''''''''''''''''''''
@@ -40,13 +36,13 @@ Sub getFromMaster()
         printRow = 2
 
     '''''''''''''''''''''''''''''Input Object''''''''''''''''''''''
-    Dim inputData() As cJobData
+    Dim jobData() As cJobData
     Dim currentRep  As cJobData
 
     '''''''''''''''''''''''''''''Data Size'''''''''''''''''''''''''
-    Dim inputDataSize As Long
-    	inputDataSize = inputDataSheet.Cells(1,1).End(xlDown).Row - 2
-    	ReDim inputData(inputDataSize)
+    Dim jobDataSize As Long
+    	jobDataSize = jobDataSheet.Cells(1,1).End(xlDown).Row - 2
+    	ReDim jobData(jobDataSize)
 
    	'''''''''''Date constant to consider for new jobs''''''''''''''
    	Const NEWJOBDATE = #11/30/2014#
@@ -55,8 +51,8 @@ Sub getFromMaster()
 '''''''''''''''''''''''''''''GET AND SET VALUES''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-      For inputRow = 2 To inputDataSize + 2
-            With inputDataSheet
+      For inputRow = 2 To jobDataSize + 2
+            With jobDataSheet
                 
             	'determine if the job is in the new pay structure'
                 If  .Cells(inputRow, createdDateCol).value >= NEWJOBDATE Then
@@ -75,41 +71,24 @@ Sub getFromMaster()
 	                    currentRep.setIsInstall
 	                    currentRep.setIsCancelled
 
-	                ''''''''''Add currentRep to the inputData Array'''''''''''''
-	                Set inputData(inputRow - 2) = currentRep
+	                ''''''''''Add currentRep to the jobData Array'''''''''''''
+	                Set jobData(inputRow - 2) = currentRep
 
                 End If
             End With
 
             
         Next inputRow
-        printRow = 2
-        
-        For Each printRep In inputData
-            
-            With printSheet
-                    .Cells(printRow, 1).value  = printRep.Customer
-                    .Cells(printRow, 2).value  = printRep.JobID
-                    .Cells(printRow, 3).value  = printRep.kW
-                    .Cells(printRow, 4).value  = printRep.CreatedDate
-                    .Cells(printRow, 5).value  = printRep.Status
-                    .Cells(printRow, 6).value  = printRep.SubStatus
-                    .Cells(printRow, 7).value  = printRep.RepEmail
-                    .Cells(printRow, 8).value  = printRep.IsDocSigned
-                    .Cells(printRow, 9).value  = printRep.IsFinalContract
-                    .Cells(printRow, 10).value = printRep.IsInstall
-                    .Cells(printRow, 11).value = printRep.IsCancelled
 
-            End With
-            
-            printRow = printRow + 1
-        Next
+        getJobData = jobData
+        
+        
 
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''PRINT VALUES''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-End Sub
+End Function
 
 
 
