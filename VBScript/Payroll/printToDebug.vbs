@@ -40,6 +40,7 @@ Sub printToDebug(ByRef jobData() As cJobData, ByVal workbookName As String)
     Dim printRow As Integer
         printRow = 2
 
+    Const EMPTYDATE = #12:00:00 AM#
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''PRINT JOBS TO DEBUG SHEET'''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -60,9 +61,17 @@ Sub printToDebug(ByRef jobData() As cJobData, ByVal workbookName As String)
                     .Cells(printRow, isInstallCol).value        = printJob.IsInstall
                     .Cells(printRow, isCancelledCol).value      = printJob.IsCancelled
                     .Cells(printRow, firstPayCol).value         = printJob.FirstPaymentAmount
-                    .Cells(printRow, firstPayDateCol).value     = printJob.FirstPaymentDate
                     .Cells(printRow, secondPayCol).value        = printJob.SecondPaymentAmount
-                    .Cells(printRow, secondPayDateCol).value    = printJob.SecondPaymentDate
+
+                    'Leave the cell empty if it equals Empty Date'
+                    If printJob.FirstPaymentDate <> EMPTYDATE Then
+                        .Cells(printRow, firstPayDateCol).value = printJob.FirstPaymentDate
+                    End If
+                    
+                    'Leave the cell empty if it equals Empty Date'
+                    If printJob.SecondPaymentDate <> EMPTYDATE Then
+                        .Cells(printRow, secondPayDateCol).value= printJob.SecondPaymentDate
+                    End If
                     .Cells(printRow, whatWasPaidCol).value      = printJob.WhatWasPaid
 
             End With
