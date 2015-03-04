@@ -47,6 +47,7 @@ Sub printToDebug(ByRef jobData() As cJobData, ByVal workbookName As String)
 	For Each printJob In jobData
             
             With printSheet
+            
                     .Cells(printRow, customerCol).value         = printJob.Customer
                     .Cells(printRow, jobCol).value              = printJob.JobID
                     .Cells(printRow, kWCol).value               = printJob.kW

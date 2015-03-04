@@ -32,6 +32,8 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workbookName As Strin
         printRow = 2
 '''''''''''''''''''''''''''''job Object''''''''''''''''''''''
 	Dim job As cJobData	
+	Dim newJobData() As cJobData
+    Redim newJobData(UBound(jobData))
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''GET PAYMENT INFORMATION'''''''''''''''''''''''''
@@ -94,8 +96,11 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workbookName As Strin
           
          'set the value of what was paid'
          job.setWhatWasPaid
+         'Reset the job in the array'
+         newJobData(jobIndex) = job
     Next
 
+    getPaymentInfo = jobData
 
 
 End Function
