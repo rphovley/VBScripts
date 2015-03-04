@@ -24,7 +24,7 @@ Function getRepData(ByVal workBookName As String) As Collection
     	
     ''''''''''''''''''''''''''''''Worksheets''''''''''''''''''''''
     Dim repDataSheet As Worksheet
-        Set repDataSheet = NatesEvolution.Worksheets("RepID.PayScale.Status")
+        Set repDataSheet = NatesEvolution.Worksheets("RepData")
 
     ''''''''''''''''''''''''''''''Row Counters''''''''''''''''''''''
     Dim inputRow, printRow, repRow As Integer
@@ -51,8 +51,8 @@ Function getRepData(ByVal workBookName As String) As Collection
                         currentRep.Email    = .Cells(inputRow, repListEmailCol).Value
                         currentRep.Name     = .Cells(inputRow, repListNameCol).Value
                         currentRep.PayScaleID  = .Cells(inputRow, repListScaleCol).Value
-                        currentRep.IsBlackList = .Cells(inputRow, repListBlackCol).Value
-                        currentRep.IsInactive  = .Cells(inputRow, repListInactiveCol).Value
+                        currentRep.setIsBlackList(.Cells(inputRow, repListBlackCol).Value)
+                        currentRep.setIsInactive(Cells(inputRow, repListInactiveCol).Value)
 	                    
 	                ''''''''''Add currentRep to the jobData Collection''''''''''''
 	                repData.Add currentRep, currentRep.Email
@@ -61,7 +61,7 @@ Function getRepData(ByVal workBookName As String) As Collection
             
         Next inputRow
 
-       Set getRepData = repData
+        Set getRepData = repData
         
         
 
