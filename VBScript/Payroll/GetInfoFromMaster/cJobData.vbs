@@ -5,9 +5,42 @@ Private pCustomer, pJobID, pStatus, _
 
 Private pkW As Double
 Private pAmount, pWhatWasPaid, pFirstPaymentAmount, pSecondPaymentAmount As Currency
-Private pRepID As Integer
+Private pRepID, pPayScaleID As Integer
 Private pCreatedDate, pFirstPaymentDate, pSecondPaymentDate As Date
-Private pIsInstall, pIsDocSigned, pIsFinalContract, pIsCancelled, pIsPaidInFull As Boolean
+Private pIsInstall, pIsDocSigned, pIsFinalContract, pIsCancelled, pIsPaidInFull, pIsBlackListed As Boolean
+
+'Rep Info'
+Public Property Get RepID() As Integer
+    RepID = pRepID
+End Property
+
+Public Property Let RepID(value As Integer)
+    pRepID = value
+End Property
+
+Public Property Get RepEmail() As String
+    RepEmail = pRepEmail
+End Property
+
+Public Property Let RepEmail(value As String)
+    pRepEmail = value
+End Property
+
+Public Property Get RepName() As String
+    RepName = pRepName
+End Property
+
+Public Property Let RepName(value As String)
+    pRepName = value
+End Property
+
+Public Property Get PayScaleID() As Integer
+    PayScaleID= pPayScaleID
+End Property
+
+Public Property Let RepID(value As Integer)
+    pPayScaleID = value
+End Property
 
 'Payment Get/Set methods'
 Public Property Let IsPaidInFull(value As Boolean)
@@ -169,13 +202,6 @@ Public Property Let CreatedDate(value As Date)
     pCreatedDate = value
 End Property
 
-Public Property Get RepID() As Integer
-    RepID = pRepID
-End Property
-
-Public Property Let RepID(value As Integer)
-    pRepID = value
-End Property
 
 Public Property Get Amount() As Currency
     Amount = pAmount
@@ -209,14 +235,6 @@ Public Property Let SubStatus(value As String)
     pSubStatus = value
 End Property
 
-Public Property Get RepName() As String
-    RepName = pRepName
-End Property
-
-Public Property Let RepName(value As String)
-    pRepName = value
-End Property
-
 Public Property Get JobID() As String
     JobID = pJobID
 End Property
@@ -233,12 +251,6 @@ Public Property Let Customer(value As String)
     pCustomer = value
 End Property
 
-Public Property Get RepEmail() As String
-    RepEmail = pRepEmail
-End Property
 
-Public Property Let RepEmail(value As String)
-    pRepEmail = value
-End Property
 
 ''''''''''''''''''''''''METHODS''''''''''''''''''''''
