@@ -18,8 +18,6 @@ sub payroll_main()
 
 	'''''''''''''''''''''''''''''Input Array Object''''''''''''''''''''''
 	    Dim jobData() As cJobData
-	    Dim repData As Collection
-	    	Set repData = New Collection
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''MAIN METHODS AND LOGIC'''''''''''''''''''''''''''''''
@@ -27,11 +25,9 @@ sub payroll_main()
 
 	'Load up cJobData array with information from jobs in Nate'sEvolution'
 		jobData() = getjobData(workBookName)
-	'Load up repData with Rep Information'
-		repData   = getRepData(workBookName)
 
 	'Get relevant payment information from the payment tabs and update jobData'
-		jobData() = getPaymentInfo(jobData, workBookName)
+		jobData() = getPaymentInfo jobData, workBookName
 
 	'print out to the debug sheet all of the relevant job data'
 		printToDebug jobData, workBookName
