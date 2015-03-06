@@ -1,11 +1,14 @@
 'Class
 'Attributes
 Private pCustomer, pJobID, pStatus, _
-    pSubStatus, pRepEmail, pRepName As String
+    pSubStatus, pRepEmail As String
 
 Private pkW As Double
 Private pAmount, pWhatWasPaid, pFirstPaymentAmount, pSecondPaymentAmount As Currency
+<<<<<<< HEAD:VBScript/Payroll/GetInfoFromMaster/cJobData.vbs
 Private pRepID, pPayScaleID As Integer
+=======
+>>>>>>> origin/master:VBScript/Payroll/Classes/cJobData.vbs
 Private pCreatedDate, pFirstPaymentDate, pSecondPaymentDate As Date
 Private pIsInstall, pIsDocSigned, pIsFinalContract, pIsCancelled, pIsPaidInFull, pIsBlackListed As Boolean
 
@@ -40,6 +43,16 @@ End Property
 
 Public Property Let RepID(value As Integer)
     pPayScaleID = value
+End Property
+
+
+'Rep Get/Set methods'
+Public Property Get RepEmail() As String
+    RepEmail = pRepEmail
+End Property
+
+Public Property Let RepEmail(value As String)
+    pRepEmail = value
 End Property
 
 'Payment Get/Set methods'
@@ -95,6 +108,7 @@ Public Property Let SecondPaymentAmount(value As Currency)
     pSecondPaymentAmount = value
 End Property
 
+
 'Get/Set Methods IsInstall booleans
 Public Property Let IsInstall(value As Boolean)
     pIsInstall = value
@@ -135,9 +149,9 @@ End Property
 
 Public Sub setIsDocSigned(ByVal value As String)
     If UCase(value) = "Y" Then
-    	pIsDocSigned = True
+        pIsDocSigned = True
     Else
-    	pIsDocSigned = False
+        pIsDocSigned = False
     End IF
 End Sub
 
@@ -152,9 +166,9 @@ End Property
 
 Public Sub setIsFinalContract(ByVal value As String)
     If UCase(value) = "Y" Then
-    	pIsFinalContract = True
+        pIsFinalContract = True
     Else
-    	pIsFinalContract = False
+        pIsFinalContract = False
     End IF
 End Sub
 
@@ -173,24 +187,24 @@ End Property
 
 
 Public Sub setIsCancelled()
-	Dim isArray As Variant
+    Dim isArray As Variant
     isArray = Array("Customer Uncertain", "Customer Unresponsive", _
         "Job Disqualified", "On Hold")
 
     If Me.Status = "Cancelled" Then
-    	pIsCancelled = True
+        pIsCancelled = True
     Else
 
-	    For Each permitStatus In isArray
+        For Each permitStatus In isArray
 
-	        If permitStatus = Me.SubStatus Then
-	            
-	            pIsCancelled = True
-	            Exit For
+            If permitStatus = Me.SubStatus Then
+                
+                pIsCancelled = True
+                Exit For
 
-	        End If
-	    Next permitStatus
-	End If
+            End If
+        Next permitStatus
+    End If
 End Sub
 
 'Get/Let Methods
@@ -202,7 +216,10 @@ Public Property Let CreatedDate(value As Date)
     pCreatedDate = value
 End Property
 
+<<<<<<< HEAD:VBScript/Payroll/GetInfoFromMaster/cJobData.vbs
 
+=======
+>>>>>>> origin/master:VBScript/Payroll/Classes/cJobData.vbs
 Public Property Get Amount() As Currency
     Amount = pAmount
 End Property
