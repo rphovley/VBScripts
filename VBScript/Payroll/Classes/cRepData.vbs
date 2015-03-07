@@ -1,8 +1,26 @@
 private pName, pEmail As String
 private pID, pPayScaleID As Integer
-private pIsBlackList, pIsInactive As Boolean
+private pKwSum As Double
+private pIsBlackList, pIsInactive, pIsNewRep, pIsSlider As Boolean
+private pStartSliderDate As Date
 
 ' Get/Set methods'
+Public Property Get StartSliderDate() As Date
+    StartSliderDate = pStartSliderDate
+End Property
+
+Public Property Let StartSliderDate(value As Date)
+    pStartSliderDate = value
+End Property
+
+Public Property Let KwSum(value As Double)
+    pKwSum = value
+End Property
+
+Public Property Get KwSum() As Double
+    KwSum = pKwSum
+End Property
+
 Public Property Get Email() As String
     Email = pEmail
 End Property
@@ -27,7 +45,7 @@ Public Property Let ID(value As Integer)
     pID = value
 End Property
 
-Public Property Get RPayScaleID() As Integer
+Public Property Get PayScaleID() As Integer
     PayScaleID = pPayScaleID
 End Property
 
@@ -62,3 +80,12 @@ Sub setIsInactive(ByVal val As String)
         pIsInactive = True
     End If
 End Sub
+
+Public Property Let IsNewRep(value As Boolean)
+    pIsNewRep = value
+End Property
+
+Public Property Get IsNewRep() As Boolean
+    IsNewRep = pIsNewRep
+End Property
+

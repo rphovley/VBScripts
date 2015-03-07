@@ -37,7 +37,7 @@ Function getJobData(ByVal workBookName As String) As cJobData()
 
     '''''''''''''''''''''''''''''Input Object''''''''''''''''''''''
     Dim jobData() As cJobData
-    Dim currentRep  As cJobData
+    Dim currentJob  As cJobData
 
     '''''''''''''''''''''''''''''Data Size'''''''''''''''''''''''''
     Dim jobDataSize As Long
@@ -58,21 +58,22 @@ Function getJobData(ByVal workBookName As String) As cJobData()
                 If  .Cells(inputRow, createdDateCol).value >= NEWJOBDATE Then
 
                 	'Get data from sheet and pass it to new Data object'
-	                Set currentRep = New cJobData
-	                    currentRep.Customer    = .Cells(inputRow, customerCol).value
-	                    currentRep.JobID       = .Cells(inputRow, jobCol).value
-	                    currentRep.kW          = .Cells(inputRow, kWCol).value
-	                    currentRep.Status      = .Cells(inputRow, statusCol).value
-	                    currentRep.SubStatus   = .Cells(inputRow, subStatusCol).value
-	                    currentRep.CreatedDate = .Cells(inputRow, createdDateCol).value
-	                    currentRep.RepEmail    = .Cells(inputRow, repEmailCol).value
-	                    currentRep.setIsDocSigned (.Cells(inputRow, isDocSignedCol).value)
-	                    currentRep.setIsFinalContract (.Cells(inputRow, isFinalContractCol).value)
-	                    currentRep.setIsInstall
-	                    currentRep.setIsCancelled
+	                Set currentJob = New cJobData
+	                    currentJob.Customer    = .Cells(inputRow, customerCol).value
+	                    currentJob.JobID       = .Cells(inputRow, jobCol).value
+	                    currentJob.kW          = .Cells(inputRow, kWCol).value
+	                    currentJob.Status      = .Cells(inputRow, statusCol).value
+	                    currentJob.SubStatus   = .Cells(inputRow, subStatusCol).value
+	                    currentJob.CreatedDate = .Cells(inputRow, createdDateCol).value
+	                    currentJob.RepEmail    = .Cells(inputRow, repEmailCol).value
+	                    currentJob.setIsDocSigned (.Cells(inputRow, isDocSignedCol).value)
+	                    currentJob.setIsFinalContract (.Cells(inputRow, isFinalContractCol).value)
+	                    currentJob.setIsInstall
+	                    currentJob.setIsCancelled
+                        currentJob.setDaysSinceCreated
 
-	                ''''''''''Add currentRep to the jobData Array'''''''''''''
-	                Set jobData(inputRow - 2) = currentRep
+	                ''''''''''Add currentJob to the jobData Array'''''''''''''
+	                Set jobData(inputRow - 2) = currentJob
 
                 End If
             End With

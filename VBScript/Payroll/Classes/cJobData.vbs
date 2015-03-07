@@ -3,12 +3,10 @@
 Private pCustomer, pJobID, pStatus, _
     pSubStatus, pRepEmail As String
 
+Private pDaysSinceCreated As Integer
+
 Private pkW As Double
 Private pAmount, pWhatWasPaid, pFirstPaymentAmount, pSecondPaymentAmount As Currency
-<<<<<<< HEAD:VBScript/Payroll/GetInfoFromMaster/cJobData.vbs
-Private pRepID, pPayScaleID As Integer
-=======
->>>>>>> origin/master:VBScript/Payroll/Classes/cJobData.vbs
 Private pCreatedDate, pFirstPaymentDate, pSecondPaymentDate As Date
 Private pIsInstall, pIsDocSigned, pIsFinalContract, pIsCancelled, pIsPaidInFull, pIsBlackListed As Boolean
 
@@ -39,20 +37,6 @@ End Property
 
 Public Property Get PayScaleID() As Integer
     PayScaleID= pPayScaleID
-End Property
-
-Public Property Let RepID(value As Integer)
-    pPayScaleID = value
-End Property
-
-
-'Rep Get/Set methods'
-Public Property Get RepEmail() As String
-    RepEmail = pRepEmail
-End Property
-
-Public Property Let RepEmail(value As String)
-    pRepEmail = value
 End Property
 
 'Payment Get/Set methods'
@@ -205,6 +189,7 @@ Public Sub setIsCancelled()
             End If
         Next permitStatus
     End If
+
 End Sub
 
 'Get/Let Methods
@@ -216,10 +201,18 @@ Public Property Let CreatedDate(value As Date)
     pCreatedDate = value
 End Property
 
-<<<<<<< HEAD:VBScript/Payroll/GetInfoFromMaster/cJobData.vbs
+Public Property Get DaysSinceCreated() As Integer
+    DaysSinceCreated = pDaysSinceCreated
+End Property
 
-=======
->>>>>>> origin/master:VBScript/Payroll/Classes/cJobData.vbs
+Public Property Let DaysSinceCreated(value As Integer)
+    pDaysSinceCreated = value
+End Property
+
+Public Sub setDaysSinceCreated()
+	pDaysSinceCreated = DateDiff("d",pCreatedDate, Now())
+End Sub
+
 Public Property Get Amount() As Currency
     Amount = pAmount
 End Property

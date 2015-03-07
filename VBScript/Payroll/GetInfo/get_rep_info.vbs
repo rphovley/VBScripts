@@ -23,8 +23,10 @@ Function getRepData(ByVal workBookName As String) As Collection
     	createNatesEvo(workBookName)
     	
     ''''''''''''''''''''''''''''''Worksheets''''''''''''''''''''''
-    Dim repDataSheet As Worksheet
-        Set repDataSheet = NatesEvolution.Worksheets("RepID.PayScale.Status")
+    Dim repDataSheet, jobDataSheet, mainMenu As Worksheet
+        Set jobDataSheet = NatesEvolution.Worksheets("Master Input")
+        Set repDataSheet = NatesEvolution.Worksheets("RepData")
+        Set mainMenu     = NatesEvolution.Worksheets("Main Menu")
 
     ''''''''''''''''''''''''''''''Row Counters''''''''''''''''''''''
     Dim inputRow, printRow, repRow As Integer
@@ -36,8 +38,10 @@ Function getRepData(ByVal workBookName As String) As Collection
     Dim currentRep As cRepData
 
     '''''''''''''''''''''''''''''Data Size'''''''''''''''''''''''''
-    Dim repDataSize As Long
+    Dim repDataSize, jobDataSize As Long
     	repDataSize = repDataSheet.Cells(1,1).End(xlDown).Row - 1
+        jobDataSize = jobDataSheet.Cells(1,1).End(xlDown).Row - 1
+
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''GET AND SET VALUES''''''''''''''''''''''''''''
@@ -51,24 +55,37 @@ Function getRepData(ByVal workBookName As String) As Collection
                         currentRep.Email    = .Cells(inputRow, repListEmailCol).Value
                         currentRep.Name     = .Cells(inputRow, repListNameCol).Value
                         currentRep.PayScaleID  = .Cells(inputRow, repListScaleCol).Value
-                        currentRep.IsBlackList = .Cells(inputRow, repListBlackCol).Value
-                        currentRep.IsInactive  = .Cells(inputRow, repListInactiveCol).Value
+                        currentRep.setIsBlackList (.Cells(inputRow, repListBlackCol).Value)
+                        currentRep.setIsInactive (.Cells(inputRow, repListInactiveCol).Value)
 	                    
-	                ''''''''''Add currentRep to the jobData Collection''''''''''''
-	                repData.Add currentRep, currentRep.Email
             End With
 
+            For jobRow = 2 To jobDataSize - 1
             
+
+                With jobDataSheet
+                    
+                    If .Cells(jobRow, 17).Value = currentRep.Email Then
+
+                        'Determine if the rep is new or not'
+                        If DateDiff("d",.Cells(jobRow,7).Value, now()) < 60 Then                        
+                            currentRep.IsNewRep = True
+                        Else
+                            currentRep.IsNewRep = False
+                        End If
+                        Exit For
+                    End if
+
+
+                End With
+            Next jobRow
+
+            ''''''''''Add currentRep to the jobData Collection''''''''''''
+                                repData.Add currentRep, currentRep.Email
         Next inputRow
 
        Set getRepData = repData
         
-        
-
-
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-'''''''''''''''''''''''''''''PRINT VALUES''''''''''''''''''''''''''''''''''
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 End Function
 
 
