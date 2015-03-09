@@ -7,7 +7,7 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workbookName As Strin
 
 ''''''''''''''''''''''''''''''Columns''''''''''''''''''''''
     Dim customerCol, jobCol, kWCol, createdDateCol, _
-    	paymentAmountCol, paymentDateCol As Integer
+    	paymentAmountCol, paymentDateCol, finalAmountCol, finalDateCol As Integer
 
         customerCol      = 3
         jobCol           = 4
@@ -15,6 +15,8 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workbookName As Strin
         createdDateCol   = 6
         paymentAmountCol = 7
         paymentDateCol   = 8
+        finalAmountCol   = 12
+        finalAmountCol   = 13
 
         
 ''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
@@ -91,7 +93,22 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workbookName As Strin
 
 
 	         	Next jobRow
-	         End With   
+	         End With 
+	          With secondPaymentSheet
+
+	         	'Loop through the first Payments Sheet'
+	         	For jobRow = 2 To .Cells(1,1).End(xlDown).Row
+
+	         		'If this is true, this job is in the 2nd_Payments_Pending Tab'
+	         		If .Cells(jobRow, jobCol).Value = job.JobID Then
+	         			'update jobData with new information'
+	         			job.ThirdPaymentAmount = .Cells(jobRow, finalAmountCol).Value
+	         			job.ThirdPaymentDate   = .Cells(jobRow, finalDateCol).Value
+	         		End If
+
+
+	         	Next jobRow
+	         End With     
 	     End If
           
          'set the value of what was paid'

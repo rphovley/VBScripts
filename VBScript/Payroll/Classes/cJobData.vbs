@@ -6,8 +6,8 @@ Private pCustomer, pJobID, pStatus, _
 Private pDaysSinceCreated As Integer
 
 Private pkW As Double
-Private pAmount, pWhatWasPaid, pFirstPaymentAmount, pSecondPaymentAmount As Currency
-Private pCreatedDate, pFirstPaymentDate, pSecondPaymentDate As Date
+Private pAmount, pWhatWasPaid, pFirstPaymentAmount, pSecondPaymentAmount, pFinalPaymentAmount As Currency
+Private pCreatedDate, pFirstPaymentDate, pSecondPaymentDate, pFinalPaymentDate As Date
 Private pIsInstall, pIsDocSigned, pIsFinalContract, pIsCancelled, pIsPaidInFull, pIsBlackListed As Boolean
 
 'Rep Info'
@@ -64,6 +64,14 @@ Public Property Let SecondPaymentDate(value As Date)
     pSecondPaymentDate = value
 End Property
 
+Public Property Get FinalPaymentDate() As Date
+    FinalPaymentDate = pFinalPaymentDate
+End Property
+
+Public Property Let FinalPaymentDate(value As Date)
+    pFinalPaymentDate = value
+End Property
+
 Public Property Get WhatWasPaid() As Currency
     WhatWasPaid = pWhatWasPaid
 End Property
@@ -90,6 +98,14 @@ End Property
 
 Public Property Let SecondPaymentAmount(value As Currency)
     pSecondPaymentAmount = value
+End Property
+
+Public Property Get FinalPaymentAmount() As Currency
+    FinalPaymentAmount = pFinalPaymentAmount
+End Property
+
+Public Property Let FinalPaymentAmount(value As Currency)
+    pFinalPaymentAmount = value
 End Property
 
 
