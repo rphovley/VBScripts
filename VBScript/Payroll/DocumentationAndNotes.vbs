@@ -40,6 +40,7 @@
 	
 	'BEFORE PROCESS'
 		'Check Nate's Evolution that the formulas include all the data from Master and Doc Signed Input'
+		'Remove any job duplicates from MasterReport'
 
 	'ADJUSTMENTS AFTER PROCESS HAS BEEN RUN'
 		'Bobby and Josh will press a button, and based on the normal conditions, they will'
