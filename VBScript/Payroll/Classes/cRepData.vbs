@@ -3,8 +3,17 @@ private pID, pPayScaleID As Integer
 private pKwSum As Double
 private pIsBlackList, pIsInactive, pIsNewRep, pIsSlider As Boolean
 private pStartSliderDate As Date
+private pSalesThisWeek as integer
 
 ' Get/Set methods'
+Public Property Let SalesThisWeek(value as Integer)
+	pSalesThisWeek = value
+End Property
+
+Public Property Get SalesThisWeek()
+	SalesThisWeek = pSalesThisWeek
+End Property
+
 Public Property Let IsNewRep(value As Boolean)
     pIsNewRep = value
 End Property
