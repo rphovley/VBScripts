@@ -6,7 +6,7 @@ Function newRepSliderRep(ByRef currentRep As cRepData, ByVal workBookName As Str
 
     ''''''''''''''''''''''''''''''Columns''''''''''''''''''''''
     Dim masCustomerCol, masJobCol, masKWCol, masStatusCol, masSubStatusCol, _
-        masDateCol, masRepEmailCol As Integer
+        masDateCol, masRepEmailCol, mainmenuDatesCol As Integer
 
         masCustomerCol        = 1   
         masJobCol             = 2
@@ -15,14 +15,19 @@ Function newRepSliderRep(ByRef currentRep As cRepData, ByVal workBookName As Str
         masSubStatusCol       = 5
         masCreatedDateCol     = 7
         masRepEmailCol        = 17
+		
+	''''''''''''''''''''''''Rows'''''''''''''''''''''''''''
+		mainmenuStartDateRow = 5
+		mainmenuEndDateRow = 6
 
     ''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
     Dim NatesEvolution As Workbook
         Set NatesEvolution = Workbooks(workBookName)
         
     ''''''''''''''''''''''''''''''Worksheets''''''''''''''''''''''
-    Dim jobDataSheet As Worksheet
+    Dim jobDataSheet, MainMenuSheet As Worksheet
         Set jobDataSheet = NatesEvolution.Worksheets("Master Input")
+		Set MainMenuSheet = NatesEvolution.Worksheets("Main Menu")
 
     '''''''''''''''''''''''''''''Data Size'''''''''''''''''''''''''
     Dim jobDataSize As Long
@@ -33,16 +38,16 @@ Function newRepSliderRep(ByRef currentRep As cRepData, ByVal workBookName As Str
 '''''''''''''''''''''''''''LOGIC AND SET VALUES''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
+'''''''''''''''''''''''''''Sets start and end dates for pay period'''''''''''''''''''''''''''''''''''
+Dim PayPeriodStartDate, PayPeriodEndDate as Date
+	PayPeriodStartDate = MainMenuSheet.cells(mainmenuStartDateRow, mainmenuDatesCol).value
+	PayPeriodEndDate = MainMenuSheet.cells(mainmenuEndDateRow, mainmenuDatesCol).value
+	
     For jobRow = 2 To jobDataSize - 1
     
         With jobDataSheet
             
-            If .Cells(jobRow, 17).Value = currentRep.Email Then
-
-                'Determine if the rep is new or not'
-                If DateDiff("d", .Cells(jobRow, 7).value, Now()) >= 60 And currentRep.IsNewRep Then                        
-                    currentRep.IsNewRep = False
-                End If
+            If .Cells(jobRow, masRepEmailCol).Value = currentRep.Email Then
 
                 'Code for determining if rep is on sliding pay scale or not'
                 currentRep.KwSum = currentRep.KwSum + .Cells(jobRow,3).Value
@@ -51,6 +56,11 @@ Function newRepSliderRep(ByRef currentRep As cRepData, ByVal workBookName As Str
                     currentRep.IsSlider = True
                     currentRep.StartSliderDate = .Cells(jobRow,7).Value
                 End If
+				
+				If .cells(jobRow, masCreatedDateCol).value >= PayPeriodStartDate and .cells(jobRow, masCreatedDateCol).value <= PayPeriodEndDate
+					currentRep.SalesThisWeek = currentRep.SalesThisWeek + 1
+				End If
+				
             End if
 
 
