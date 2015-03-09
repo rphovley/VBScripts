@@ -5,6 +5,22 @@ private pIsBlackList, pIsInactive, pIsNewRep, pIsSlider As Boolean
 private pStartSliderDate As Date
 
 ' Get/Set methods'
+Public Property Let IsNewRep(value As Boolean)
+    pIsNewRep = value
+End Property
+
+Public Property Get IsNewRep() As Boolean
+    IsNewRep = pIsNewRep
+End Property
+
+Public Property Let IsSlider(value As Boolean)
+    pIsSlider = value
+End Property
+
+Public Property Get IsSlider() As Boolean
+    IsSlider = pIsSlider
+End Property
+
 Public Property Get StartSliderDate() As Date
     StartSliderDate = pStartSliderDate
 End Property
@@ -81,11 +97,5 @@ Sub setIsInactive(ByVal val As String)
     End If
 End Sub
 
-Public Property Let IsNewRep(value As Boolean)
-    pIsNewRep = value
-End Property
 
-Public Property Get IsNewRep() As Boolean
-    IsNewRep = pIsNewRep
-End Property
 

@@ -18,9 +18,6 @@ Function getRepData(ByVal workBookName As String) As Collection
         'workBookName = InputBox("What is the master report's name?") & ".xlsx"
     Dim NatesEvolution As Workbook
         Set NatesEvolution = Workbooks(workBookName)
-
-    ''''''''''''''''''''''''''Create Nate's Evolution'''''''''''''
-    	createNatesEvo(workBookName)
     	
     ''''''''''''''''''''''''''''''Worksheets''''''''''''''''''''''
     Dim repDataSheet, jobDataSheet, mainMenu As Worksheet
@@ -60,25 +57,10 @@ Function getRepData(ByVal workBookName As String) As Collection
 	                    
             End With
 
-            For jobRow = 2 To jobDataSize - 1
-            
+                'Determines if the rep is a new rep and if the rep'
+                 'is a slider rep and sets related values'
+                Set currentRep = newRepSliderRep(currentRep, workBookName)
 
-                With jobDataSheet
-                    
-                    If .Cells(jobRow, 17).Value = currentRep.Email Then
-
-                        'Determine if the rep is new or not'
-                        If DateDiff("d",.Cells(jobRow,7).Value, now()) < 60 Then                        
-                            currentRep.IsNewRep = True
-                        Else
-                            currentRep.IsNewRep = False
-                        End If
-                        Exit For
-                    End if
-
-
-                End With
-            Next jobRow
 
             ''''''''''Add currentRep to the jobData Collection''''''''''''
                                 repData.Add currentRep, currentRep.Email

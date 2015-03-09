@@ -1,4 +1,4 @@
-Sub printToDebug(ByRef repData As Collection, ByVal workBookName As String)
+Sub printToDebugRep(ByRef repData As Collection, ByVal workBookName As String)
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''INITIALIZE VARIABLES''''''''''''''''''''''''''
@@ -7,7 +7,7 @@ Sub printToDebug(ByRef repData As Collection, ByVal workBookName As String)
 ''''''''''''''''''''''''''''''Columns''''''''''''''''''''''
     Dim repListNameCol, repListEmailCol, repListIDCol, _
         repListScaleCol, repListBlackCol, repListInactiveCol, _
-        repListIsNewRep As Integer
+        repListIsNewRep, repListIsSliderCol, repSliderDateCol As Integer
 
         repListIDCol       = 1
         repListEmailCol    = 2
@@ -16,6 +16,8 @@ Sub printToDebug(ByRef repData As Collection, ByVal workBookName As String)
         repListBlackCol    = 5
         repListInactiveCol = 6
         repListIsNewRep    = 7
+        repListIsSliderCol = 8
+        repSliderDateCol   = 9
         
 ''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
         'workBookName = InputBox("What is the master report's name?") & ".xlsx"
@@ -39,13 +41,17 @@ Sub printToDebug(ByRef repData As Collection, ByVal workBookName As String)
             
             With printSheet
             
-                    .Cells(index, repListIDCol).value       = repData(index - 1).ID
-                    .Cells(index, repListEmailCol).value    = repData(index - 1).Email
-                    .Cells(index, repListNameCol).value     = repData(index - 1).Name
-                    .Cells(index, repListScaleCol).value    = repData(index - 1).PayScaleID
-                    .Cells(index, repListBlackCol).value    = repData(index - 1).IsBlackList
-                    .Cells(index, repListInactiveCol).value = repData(index - 1).IsInactive
-                    .Cells(index, repListIsNewRep).value    = repData(index - 1).IsNewRep
+                    .Cells(index, repListIDCol).value          = repData(index - 1).ID
+                    .Cells(index, repListEmailCol).value       = repData(index - 1).Email
+                    .Cells(index, repListNameCol).value        = repData(index - 1).Name
+                    .Cells(index, repListScaleCol).value       = repData(index - 1).PayScaleID
+                    .Cells(index, repListBlackCol).value       = repData(index - 1).IsBlackList
+                    .Cells(index, repListInactiveCol).value    = repData(index - 1).IsInactive
+                    .Cells(index, repListIsNewRep).value       = repData(index - 1).IsNewRep
+                    .Cells(index, repListIsSliderCol).value    = repData(index - 1).IsSlider
+                    if repData(index - 1).IsSlider = True Then
+                        .Cells(index, repSliderDateCol).value    = repData(index - 1).StartSliderDate
+                    End if
             End With
             
         printRow = printRow + 1
