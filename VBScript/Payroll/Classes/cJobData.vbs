@@ -7,36 +7,49 @@ Private pDaysSinceCreated As Integer
 
 Private pkW As Double
 Private pAmount, pWhatWasPaid, pFirstPaymentAmount, pSecondPaymentAmount, pFinalPaymentAmount As Currency
+private pThisWeekFirstPayment, pThisWeekSecondPayment, pThisWeekFinalPayment, pThisWeekCancelled As Currency
 Private pCreatedDate, pFirstPaymentDate, pSecondPaymentDate, pFinalPaymentDate As Date
 Private pIsInstall, pIsDocSigned, pIsFinalContract, pIsCancelled, pIsPaidInFull, pIsBlackListed As Boolean
 
+Public Property Get ThisWeekFirstPayment() As Currency
+    ThisWeekFirstPayment = pThisWeekFirstPayment
+End Property
+
+Public Property Let ThisWeekFirstPayment(value As Currency)
+    pThisWeekFirstPayment = value
+End Property
+
+Public Property Get ThisWeekSecondPayment() As Currency
+    ThisWeekSecondPayment = pThisWeekSecondPayment
+End Property
+
+Public Property Let ThisWeekSecondPayment(value As Currency)
+    pThisWeekSecondPayment = value
+End Property
+
+Public Property Get ThisWeekFinalPayment() As Currency
+    ThisWeekFinalPayment = pThisWeekFinalPayment
+End Property
+
+Public Property Let ThisWeekFinalPayment(value As Currency)
+    pThisWeekFinalPayment= value
+End Property
+
+Public Property Get ThisWeekCancelled() As Currency
+    ThisWeekFinalPayment = pThisWeekFinalPayment
+End Property
+
+Public Property Let ThisWeekCancelled(value As Currency)
+    pThisWeekFinalPayment= value
+End Property
+
 'Rep Info'
-Public Property Get RepID() As Integer
-    RepID = pRepID
-End Property
-
-Public Property Let RepID(value As Integer)
-    pRepID = value
-End Property
-
 Public Property Get RepEmail() As String
     RepEmail = pRepEmail
 End Property
 
 Public Property Let RepEmail(value As String)
     pRepEmail = value
-End Property
-
-Public Property Get RepName() As String
-    RepName = pRepName
-End Property
-
-Public Property Let RepName(value As String)
-    pRepName = value
-End Property
-
-Public Property Get PayScaleID() As Integer
-    PayScaleID= pPayScaleID
 End Property
 
 'Payment Get/Set methods'
@@ -81,7 +94,7 @@ Public Property Let WhatWasPaid(value As Currency)
 End Property
 
 Public Sub setWhatWasPaid()
-    pWhatWasPaid = pFirstPaymentAmount + pSecondPaymentAmount
+    pWhatWasPaid = pFirstPaymentAmount + pSecondPaymentAmount + pFinalPaymentAmount
 End Sub
 
 Public Property Get FirstPaymentAmount() As Currency
