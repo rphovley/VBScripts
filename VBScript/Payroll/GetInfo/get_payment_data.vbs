@@ -7,15 +7,17 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workBookName As Strin
 
 ''''''''''''''''''''''''''''''Columns''''''''''''''''''''''
     Dim customerCol, jobCol, kWCol, createdDateCol, _
-        paymentAmountCol, paymentDateCol As Integer
+        paymentAmountCol, paymentDateCol, _
+        finalPaymentCol, finalDateCol As Integer
 
-        customerCol = 3
-        jobCol = 4
-        kWCol = 5
-        createdDateCol = 6
+        customerCol      = 3
+        jobCol           = 4
+        kWCol            = 5
+        createdDateCol   = 6
         paymentAmountCol = 7
-        paymentDateCol = 8
-
+        paymentDateCol   = 8
+        finalPaymentCol  = 12
+        finalDateCol     = 13
         
 ''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
         'workBookName = InputBox("What is the master report's name?") & ".xlsx"
@@ -53,6 +55,8 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workBookName As Strin
                 If .Cells(jobRow, jobCol).value = job.JobID Then
                     'update jobData with new information'
                     job.IsPaidInFull = True
+                    job.FinalPaymentAmount = .Cells(jobRow, finalPaymentCol).value
+                    job.FinalPaymentDate   = .Cells(jobRow, finalDateCol).value
                 End If
 
 
@@ -70,7 +74,7 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workBookName As Strin
                     If .Cells(jobRow, jobCol).value = job.JobID Then
                         'update jobData with new information'
                         job.FirstPaymentAmount = .Cells(jobRow, paymentAmountCol).value
-                        job.FirstPaymentDate = .Cells(jobRow, paymentDateCol).value
+                        job.FirstPaymentDate   = .Cells(jobRow, paymentDateCol).value
                     End If
 
 
@@ -86,7 +90,7 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workBookName As Strin
                     If .Cells(jobRow, jobCol).value = job.JobID Then
                         'update jobData with new information'
                         job.SecondPaymentAmount = .Cells(jobRow, paymentAmountCol).value
-                        job.SecondPaymentDate = .Cells(jobRow, paymentDateCol).value
+                        job.SecondPaymentDate   = .Cells(jobRow, paymentDateCol).value
                     End If
 
 
