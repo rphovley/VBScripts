@@ -28,7 +28,7 @@ sub payroll_main()
 	'Load up cJobData array with information from jobs in Nate'sEvolution'
 		jobData() = getjobData(workBookName)
 	'Load up repData with Rep Information'
-		repData   = getRepData(workBookName)
+		Set repData   = getRepData(workBookName)
 	'Get relevant payment information from the payment tabs and update jobData'
 		jobData() = getPaymentInfo(jobData, workBookName)
 	
@@ -36,7 +36,7 @@ sub payroll_main()
 		jobData() = processPayment(jobData, repData, workBookName)
 	'print out to the debug sheet all of the relevant job data'
 
-		printToDebug jobData, workBookName
+		'printToDebug jobData, workBookName
 
 		printToDebugRep repData, workBookName
 

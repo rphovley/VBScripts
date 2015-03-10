@@ -5,11 +5,6 @@ Function processPayment(ByRef jobData() As cJobData, ByRef repData As Collection
 	''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 	''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
-	    Dim workBookName As String
-	    Dim testName As String
-	        testName = "VBA Triforce (Ezra)"
-	        workBookName = testName & ".xlsm"
-	        'workBookName = InputBox("What is the master report's name?") & ".xlsx"
 	    Dim NatesEvolution As Workbook
 	        Set NatesEvolution = Workbooks(workBookName)
 
@@ -25,13 +20,13 @@ Function processPayment(ByRef jobData() As cJobData, ByRef repData As Collection
 	    	Set job = jobData(jobIndex)
 
 	    	'IGNORE ANY JOBS THAT HAVE ALREADY BEEN PAID OUT IN FULL'
-	    	If jobData.FinalPaymentAmount = 0 Then
+	    	If job.FinalPaymentAmount = 0 Then
 
 	    		'IGNORE ANY JOBS THAT HAVE ALREADY BEEN PAID SECOND PAYMENTS'
-	    		If jobData.SecondPaymentAmount = 0 Then
+	    		If job.SecondPaymentAmount = 0 Then
 
 	    			'IGNORE ANY JOBS THAT HAVE ALREADY BEEN PAID FIRST PAYMENTS'
-	    			If jobData.FirstPaymentAmount = 0 Then
+	    			If job.FirstPaymentAmount = 0 Then
 					''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 					''''''''''''''''''''''''FIRST PAYMENT'''''''''''''''''''''''''''''''
 					''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -44,13 +39,13 @@ Function processPayment(ByRef jobData() As cJobData, ByRef repData As Collection
 				''''''''''''''''''''''''SECOND PAYMENT''''''''''''''''''''''''''''''
 				''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 				Set job = secondPayment(job, workBookName)
-				
+
 				End If
 
 			''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 			''''''''''''''''''''''''FINAL PAYMENT'''''''''''''''''''''''''''''''
 			''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-			
+
 
 
 
@@ -59,6 +54,7 @@ Function processPayment(ByRef jobData() As cJobData, ByRef repData As Collection
 			''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 			End If
 
+			Set jobData(jobIndex) = job
 		Next jobIndex
-	Set processPayment = jobData
+	processPayment = jobData
 End Function
