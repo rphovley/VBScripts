@@ -31,10 +31,16 @@ sub payroll_main()
 		repData   = getRepData(workBookName)
 	'Get relevant payment information from the payment tabs and update jobData'
 		jobData() = getPaymentInfo(jobData, workBookName)
+	
+	'Process Payment Info'
+		jobData() = processPayment(jobData, repData, workBookName)
 	'print out to the debug sheet all of the relevant job data'
+
 		printToDebug jobData, workBookName
 
 		printToDebugRep repData, workBookName
+
+		printAllToDebug jobData, repData, workBookName
 	'Loop through pending accounts to grab any info for those jobs based on'
 
 End Sub
