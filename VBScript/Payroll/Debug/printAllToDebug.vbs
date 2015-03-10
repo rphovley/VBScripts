@@ -7,9 +7,12 @@ Sub printAllToDebug(ByRef jobData() As cJobData, ByRef repData As Collection, By
 ''''''''''''''''''''''''''''''Columns''''''''''''''''''''''
     Dim customerCol, jobCol, kWCol, statusCol, subStatusCol, _
         createdDateCol, repEmailCol, isDocSignedCol, isFinalContractCol, _
-        isInstallCol, isCancelledCol, firstPayCol, firstPayDateCol, _
-        secondPayCol, secondPayDateCol, whatWasPaidCol, daysSinceCol, _
-        repNameCol, repScaleCol, repBlackCol, repInactiveCol, repNewCol, _
+        isInstallCol, isCancelledCol, firstPayCol, firstPayDateCol,  _
+        secondPayCol, secondPayDateCol, finalPayCol,  finalDateCol, _
+        whatWasPaidCol, thisWeeksFirstCol, thisWeeksSecondCol, _
+        thisWeeksFinalCol, thisCancellationCol, _
+         daysSinceCol, repNameCol, repScaleCol, _
+        repBlackCol, repInactiveCol, repNewCol, _
         repSliderCol, repSliderDateCol As Integer
 
         customerCol        = 1
@@ -27,15 +30,21 @@ Sub printAllToDebug(ByRef jobData() As cJobData, ByRef repData As Collection, By
         firstPayDateCol    = 13
         secondPayCol       = 14
         secondPayDateCol   = 15
-        whatWasPaidCol     = 16
-        daysSinceCol       = 17
-        repNameCol         = 18
-        repScaleCol        = 19
-        repBlackCol        = 20
-        repInactiveCol     = 21
-        repNewCol          = 22
-        repSliderCol       = 23
-        repSliderDateCol   = 24
+        finalPayCol        = 16
+        finalDateCol       = 17
+        whatWasPaidCol     = 18
+        thisWeeksFirstCol  = 19
+        thisWeeksSecondCol = 20
+        thisWeeksFinalCol  = 21
+        thisCancellationCol= 22
+        daysSinceCol       = 23
+        repNameCol         = 24
+        repScaleCol        = 25
+        repBlackCol        = 26
+        repInactiveCol     = 27
+        repNewCol          = 28
+        repSliderCol       = 29
+        repSliderDateCol   = 30
         
 ''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
         'workBookName = InputBox("What is the master report's name?") & ".xlsx"
@@ -59,28 +68,54 @@ Sub printAllToDebug(ByRef jobData() As cJobData, ByRef repData As Collection, By
             
             With printSheet
             
-                    .Cells(printRow, customerCol).value = printJob.Customer
-                    .Cells(printRow, jobCol).value = printJob.JobID
-                    .Cells(printRow, kWCol).value = printJob.kW
-                    .Cells(printRow, createdDateCol).value = printJob.CreatedDate
-                    .Cells(printRow, statusCol).value = printJob.Status
-                    .Cells(printRow, subStatusCol).value = printJob.SubStatus
-                    .Cells(printRow, repEmailCol).value = printJob.RepEmail
-                    .Cells(printRow, isDocSignedCol).value = printJob.IsDocSigned
+                    .Cells(printRow, customerCol).value        = printJob.Customer
+                    .Cells(printRow, jobCol).value             = printJob.JobID
+                    .Cells(printRow, kWCol).value              = printJob.kW
+                    .Cells(printRow, createdDateCol).value     = printJob.CreatedDate
+                    .Cells(printRow, statusCol).value          = printJob.Status
+                    .Cells(printRow, subStatusCol).value       = printJob.SubStatus
+                    .Cells(printRow, repEmailCol).value        = printJob.RepEmail
+                    .Cells(printRow, isDocSignedCol).value     = printJob.IsDocSigned
                     .Cells(printRow, isFinalContractCol).value = printJob.IsFinalContract
-                    .Cells(printRow, isInstallCol).value = printJob.IsInstall
-                    .Cells(printRow, isCancelledCol).value = printJob.IsCancelled
+                    .Cells(printRow, isInstallCol).value       = printJob.IsInstall
+                    .Cells(printRow, isCancelledCol).value     = printJob.IsCancelled
                     
                     'Leave the cell empty if it equals Empty Date'
                     If printJob.FirstPaymentDate <> EMPTYDATE Then
-                        .Cells(printRow, firstPayCol).value = printJob.FirstPaymentAmount
+                        .Cells(printRow, firstPayCol).value     = printJob.FirstPaymentAmount
                         .Cells(printRow, firstPayDateCol).value = printJob.FirstPaymentDate
                     End If
 
                     'Leave the cell empty if it equals Empty Date'
                     If printJob.SecondPaymentDate <> EMPTYDATE Then
-                        .Cells(printRow, secondPayCol).value = printJob.SecondPaymentAmount
+                        .Cells(printRow, secondPayCol).value     = printJob.SecondPaymentAmount
                         .Cells(printRow, secondPayDateCol).value = printJob.SecondPaymentDate
+                    End If
+
+                    'Leave the cell empty if it equals Empty Date'
+                    If printJob.FinalPaymentDate <> EMPTYDATE Then
+                        .Cells(printRow, finalPayCol).value     = printJob.FinalPaymentAmount
+                        .Cells(printRow, finalDateCol).value    = printJob.FinalPaymentDate
+                    End If
+
+                    'Leave the cell empty if it equals 0'
+                    If printJob.ThisWeekFirstPayment <> 0 Then
+                        .Cells(printRow, thisWeeksFirstCol).value = printJob.ThisWeekFirstPayment
+                    End If
+
+                    'Leave the cell empty if it equals 0'
+                    If printJob.ThisWeekSecondPayment <> 0 Then
+                        .Cells(printRow, thisWeeksSecondCol).value = printJob.ThisWeekSecondPayment
+                    End If        
+
+                    'Leave the cell empty if it equals 0'
+                    If printJob.ThisWeekFinalPayment <> 0 Then
+                        .Cells(printRow, thisWeeksFinalCol).value = printJob.ThisWeekFinalPayment
+                    End If
+
+                    'Leave the cell empty if it equals 0'
+                    If printJob.ThisWeekCancelled <> 0 Then
+                        .Cells(printRow, thisCancellationCol).value     = printJob.ThisWeekCancelled
                     End If
                     .Cells(printRow, whatWasPaidCol).value = printJob.WhatWasPaid
 
