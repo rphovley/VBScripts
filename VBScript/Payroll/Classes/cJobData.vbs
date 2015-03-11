@@ -205,7 +205,7 @@ Public Property Let IsFinalContract(value As Boolean)
 End Property
 
 Public Sub setIsFinalContract(ByVal value As String)
-    If UCase(value) <> "N" Then
+    If value <> "" Then
         pIsFinalContract = True
     End IF
 End Sub

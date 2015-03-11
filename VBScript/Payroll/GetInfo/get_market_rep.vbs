@@ -22,27 +22,27 @@ Function getMarketRep(ByRef currentRep As cRepData, ByVal workBookName As String
 
     '''''''''''''''''''''''''''''Data Size'''''''''''''''''''''''''
     Dim marketDataSize As Long
-        marketDataSize = marketDataSheet.Cells(1,1).End(xlDown).Row - 1
+        marketDataSize = marketDataSheet.Cells(3,IDCol).End(xlDown).Row
 
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''LOGIC AND SET VALUES''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-    For marketRow = 2 To marketingDataSize - 1
+    For marketRow = 4 To marketDataSize - 1
     
         With marketDataSheet
             
             If .Cells(marketRow, IDCol).Value = currentRep.ID Then
-                currentRep.MarteingRate  = .Cells(marketRow, RateCol).Value
+                currentRep.MarketingRate  = .Cells(marketRow, RateCol).Value
                 currentRep.MarkStartDate = .Cells(marketRow, StartCol).Value
                 currentRep.MarkEndDate   = .Cells(marketRow, EndCol).Value
-                currentRep.setIsMarketing()
+                currentRep.setIsMarketing
             End if
 
 
         End With
     Next marketRow
 
-    Set newRepSliderRep = currentRep
+    Set getMarketRep = currentRep
 End Function

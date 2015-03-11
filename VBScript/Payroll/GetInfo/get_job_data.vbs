@@ -8,14 +8,13 @@ Function getJobData(ByVal workBookName As String) As cJobData()
     Dim customerCol, jobCol, kWCol, statusCol, subStatusCol, _
         createdDateCol, repEmailCol, isDocSignedCol, isFinalContractCol As Integer
 
-        customerCol = 1
-        jobCol = 2
-        kWCol = 3
-        statusCol = 4
-        subStatusCol = 5
-        createdDateCol = 6
-        repEmailCol = 9
-        isDocSignedCol = 7
+        customerCol        = 1
+        jobCol             = 2
+        kWCol              = 3
+        statusCol          = 4
+        subStatusCol       = 5
+        createdDateCol     = 6
+        repEmailCol        = 7
         isFinalContractCol = 8
         
     ''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
@@ -66,11 +65,11 @@ Function getJobData(ByVal workBookName As String) As cJobData()
 	                    currentJob.SubStatus   = .Cells(inputRow, subStatusCol).value
 	                    currentJob.CreatedDate = .Cells(inputRow, createdDateCol).value
 	                    currentJob.RepEmail    = .Cells(inputRow, repEmailCol).value
-	                    currentJob.setIsDocSigned (.Cells(inputRow, isDocSignedCol).value)
-	                    currentJob.setIsFinalContract (.Cells(inputRow, isFinalContractCol).value)
+                        currentJob.setIsFinalContract(.Cells(inputRow, isFinalContractCol).value)
 	                    currentJob.setIsInstall
 	                    currentJob.setIsCancelled
                         currentJob.setDaysSinceCreated
+                        currentJob.setIsSurveyComplete
 
 	                ''''''''''Add currentJob to the jobData Array'''''''''''''
 	                Set jobData(inputRow - 2) = currentJob

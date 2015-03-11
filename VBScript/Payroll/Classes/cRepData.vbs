@@ -1,7 +1,7 @@
 private pName, pEmail As String
 private pID, pPayScaleID As Integer
 private pKwSum As Double
-private pIsBlackList, pIsInactive pIsSlider, pIsMarketing As Boolean
+private pIsBlackList, pIsInactive, pIsSlider, pIsMarketing As Boolean
 private pMarketingRate As Currency
 private pFirstJobDate, pStartSliderDate, pMarkStartDate, pMarkEndDate As Date
 private pSalesThisWeek as Integer

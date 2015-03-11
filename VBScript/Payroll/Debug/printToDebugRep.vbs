@@ -47,7 +47,6 @@ Sub printToDebugRep(ByRef repData As Collection, ByVal workBookName As String)
                     .Cells(index, repListScaleCol).value       = repData(index - 1).PayScaleID
                     .Cells(index, repListBlackCol).value       = repData(index - 1).IsBlackList
                     .Cells(index, repListInactiveCol).value    = repData(index - 1).IsInactive
-                    .Cells(index, repListIsNewRep).value       = repData(index - 1).IsNewRep
                     .Cells(index, repListIsSliderCol).value    = repData(index - 1).IsSlider
                     if repData(index - 1).IsSlider = True Then
                         .Cells(index, repSliderDateCol).value    = repData(index - 1).StartSliderDate

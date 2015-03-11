@@ -6,7 +6,7 @@ Sub createNatesEvo(ByVal workBookName As String)
 
 	''''''''''''''''''''''''''''''Columns''''''''''''''''''''''
 	Dim customerCol, jobCol, kWCol, statusCol, subStatusCol, _
-	    createdDateCol, repEmailCol, isDocSignedCol, isFinalContractCol As Integer
+	    createdDateCol, repEmailCol, finalContratCol As Integer
 
 	    customerCol        = 1   
 	    jobCol             = 2
@@ -14,12 +14,11 @@ Sub createNatesEvo(ByVal workBookName As String)
 	    statusCol          = 4
 	    subStatusCol       = 5
 	    createdDateCol     = 6
-	    isDocSignedCol     = 7
-	    isFinalContractCol = 8
-	    repEmailCol        = 9
+	    repEmailCol        = 7
+	    finalContratCol    = 8
 	    
 	Dim masCustomerCol, masJobCol, masKWCol, masStatusCol, masSubStatusCol, _
-		masDateCol, masRepEmailCol As Integer
+		masDateCol, masFinalCol, masRepEmailCol As Integer
 
 		masCustomerCol        = 1   
 	    masJobCol             = 2
@@ -27,6 +26,7 @@ Sub createNatesEvo(ByVal workBookName As String)
 	    masStatusCol          = 4
 	    masSubStatusCol       = 5
 	    masCreatedDateCol     = 7
+	    masFinalCol           = 8
 	    masRepEmailCol        = 17
 
 	Dim nateIsDocSignedCol, nateIsFinalContractCol As Integer
@@ -44,7 +44,6 @@ Sub createNatesEvo(ByVal workBookName As String)
 		Set jobDataSheet = NatesEvolution.Worksheets("Master Input")
 		Set printSheet     = NatesEvolution.Worksheets("Nate's Evolution")
 		Set masterInput    = NatesEvolution.Worksheets("Master Input")
-		Set natesSheet     = NatesEvolution.Worksheets("Docs Signed Input")
 
 	''''''''''''''''''''''''''''''Row Counters''''''''''''''''''''''
 		Dim inputRow, printRow, natesJobRow As Integer
@@ -91,18 +90,7 @@ Sub createNatesEvo(ByVal workBookName As String)
 					.Cells(printRow, subStatusCol).Value    = masterInput.Cells(inputRow, masSubStatusCol).Value
 					.Cells(printRow, createdDateCol).Value  = masterInput.Cells(inputRow, masCreatedDateCol).Value				
 					.Cells(printRow, repEmailCol).Value     = masterInput.Cells(inputRow, masRepEmailCol).Value
-
-					''From Nate's Input'''
-					if isJobFound Then
-						.Cells(printRow, isDocSignedCol).Value     = natesSheet.Cells(natesJobRow, nateIsDocSignedCol).Value
-						'.Cells(inputRow, isDocSignedCol).Value     = "=INDEX($B:$B, MATCH(" + Col_Letter(CStr(masJobCol)) + CStr(inputRow) + ",$E:$E,0))"
-						.Cells(printRow, isFinalContractCol).Value = natesSheet.Cells(natesJobrow, nateIsFinalContractCol).Value
-						'.Cells(inputRow, isFinalContractCol).Value = "=INDEX($C:$C, MATCH(" + Col_Letter(CStr(masJobCol)) + CStr(inputRow) + ",$E:$E,0))"
-					Else
-						.Cells(printRow, isDocSignedCol).Value     = "N"
-						.Cells(printRow, isFinalContractCol).Value = "N"
-					End If
-
+					.Cells(printRow, finalContratCol).Value = masterInput.Cells(inputRow, masFinalCol).Value
 					printRow = printRow + 1
 				End With
 			End If

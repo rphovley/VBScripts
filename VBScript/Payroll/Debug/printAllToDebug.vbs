@@ -140,7 +140,6 @@ Sub printAllToDebug(ByRef jobData() As cJobData, ByRef repData As Collection, By
                     .Cells(printRow, repScaleCol).value      = rep.PayScaleID
                     .Cells(printRow, repBlackCol).value      = rep.IsBLackList
                     .Cells(printRow, repInactiveCol).value   = rep.IsInactive
-                    .Cells(printRow, repNewCol).value        = rep.IsNewRep
                     .Cells(printRow, repFirstJobCol).Value   = rep.FirstJobDate
                     .Cells(printRow, repSalesWeekCol).Value  = rep.SalesThisWeek
                     If rep.IsSlider Then

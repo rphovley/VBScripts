@@ -15,7 +15,7 @@ Function newRepSliderRep(ByRef currentRep As cRepData, ByVal workBookName As Str
         masSubStatusCol       = 5
         masCreatedDateCol     = 7
         masRepEmailCol        = 17
-        mainmenuDatesCol      = 2
+        mainmenuDatesCol      = 3
 		
 	''''''''''''''''''''''''Rows'''''''''''''''''''''''''''
 		mainmenuStartDateRow = 5

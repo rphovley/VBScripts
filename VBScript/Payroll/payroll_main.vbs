@@ -31,10 +31,10 @@ sub payroll_main()
 	'Load up repData with Rep Information'
 		Set repData    = getRepData(workBookName)
 	'Load up scale data with Scale information'
-		Set scaleData  = getScaleData(workBookName)
+		Set scaleData  = getPayScaleData(workBookName)
 	'Load up slider data with Slider Information'
 		Set sliderData = getSliderData(workBookName)
-		
+
 	'Get relevant payment information from the payment tabs and update jobData'
 		jobData() = getPaymentInfo(jobData, workBookName)
 	

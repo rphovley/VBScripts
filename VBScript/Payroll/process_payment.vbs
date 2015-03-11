@@ -23,8 +23,10 @@ Function processPayment(ByRef jobData() As cJobData, ByRef repData As Collection
 	'''''''''''''''''''''''''''''''''''''THESE OBJECTS HAVE EVERYTHING WE NEED TO PROCESS PAYMENT''''''''''''''
 	    	Set job       = jobData(jobIndex)
 	    	Set rep       = findRep(repData, job.repEmail)
-	    	Set payScale  = findScale(scaleData, rep.PayScaleID)
-	    	Set slider    = findScale(sliderData, rep.PayScaleID)
+	    	If Not rep is Nothing Then
+		    	Set payScale  = findScale(scaleData, rep.PayScaleID)
+		    	Set slider    = findSlider(sliderData, rep.PayScaleID)
+		    End If
 	'''''''''''''''''''''''''''''''''''''THESE OBJECTS HAVE EVERYTHING WE NEED TO PROCESS PAYMENT''''''''''''''
 
 
@@ -39,7 +41,7 @@ Function processPayment(ByRef jobData() As cJobData, ByRef repData As Collection
 					''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 					''''''''''''''''''''''''FIRST PAYMENT'''''''''''''''''''''''''''''''
 					''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
+						
 					End IF
 
 
@@ -79,7 +81,7 @@ Function findRep( ByRef repData As Collection, ByVal repEmail As String) As cRep
 End Function
 
 'Returns the scale object associated with the rep'
-Function findScale(ByRef scaleData As CollectionByVal scaleID As Integer) As cScaleData
+Function findScale(ByRef scaleData As Collection, ByVal scaleID As Integer) As cScaleData
 		
 	For Each payScale In scaleData
         If payScale.ID = scaleID Then
