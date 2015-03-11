@@ -64,10 +64,12 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workBookName As Strin
                     job.FirstPaymentDate    = .Cells(jobRow, paymentDateCol).value
                     job.SecondPaymentAmount = .Cells(jobRow, secondPaymentCol).value
                     job.SecondPaymentDate   = .Cells(jobRow, secondDateCol).value
+
                 End If
 
 
             Next jobRow
+
          End With
 
          'Do not check for job in first and second payment tab if it is already paid in full'
@@ -104,15 +106,30 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workBookName As Strin
                 Next jobRow
              End With
          End If
-          
-         'set the value of what was paid'
-         job.setWhatWasPaid
-         'Reset the job in the array'
-         Set jobData(jobIndex) = job
+
+
+         Set rep = findRep(repData, job.repEmail)
+
+        'set the value of what was paid'
+        job.setWhatWasPaid
+
+        'Reset the job in the array'
+        Set jobData(jobIndex) = job
     Next
+
 
     getPaymentInfo = jobData
 
 
 End Function
 
+'returns the rep object associated with the job'
+Function findRep( ByRef repData As Collection, ByVal repEmail As String) As cRepData
+        
+    For Each rep In repData
+        If rep.Email = repEmail Then
+            Set findRep = rep
+        End IF
+    Next
+
+End Function
