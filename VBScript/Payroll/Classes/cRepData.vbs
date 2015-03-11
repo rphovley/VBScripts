@@ -1,11 +1,50 @@
 private pName, pEmail As String
 private pID, pPayScaleID As Integer
 private pKwSum As Double
-private pIsBlackList, pIsInactive, pIsNewRep, pIsSlider As Boolean
-private pStartSliderDate As Date
-private pSalesThisWeek as integer
+private pIsBlackList, pIsInactive, pIsNewRep, pIsSlider, pIsMarketing As Boolean
+private pMarketingRate As Currency
+private pStartSliderDate, pMarkStartDate, pMarkEndDate As Date
+private pSalesThisWeek as Integer
 
 ' Get/Set methods'
+Sub setIsMarketing()
+    If Now() > pMarkStartDate AND Now() < pMarkEndDate Then
+        pIsMarketing = True
+    End If
+End Sub
+
+Public Property Let IsMarketing(value As Boolean)
+    pIsMarketing = value
+End Property
+
+Public Property Get IsMarketing() As Boolean
+    IsMarketing = pIsMarketing
+End Property
+
+Public Property Get MarketingRate() As Date
+    MarketingRate = pMarketingRate 
+End Property
+
+Public Property Let MarketingRate(value As Date)
+    pMarketingRate = value
+End Property
+
+Public Property Get MarkEndDate() As Date
+    MarkEndDate = pMarkEndDate
+End Property
+
+Public Property Let MarkEndDate(value As Date)
+    pMarkEndDate = value
+End Property
+
+Public Property Get MarkStartDate() As Date
+    MarkStartDate = pMarkStartDate
+End Property
+
+Public Property Let MarkStartDate(value As Date)
+    pMarkStartDate = value
+End Property
+
 Public Property Let SalesThisWeek(value as Integer)
 	pSalesThisWeek = value
 End Property
