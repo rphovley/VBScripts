@@ -6,7 +6,7 @@ Sub createNatesEvo(ByVal workBookName As String)
 
 	''''''''''''''''''''''''''''''Columns''''''''''''''''''''''
 	Dim customerCol, jobCol, kWCol, statusCol, subStatusCol, _
-	    createdDateCol, repEmailCol, finalContratCol As Integer
+	    createdDateCol, repEmailCol, finalContratCol, stateCol As Integer
 
 	    customerCol        = 1   
 	    jobCol             = 2
@@ -16,9 +16,10 @@ Sub createNatesEvo(ByVal workBookName As String)
 	    createdDateCol     = 6
 	    repEmailCol        = 7
 	    finalContratCol    = 8
+	    stateCol           = 9
 	    
 	Dim masCustomerCol, masJobCol, masKWCol, masStatusCol, masSubStatusCol, _
-		masDateCol, masFinalCol, masRepEmailCol As Integer
+		masDateCol, masFinalCol, masRepEmailCol, masStateCol As Integer
 
 		masCustomerCol        = 1   
 	    masJobCol             = 2
@@ -28,6 +29,7 @@ Sub createNatesEvo(ByVal workBookName As String)
 	    masCreatedDateCol     = 7
 	    masFinalCol           = 8
 	    masRepEmailCol        = 17
+	    masStateCol           = 18
 
 	Dim nateIsDocSignedCol, nateIsFinalContractCol As Integer
 
@@ -49,23 +51,14 @@ Sub createNatesEvo(ByVal workBookName As String)
 		Dim inputRow, printRow, natesJobRow As Integer
 			printRow = 2
 
-	'''''''''''''''''''''''''''''Input Object''''''''''''''''''''''
-		Dim jobData() As cJobData
-		Dim currentRep  As cJobData
-		Dim printRep    As cJobData
-
 	'''''''''''''''''''''''''''''Data Size'''''''''''''''''''''''''
 		Dim jobDataSize As Long
 			jobDataSize = jobDataSheet.UsedRange.Rows.Count - 1
 			ReDim jobData(jobDataSize)
-
-	'''''''''Found Job in Nate's Input''''''''''''''''''''''''''''''
-		Dim isJobFound As Boolean
 	'''''''''''Date constant to consider for new jobs''''''''''''''
    	Const NEWJOBDATE = #11/30/2014#
 
-	''''''''''''''''''TURN OFF SCREEN UPDATING''''''''''''''''''''''
-	application.screenupdating = False
+	
 	'''''''''''''''''''''''''Print out'''''''''''''''''''''''''''''
 		For inputRow = 2 To jobDataSize + 1
 			isJobFound = True
@@ -74,9 +67,6 @@ Sub createNatesEvo(ByVal workBookName As String)
 
 			If masterInput.Cells(inputRow, masCreatedDateCol).Value >= NEWJOBDATE Then
 				'''''''''''''''''''Find job in Nate's Sheet'''''''''''''''
-				On Error GoTo jobIdNotFound:
-				natesJobRow = Application.WorksheetFunction.Match(masterInput.Cells(inputRow, masJobCol).Value, natesSheet.Range("E:E"), 0)
-				'natesJobrow = "=INDEX($B:$B, MATCH(" + Col_Letter(masJobCol) + CStr(inputRow) + ",$E:$E,0))"
 
 
 
@@ -91,14 +81,12 @@ Sub createNatesEvo(ByVal workBookName As String)
 					.Cells(printRow, createdDateCol).Value  = masterInput.Cells(inputRow, masCreatedDateCol).Value				
 					.Cells(printRow, repEmailCol).Value     = masterInput.Cells(inputRow, masRepEmailCol).Value
 					.Cells(printRow, finalContratCol).Value = masterInput.Cells(inputRow, masFinalCol).Value
+					.Cells(printRow, stateCol).Value        = masterInput.Cells(inputRow, masStateCol).Value
 					printRow = printRow + 1
 				End With
 			End If
 
 		Next inputRow
-''''''''''''''''''TURN ON SCREEN UPDATING''''''''''''''''''''''
-		application.screenupdating = False
-		jobIdNotFound:
-			isJobFound = False
-			Resume Next
+
+
 End Sub

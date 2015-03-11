@@ -7,6 +7,9 @@ sub payroll_main()
 	'''''''''''''''''''''''''''''INITIALIZE VARIABLES''''''''''''''''''''''''''
 	'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
+	''''''''''''''''''TURN OFF SCREEN UPDATING''''''''''''''''''''''
+	application.screenupdating = False
+
 	''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
 	    Dim workBookName As String
 	    Dim testName As String
@@ -33,7 +36,7 @@ sub payroll_main()
 	'Load up scale data with Scale information'
 		Set scaleData  = getPayScaleData(workBookName)
 	'Load up slider data with Slider Information'
-		Set sliderData = getSliderData(workBookName)
+		Set sliderData = getSliderData(workBookName)		
 
 	'Get relevant payment information from the payment tabs and update jobData'
 		jobData() = getPaymentInfo(jobData, workBookName)
@@ -48,5 +51,8 @@ sub payroll_main()
 
 		printAllToDebug jobData, repData, workBookName
 	'Loop through pending accounts to grab any info for those jobs based on'
+
+	''''''''''''''''''TURN ON SCREEN UPDATING''''''''''''''''''''''
+		application.screenupdating = True
 
 End Sub
