@@ -11,9 +11,11 @@ Sub printAllToDebug(ByRef jobData() As cJobData, ByRef repData As Collection, By
         secondPayCol, secondPayDateCol, finalPayCol,  finalDateCol, _
         whatWasPaidCol, thisWeeksFirstCol, thisWeeksSecondCol, _
         thisWeeksFinalCol, thisCancellationCol, _
-         daysSinceCol, repNameCol, repScaleCol, _
+        daysSinceCol, repNameCol, repScaleCol, _
         repBlackCol, repInactiveCol, repNewCol, _
-        repSliderCol, repSliderDateCol As Integer
+        repSliderCol, repSliderDateCol, repMarketEndCol, _
+        repMarketStartCol, repIsMarketCol, repMarketRateCol, _
+        repFirstJobCol, repSalesWeekCol As Integer
 
         customerCol        = 1
         jobCol             = 2
@@ -45,6 +47,12 @@ Sub printAllToDebug(ByRef jobData() As cJobData, ByRef repData As Collection, By
         repNewCol          = 28
         repSliderCol       = 29
         repSliderDateCol   = 30
+        repIsMarketCol     = 31
+        repMarketStartCol  = 32
+        repMarketEndCol    = 33 
+        repMarketRateCol   = 34
+        repFirstJobCol     = 35
+        repSalesWeekCol    = 36
         
 ''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
         'workBookName = InputBox("What is the master report's name?") & ".xlsx"
@@ -117,6 +125,8 @@ Sub printAllToDebug(ByRef jobData() As cJobData, ByRef repData As Collection, By
                     If printJob.ThisWeekCancelled <> 0 Then
                         .Cells(printRow, thisCancellationCol).value     = printJob.ThisWeekCancelled
                     End If
+
+                    
                     .Cells(printRow, whatWasPaidCol).value = printJob.WhatWasPaid
 
                     .Cells(printRow, daysSinceCol).value = printJob.DaysSinceCreated
@@ -131,8 +141,20 @@ Sub printAllToDebug(ByRef jobData() As cJobData, ByRef repData As Collection, By
                     .Cells(printRow, repBlackCol).value      = rep.IsBLackList
                     .Cells(printRow, repInactiveCol).value   = rep.IsInactive
                     .Cells(printRow, repNewCol).value        = rep.IsNewRep
-                    .Cells(printRow, repSliderCol).value     = rep.IsSlider
-                    .Cells(printRow, repSliderDateCol).value = rep.StartSliderDate
+                    .Cells(printRow, repFirstJobCol).Value   = rep.FirstJobDate
+                    .Cells(printRow, repSalesWeekCol).Value  = rep.SalesThisWeek
+                    If rep.IsSlider Then
+                        .Cells(printRow, repSliderCol).value     = rep.IsSlider
+                        .Cells(printRow, repSliderDateCol).value = rep.StartSliderDate
+                    End If
+
+                    'check if the rep is a market rep'
+                    If rep.IsMarketing Then
+                        .Cells(printRow, repIsMarketCol).Value    = rep.IsMarketing
+                        .Cells(printRow, repMarketStartCol).Value = rep.MarkStartDate
+                        .Cells(printRow, repMarketEndCol).Value   = rep.MarkEndDate
+                        .Cells(printRow, repMarketRateCol).Value  = rep.MarketingRate
+                    End If
                 End If
             Next
 

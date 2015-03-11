@@ -5,7 +5,7 @@ Function newRepSliderRep(ByRef currentRep As cRepData, ByVal workBookName As Str
     '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
     ''''''''''''''''''''''''''''''Columns''''''''''''''''''''''
-    Dim masCustomerCol, masJobCol, masKWCol, masStatusCol, masSubStatusCol, _
+    Dim masCustomerCol, masJobCol, masKWCol, masStatusCol, masCreatedDateCol, masSubStatusCol, _
         masDateCol, masRepEmailCol, mainmenuDatesCol As Integer
 
         masCustomerCol        = 1   
@@ -15,6 +15,7 @@ Function newRepSliderRep(ByRef currentRep As cRepData, ByVal workBookName As Str
         masSubStatusCol       = 5
         masCreatedDateCol     = 7
         masRepEmailCol        = 17
+        mainmenuDatesCol      = 2
 		
 	''''''''''''''''''''''''Rows'''''''''''''''''''''''''''
 		mainmenuStartDateRow = 5
@@ -33,7 +34,9 @@ Function newRepSliderRep(ByRef currentRep As cRepData, ByVal workBookName As Str
     Dim jobDataSize As Long
         jobDataSize = jobDataSheet.Cells(1,1).End(xlDown).Row - 1
 
-
+    ''''''''''''''''''''''''''''First Sale Boolean'''''''''''''''''''
+    Dim isFirstSale As Boolean
+        isFirstSale = True
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''LOGIC AND SET VALUES''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -56,8 +59,14 @@ Dim PayPeriodStartDate, PayPeriodEndDate as Date
                     currentRep.IsSlider = True
                     currentRep.StartSliderDate = .Cells(jobRow,7).Value
                 End If
+
+                'Code for getting first job date for the rep'
+                If isFirstSale Then
+                    currentRep.FirstJobDate = .Cells(jobRow, masJobCreatedCol).Value
+                    isFirstSale = False
+                End If
 				
-				If .cells(jobRow, masCreatedDateCol).value >= PayPeriodStartDate and .cells(jobRow, masCreatedDateCol).value <= PayPeriodEndDate
+				If .cells(jobRow, masCreatedDateCol).value >= PayPeriodStartDate and .cells(jobRow, masCreatedDateCol).value <= PayPeriodEndDate Then
 					currentRep.SalesThisWeek = currentRep.SalesThisWeek + 1
 				End If
 				

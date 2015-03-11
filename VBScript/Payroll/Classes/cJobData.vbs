@@ -2,14 +2,12 @@
 'Attributes
 Private pCustomer, pJobID, pStatus, _
     pSubStatus, pRepEmail As String
-
 Private pDaysSinceCreated As Integer
-
 Private pkW As Double
 Private pAmount, pWhatWasPaid, pFirstPaymentAmount, pSecondPaymentAmount, pFinalPaymentAmount As Currency
 private pThisWeekFirstPayment, pThisWeekSecondPayment, pThisWeekFinalPayment, pThisWeekCancelled As Currency
 Private pCreatedDate, pFirstPaymentDate, pSecondPaymentDate, pFinalPaymentDate As Date
-Private pIsInstall, pIsDocSigned, pIsFinalContract, pIsCancelled, pIsPaidInFull, pIsBlackListed As Boolean
+Private pIsInstall, pIsDocSigned, pIsSurveyComplete, pIsFinalContract, pIsCancelled, pIsPaidInFull, pIsBlackListed As Boolean
 
 Public Property Get ThisWeekFirstPayment() As Currency
     ThisWeekFirstPayment = pThisWeekFirstPayment
@@ -121,6 +119,37 @@ Public Property Let FinalPaymentAmount(value As Currency)
     pFinalPaymentAmount = value
 End Property
 
+'Get/Set Methods IsInstall booleans
+Public Property Let IsSurveyComplete(value As Boolean)
+    pIsSurveyComplete = value
+End Property
+
+Public Property Get IsSurveyComplete() As Boolean
+    IsSurveyComplete = IsSurveyComplete
+End Property
+
+Public Sub setIsSurveyComplete()
+    Dim isArray As Variant
+    isArray = Array("Site Survey Complete", "Design Complete", "Application Complete", _
+        "Submitted", "Rejected", "Received")
+
+        'Loops through backend statuses that trigger backend'
+        For Each arrayStatus In isArray
+            
+            'if it is a correct backend status, return true'
+            If arrayStatus = Me.SubStatus Then
+                pIsSurveyComplete = True
+                Exit For
+            End If
+        Next arrayStatus
+    
+        'This code is only hit if the previous loop didn't return a value
+        'The only other situation for a backend is if the substatus = "complete"'
+        If Me.SubStatus = "Complete" Then
+            pIsInstall = True
+        End If
+
+End Sub
 
 'Get/Set Methods IsInstall booleans
 Public Property Let IsInstall(value As Boolean)

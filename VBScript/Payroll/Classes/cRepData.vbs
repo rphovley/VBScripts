@@ -1,13 +1,21 @@
 private pName, pEmail As String
 private pID, pPayScaleID As Integer
 private pKwSum As Double
-private pIsBlackList, pIsInactive, pIsNewRep, pIsSlider, pIsMarketing As Boolean
+private pIsBlackList, pIsInactive pIsSlider, pIsMarketing As Boolean
 private pMarketingRate As Currency
-private pStartSliderDate, pMarkStartDate, pMarkEndDate As Date
+private pFirstJobDate, pStartSliderDate, pMarkStartDate, pMarkEndDate As Date
 private pSalesThisWeek as Integer
 
 ' Get/Set methods'
-Sub setIsMarketing()
+Public Property Get FirstJobDate() As Date
+    FirstJobDate = pFirstJobDate
+End Property
+
+Public Property Let FirstJobDate(value As Date)
+    pFirstJobDate = value
+End Property
+
+Public Sub setIsMarketing()
     If Now() > pMarkStartDate AND Now() < pMarkEndDate Then
         pIsMarketing = True
     End If
@@ -49,16 +57,8 @@ Public Property Let SalesThisWeek(value as Integer)
 	pSalesThisWeek = value
 End Property
 
-Public Property Get SalesThisWeek()
+Public Property Get SalesThisWeek() As Integer
 	SalesThisWeek = pSalesThisWeek
-End Property
-
-Public Property Let IsNewRep(value As Boolean)
-    pIsNewRep = value
-End Property
-
-Public Property Get IsNewRep() As Boolean
-    IsNewRep = pIsNewRep
 End Property
 
 Public Property Let IsSlider(value As Boolean)
