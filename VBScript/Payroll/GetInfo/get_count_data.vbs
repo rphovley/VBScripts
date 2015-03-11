@@ -52,8 +52,8 @@ Function getCountInfo(ByRef jobData() As cJobData, ByRef repData() As cRepData, 
 
 		 For jobIndex = 0 To UBound(jobData)
 		 
-			If job.firstPaymentAmount = 0 and job.repEmail = rep then
-				SalesThisWeek = SalesThisWeek + 1
+			If job.firstPaymentAmount = 0 and job.repEmail = rep and job.Status <> "Cancelled" then
+				rep.SalesThisWeek = rep.SalesThisWeek + 1
 			End if
 
 		 Next
@@ -64,16 +64,5 @@ Function getCountInfo(ByRef jobData() As cJobData, ByRef repData() As cRepData, 
 
     getPaymentInfo = jobData
 
-
-End Function
-
-'returns the rep object associated with the job'
-Function findRep( ByRef repData As Collection, ByVal repEmail As String) As cRepData
-        
-    For Each rep In repData
-        If rep.Email = repEmail Then
-            Set findRep = rep
-        End IF
-    Next
 
 End Function
