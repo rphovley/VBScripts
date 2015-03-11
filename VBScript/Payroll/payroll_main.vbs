@@ -17,23 +17,29 @@ sub payroll_main()
 	        Set NatesEvolution = Workbooks(workBookName)
 
 		'''''''''''''''''''''''''''''Input Array Object''''''''''''''''''''''
-	    Dim jobData() As cJobData
-	    Dim repData As Collection
-	    	Set repData = New Collection
+	    Dim jobData()  As cJobData
+	    Dim repData    As Collection
+	    Dim scaleData  As Collection
+	    Dim sliderData As Collection
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''MAIN METHODS AND LOGIC'''''''''''''''''''''''''''''''
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 	'Load up cJobData array with information from jobs in Nate'sEvolution'
-		jobData() = getjobData(workBookName)
+		jobData()      = getjobData(workBookName)
 	'Load up repData with Rep Information'
-		Set repData   = getRepData(workBookName)
+		Set repData    = getRepData(workBookName)
+	'Load up scale data with Scale information'
+		Set scaleData  = getScaleData(workBookName)
+	'Load up slider data with Slider Information'
+		Set sliderData = getSliderData(workBookName)
+		
 	'Get relevant payment information from the payment tabs and update jobData'
 		jobData() = getPaymentInfo(jobData, workBookName)
 	
 	'Process Payment Info'
-		jobData() = processPayment(jobData, repData, workBookName)
+		jobData() = processPayment(jobData, repData, scaleData, workBookName)
 	'print out to the debug sheet all of the relevant job data'
 
 		'printToDebug jobData, workBookName

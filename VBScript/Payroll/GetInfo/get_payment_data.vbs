@@ -8,6 +8,7 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workBookName As Strin
 ''''''''''''''''''''''''''''''Columns''''''''''''''''''''''
     Dim customerCol, jobCol, kWCol, createdDateCol, _
         paymentAmountCol, paymentDateCol, _
+        secondPaymentCol, secondDateCol, _
         finalPaymentCol, finalDateCol As Integer
 
         customerCol      = 3
@@ -16,6 +17,8 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workBookName As Strin
         createdDateCol   = 6
         paymentAmountCol = 7
         paymentDateCol   = 8
+        secondPaymentCol = 9
+        secondDateCol    = 10
         finalPaymentCol  = 12
         finalDateCol     = 13
         
@@ -55,8 +58,12 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workBookName As Strin
                 If .Cells(jobRow, jobCol).value = job.JobID Then
                     'update jobData with new information'
                     job.IsPaidInFull = True
-                    job.FinalPaymentAmount = .Cells(jobRow, finalPaymentCol).value
-                    job.FinalPaymentDate   = .Cells(jobRow, finalDateCol).value
+                    job.FinalPaymentAmount  = .Cells(jobRow, finalPaymentCol).value
+                    job.FinalPaymentDate    = .Cells(jobRow, finalDateCol).value
+                    job.FirstPaymentAmount  = .Cells(jobRow, paymentAmountCol).value
+                    job.FirstPaymentDate    = .Cells(jobRow, paymentDateCol).value
+                    job.SecondPaymentAmount = .Cells(jobRow, secondPaymentCol).value
+                    job.SecondPaymentDate   = .Cells(jobRow, secondDateCol).value
                 End If
 
 
