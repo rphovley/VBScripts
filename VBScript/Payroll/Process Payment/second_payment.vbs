@@ -2,15 +2,22 @@ function secondPayment(ByRef currentJob As cJobData, ByRef currentRep as cRepDat
 
 'Happens after final contract is signed
 dim second_payment_rate as currency
-	second_payment_rate = 50
 dim number_of_kW as integer
 dim second_payment_total as currency
 
-'Need to find the total number of kW that qualify for this week's second payment.
-second_payment_total = currentJob.kW * second_payment_rate
+
 
 'determine if job is at second payment status and that it hasn't been cancelled'
-If currentJob.isFinalContract AND NOT currentJob.isCancelled Then
+If currentJob.isFinalContract AND NOT currentJob.isCancelled And Not currentRep.IsBlackList Then
+	
+	If currentRep.IsMarketing Then
+		second_payment_rate = 25
+	Else
+		second_payment_rate = 50
+	End If
+
+	second_payment_total = currentJob.kW * second_payment_rate
+
 	currentJob.ThisWeekSecondPayment = second_payment_total
 	printSecond currentJob, currentRep, workBookName
 End If

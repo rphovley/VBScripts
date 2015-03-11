@@ -129,26 +129,27 @@ Public Property Get IsSurveyComplete() As Boolean
 End Property
 
 Public Sub setIsSurveyComplete()
-    Dim isArray As Variant
+    Dim isArray, statusArray As Variant
     isArray = Array("Site Survey Complete", "Design Complete", "Application Complete", _
         "Submitted", "Rejected", "Received")
+    statusArray = Array("Sales", "Permit")
 
         'Loops through backend statuses that trigger backend'
-        For Each arrayStatus In isArray
-            
-            'if it is a correct backend status, return true'
-            If arrayStatus = Me.SubStatus Then
+            If Me.Status = "Permit" Then
+         
+                For Each arrayStatus In isArray
+                    
+                    'if it is a correct backend status, return true'
+                    If arrayStatus = Me.SubStatus Or Me.Status <> "Sales" Then
+                        pIsSurveyComplete = True
+                        Exit For
+                    End If
+                Next arrayStatus
+            ElseIf Me.Status = "Sales" Then
+                pIsSurveyComplete = False
+            Else
                 pIsSurveyComplete = True
-                Exit For
             End If
-        Next arrayStatus
-    
-        'This code is only hit if the previous loop didn't return a value
-        'The only other situation for a backend is if the substatus = "complete"'
-        If Me.SubStatus = "Complete" Then
-            pIsInstall = True
-        End If
-
 End Sub
 
 'Get/Set Methods IsInstall booleans
