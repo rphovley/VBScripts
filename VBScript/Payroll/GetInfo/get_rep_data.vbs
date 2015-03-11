@@ -60,7 +60,8 @@ Function getRepData(ByVal workBookName As String) As Collection
                 'Determines if the rep is a new rep and if the rep'
                  'is a slider rep and sets related values'
                 Set currentRep = newRepSliderRep(currentRep, workBookName)
-
+                'adds any event marketing data'
+                Set currentRep = getMarketRep(currentRep, workBookName)
 
             ''''''''''Add currentRep to the jobData Collection''''''''''''
                                 repData.Add currentRep, currentRep.Email
