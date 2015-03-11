@@ -101,3 +101,5 @@ Function findSlider(ByRef sliderData As Collection, ByRef scaleID As Integer) As
     Next
 
 End Function
+
+Function countJobs() 
