@@ -40,10 +40,14 @@ sub payroll_main()
 
 	'Get relevant payment information from the payment tabs and update jobData'
 		jobData() = getPaymentInfo(jobData, workBookName)
-	
+
+	'Get count information for reps and the jobs they did this past week'
+		Set repData = getCountInfo(jobData, repData, workBookName)
+
 	'Process Payment Info'
-		jobData() = processPayment(jobData, repData, scaleData, workBookName)
+		jobData() = processPayment(jobData, repData, scaleData, sliderData, workBookName)
 	'print out to the debug sheet all of the relevant job data'
+
 
 		'printToDebug jobData, workBookName
 

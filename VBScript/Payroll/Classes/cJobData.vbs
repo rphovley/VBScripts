@@ -1,13 +1,22 @@
 'Class
 'Attributes
 Private pCustomer, pJobID, pStatus, _
-    pSubStatus, pRepEmail As String
+    pSubStatus, pRepEmail, pState As String
 Private pDaysSinceCreated As Integer
 Private pkW As Double
 Private pAmount, pWhatWasPaid, pFirstPaymentAmount, pSecondPaymentAmount, pFinalPaymentAmount As Currency
 private pThisWeekFirstPayment, pThisWeekSecondPayment, pThisWeekFinalPayment, pThisWeekCancelled As Currency
 Private pCreatedDate, pFirstPaymentDate, pSecondPaymentDate, pFinalPaymentDate As Date
 Private pIsInstall, pIsDocSigned, pIsSurveyComplete, pIsFinalContract, pIsCancelled, pIsPaidInFull, pIsBlackListed As Boolean
+
+
+Public Property Get State() As String
+    State = pState
+End Property
+
+Public Property Let RepEmail(value As String)
+    pRepEmail = value
+End Property
 
 Public Property Get ThisWeekFirstPayment() As Currency
     ThisWeekFirstPayment = pThisWeekFirstPayment
@@ -129,22 +138,32 @@ Public Property Get IsSurveyComplete() As Boolean
 End Property
 
 Public Sub setIsSurveyComplete()
-    Dim isArray, statusArray As Variant
+    Dim isArray, statusArray, stateArray As Variant
     isArray = Array("Site Survey Complete", "Design Complete", "Application Complete", _
         "Submitted", "Rejected", "Received")
     statusArray = Array("Sales", "Permit")
+    stateArray  = Array("NY", "NJ", "DE", "MD", "CT", "MA")
+    Dim isInclementState As Boolean
 
+    For Each state In stateArray
+        If Me.State = state Then
+            isInclementState = True
+        End IF
+    Next
         'Loops through backend statuses that trigger backend'
             If Me.Status = "Permit" Then
-         
                 For Each arrayStatus In isArray
-                    
                     'if it is a correct backend status, return true'
-                    If arrayStatus = Me.SubStatus Or Me.Status <> "Sales" Then
+                    If NOT isInclementState AND arrayStatus = Me.SubStatus Then
+                        pIsSurveyComplete = True
+                        Exit For
+                    ElseIf isInclementState AND arrayStatus = Me.SubStatus OR "Site Survey Scheduled" Then
                         pIsSurveyComplete = True
                         Exit For
                     End If
+
                 Next arrayStatus
+
             ElseIf Me.Status = "Sales" Then
                 pIsSurveyComplete = False
             Else

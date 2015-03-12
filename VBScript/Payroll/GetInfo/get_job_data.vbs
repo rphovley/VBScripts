@@ -32,9 +32,8 @@ Function getJobData(ByVal workBookName As String) As cJobData()
         Set printSheet = NatesEvolution.Worksheets("Debug")
 
     ''''''''''''''''''''''''''''''Row Counters''''''''''''''''''''''
-    Dim inputRow, printRow As Integer
-        printRow = 2
-
+    Dim inputRow, dataRow As Integer
+        dataRow = 0
     '''''''''''''''''''''''''''''Input Object''''''''''''''''''''''
     Dim jobData() As cJobData
     Dim currentJob  As cJobData
@@ -74,14 +73,14 @@ Function getJobData(ByVal workBookName As String) As cJobData()
                         currentJob.setIsSurveyComplete
 
 	                ''''''''''Add currentJob to the jobData Array'''''''''''''
-                    IF currentJob.IsIsntall Or currentJob.isFinalContract Or currentJob.setIsSurveyComplete Then
-	                   Set jobData(inputRow - 2) = currentJob
-                    Else
+                    IF currentJob.IsInstall Or currentJob.isFinalContract Or currentJob.IsSurveyComplete Then
+	                   Set jobData(dataRow) = currentJob
+                       dataRow = dataRow + 1
+                    End If
 
                 End If
             End With
 
-            
         Next inputRow
 
         getJobData = jobData
