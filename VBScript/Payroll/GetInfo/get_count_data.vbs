@@ -52,9 +52,9 @@ Function getCountInfo(ByRef jobData() As cJobData, ByRef repData() As cRepData, 
 		 For jobIndex = 0 To UBound(jobData)
 		 
 			If job.firstPaymentAmount = 0 and job.repEmail = rep and job.Status <> "Cancelled" then
-				if job.CreatedDate > rep.MarkStartDate + 60 and job.Status <> "Site Survey Scheduled","Site Survey Complete" then
+				if job.CreatedDate > rep.MarkStartDate + 60 and IsFinalContract = True then
 					rep.SalesThisWeek = rep.SalesThisWeek + 1
-				else
+				elseif job.CreatedDate < rep.MarkStartDate + 60 and IsSurveyComplete = True then
 					rep.SalesThisWeek = rep.SalesThisWeek + 1
 				End if
 			End if

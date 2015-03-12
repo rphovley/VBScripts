@@ -74,7 +74,7 @@ Function getJobData(ByVal workBookName As String) As cJobData()
                         currentJob.setIsSurveyComplete
 
 	                ''''''''''Add currentJob to the jobData Array'''''''''''''
-                    IF currentJob.IsIsntall Or currentJob.isFinalContract Or currentJob.setIsSurveyComplete Then
+                    IF currentJob.IsIntall Or currentJob.isFinalContract Or currentJob.setIsSurveyComplete Then
 	                   Set jobData(inputRow - 2) = currentJob
                     Else
 
