@@ -36,9 +36,9 @@ Function getCountInfo(ByRef jobData() As cJobData, ByRef repData() As cRepData, 
     Dim printRow As Integer
         printRow = 2
 '''''''''''''''''''''''''''''job Object''''''''''''''''''''''
-    Dim job As cJobData
-    Dim newJobData() As cJobData
-    ReDim newJobData(UBound(jobData))
+    Dim rep As cRepData
+    Dim newRepData() As cRepData
+    ReDim newRepData(UBound(repData))
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''GET PAYMENT INFORMATION'''''''''''''''''''''''''
@@ -48,12 +48,15 @@ Function getCountInfo(ByRef jobData() As cJobData, ByRef repData() As cRepData, 
     '"2nd_Payments_Pending" Tabs and update the jobData info'
     For repIndex = 0 To UBound(repData)
         Set rep = repData.Item(repIndex)
-         Set rep = findRep(repData, rep.Email)
 
 		 For jobIndex = 0 To UBound(jobData)
 		 
 			If job.firstPaymentAmount = 0 and job.repEmail = rep and job.Status <> "Cancelled" then
-				rep.SalesThisWeek = rep.SalesThisWeek + 1
+				if job.CreatedDate > rep.MarkStartDate + 60 and IsFinalContract = True then
+					rep.SalesThisWeek = rep.SalesThisWeek + 1
+				elseif job.CreatedDate < rep.MarkStartDate + 60 and IsSurveyComplete = True then
+					rep.SalesThisWeek = rep.SalesThisWeek + 1
+				End if
 			End if
 
 		 Next
@@ -62,7 +65,7 @@ Function getCountInfo(ByRef jobData() As cJobData, ByRef repData() As cRepData, 
     Next
 
 
-    getPaymentInfo = jobData
+    getPaymentInfo = repData
 
 
 End Function
