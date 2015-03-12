@@ -64,6 +64,7 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workBookName As Strin
                     job.FirstPaymentDate    = .Cells(jobRow, paymentDateCol).value
                     job.SecondPaymentAmount = .Cells(jobRow, secondPaymentCol).value
                     job.SecondPaymentDate   = .Cells(jobRow, secondDateCol).value
+                    job.InstallRow          = jobRow
 
                 End If
 
@@ -84,6 +85,8 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workBookName As Strin
                         'update jobData with new information'
                         job.FirstPaymentAmount = .Cells(jobRow, paymentAmountCol).value
                         job.FirstPaymentDate   = .Cells(jobRow, paymentDateCol).value
+                        job.FirstPaymentRow    = jobRow
+
                     End If
 
 
@@ -100,6 +103,7 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workBookName As Strin
                         'update jobData with new information'
                         job.SecondPaymentAmount = .Cells(jobRow, paymentAmountCol).value
                         job.SecondPaymentDate   = .Cells(jobRow, paymentDateCol).value
+                        job.SecondPaymentRow    = jobRow
                     End If
 
 
@@ -107,8 +111,8 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workBookName As Strin
              End With
          End If
 
+        'if the job has not been paid out and it should be paid out'
 
-         Set rep = findRep(repData, job.repEmail)
 
         'set the value of what was paid'
         job.setWhatWasPaid
@@ -120,16 +124,5 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workBookName As Strin
 
     getPaymentInfo = jobData
 
-
-End Function
-
-'returns the rep object associated with the job'
-Function findRep( ByRef repData As Collection, ByVal repEmail As String) As cRepData
-        
-    For Each rep In repData
-        If rep.Email = repEmail Then
-            Set findRep = rep
-        End IF
-    Next
 
 End Function

@@ -10,7 +10,6 @@ Function getSliderData(ByVal workBookName As String) As Collection
         sliderIDCol      = 5
         quartileMaxCol   = 7
         quartileKWCol    = 8
-
         quartileOneRow   = 1
         quartileTwoRow   = 2
         quartileThreeRow = 3

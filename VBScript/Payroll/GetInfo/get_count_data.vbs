@@ -50,14 +50,17 @@ Function getCountInfo(ByRef jobData() As cJobData, ByRef repData() As cRepData, 
         Set rep = repData.Item(repIndex)
 
 		 For jobIndex = 0 To UBound(jobData)
-		 
+		      
 			If job.firstPaymentAmount = 0 and job.repEmail = rep and job.Status <> "Cancelled" then
-				if job.CreatedDate > rep.MarkStartDate + 60 and IsFinalContract = True then
+				if job.CreatedDate > rep.FirstJobDate + 60 and IsFinalContract = True then
 					rep.SalesThisWeek = rep.SalesThisWeek + 1
-				elseif job.CreatedDate < rep.MarkStartDate + 60 and IsSurveyComplete = True then
+				elseif job.CreatedDate < rep.FirstJobDate + 60 and IsSurveyComplete = True then
 					rep.SalesThisWeek = rep.SalesThisWeek + 1
 				End if
 			End if
+
+            ''''''sum up the install pool for the rep'''''
+            rep.InstallPool = rep.InstallPool + job.ThisWeekFinalPayment
 
 		 Next
 		 'Reset the job in the array'
@@ -68,4 +71,11 @@ Function getCountInfo(ByRef jobData() As cJobData, ByRef repData() As cRepData, 
     getPaymentInfo = repData
 
 
+End Function
+
+Function installPool(ByRef job As cJobData, ByRef rep As cRepData) As cRepData
+
+    rep.InstallPool = rep.InstallPool + job.ThisWeekFinalPayment
+
+    Set installPool = repData
 End Function

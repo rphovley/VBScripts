@@ -15,7 +15,7 @@ Sub printAllToDebug(ByRef jobData() As cJobData, ByRef repData As Collection, By
         repBlackCol, repInactiveCol, repNewCol, _
         repSliderCol, repSliderDateCol, repMarketEndCol, _
         repMarketStartCol, repIsMarketCol, repMarketRateCol, _
-        repFirstJobCol, repSalesWeekCol As Integer
+        repFirstJobCol, repSalesWeekCol, repInstallPool As Integer
 
         customerCol        = 1
         jobCol             = 2
@@ -53,6 +53,7 @@ Sub printAllToDebug(ByRef jobData() As cJobData, ByRef repData As Collection, By
         repMarketRateCol   = 34
         repFirstJobCol     = 35
         repSalesWeekCol    = 36
+        repInstallPool     = 37
         
 ''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
         'workBookName = InputBox("What is the master report's name?") & ".xlsx"
@@ -142,6 +143,7 @@ Sub printAllToDebug(ByRef jobData() As cJobData, ByRef repData As Collection, By
                     .Cells(printRow, repInactiveCol).value   = rep.IsInactive
                     .Cells(printRow, repFirstJobCol).Value   = rep.FirstJobDate
                     .Cells(printRow, repSalesWeekCol).Value  = rep.SalesThisWeek
+                    .Cells(printRow, repInstallPool).Value   = rep.InstallPool
                     If rep.IsSlider Then
                         .Cells(printRow, repSliderCol).value     = rep.IsSlider
                         .Cells(printRow, repSliderDateCol).value = rep.StartSliderDate

@@ -29,7 +29,7 @@ Sub createNatesEvo(ByVal workBookName As String)
 	    masCreatedDateCol     = 7
 	    masFinalCol           = 8
 	    masRepEmailCol        = 17
-	    masStateCol           = 18
+	    masStateCol           = 24
 
 	Dim nateIsDocSignedCol, nateIsFinalContractCol As Integer
 

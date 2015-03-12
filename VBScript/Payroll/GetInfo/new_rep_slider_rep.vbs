@@ -72,7 +72,6 @@ Dim PayPeriodStartDate, PayPeriodEndDate as Date
 				
             End if
 
-
         End With
     Next jobRow
 

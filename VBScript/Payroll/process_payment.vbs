@@ -62,6 +62,7 @@ Function processPayment(ByRef jobData() As cJobData, ByRef repData As Collection
 			''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 			''''''''''''''''''''''''CANCELLATIONS'''''''''''''''''''''''''''''''
 			''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+			Set job = cancellations(job, rep, workBookName)
 			End If
 
 			Set jobData(jobIndex) = job

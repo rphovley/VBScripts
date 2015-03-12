@@ -65,7 +65,7 @@ Function getJobData(ByVal workBookName As String) As cJobData()
 	                    currentJob.SubStatus   = .Cells(inputRow, subStatusCol).value
 	                    currentJob.CreatedDate = .Cells(inputRow, createdDateCol).value
 	                    currentJob.RepEmail    = .Cells(inputRow, repEmailCol).value
-                        currentJob.State       = .Cells(inputRow, stateCol).value
+                        currentJob.States       = .Cells(inputRow, stateCol).value
                         currentJob.setIsFinalContract(.Cells(inputRow, isFinalContractCol).value)
 	                    currentJob.setIsInstall
 	                    currentJob.setIsCancelled

@@ -2,11 +2,19 @@ private pName, pEmail As String
 private pID, pPayScaleID As Integer
 private pKwSum As Double
 private pIsBlackList, pIsInactive, pIsSlider, pIsMarketing As Boolean
-private pMarketingRate As Currency
+private pMarketingRate, pInstallPool As Currency
 private pFirstJobDate, pStartSliderDate, pMarkStartDate, pMarkEndDate As Date
 private pSalesThisWeek as Integer
 
 ' Get/Set methods'
+Public Property Get InstallPool() As Currency
+    InstallPool = pInstallPool
+End Property
+
+Public Property Let InstallPool(value As Currency)
+    pInstallPool = value
+End Property
+
 Public Property Get FirstJobDate() As Date
     FirstJobDate = pFirstJobDate
 End Property
@@ -29,11 +37,11 @@ Public Property Get IsMarketing() As Boolean
     IsMarketing = pIsMarketing
 End Property
 
-Public Property Get MarketingRate() As Date
+Public Property Get MarketingRate() As Currency
     MarketingRate = pMarketingRate 
 End Property
 
-Public Property Let MarketingRate(value As Date)
+Public Property Let MarketingRate(value As Currency)
     pMarketingRate = value
 End Property
 

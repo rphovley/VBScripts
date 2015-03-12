@@ -39,7 +39,8 @@
 'Implementaion Notes'
 	
 	'BEFORE PROCESS'
-		'Sort Master Spreadsheet by oldest to newest'
+		'Sort Cancelled sheet WhatWasPaid from smallest to largest'
+		'Sort Master Spreadsheet created Date from oldest to newest'
 		'Check Nate's Evolution that the formulas include all the data from Master and Doc Signed Input'
 		'Remove any job duplicates from MasterReport'
 

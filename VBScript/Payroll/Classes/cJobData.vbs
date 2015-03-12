@@ -1,21 +1,60 @@
 'Class
 'Attributes
 Private pCustomer, pJobID, pStatus, _
-    pSubStatus, pRepEmail, pState As String
-Private pDaysSinceCreated As Integer
+    pSubStatus, pRepEmail, psState As String
+Private pDaysSinceCreated, pFirstPaymentRow, pSecondPaymentRow, pInstalledRow As Integer
 Private pkW As Double
-Private pAmount, pWhatWasPaid, pFirstPaymentAmount, pSecondPaymentAmount, pFinalPaymentAmount As Currency
+Private pAmount, pWhatWasPaid, pFirstPaymentAmount, pSecondPaymentAmount, pFinalPaymentAmount, pClawbackAmount As Currency
 private pThisWeekFirstPayment, pThisWeekSecondPayment, pThisWeekFinalPayment, pThisWeekCancelled As Currency
-Private pCreatedDate, pFirstPaymentDate, pSecondPaymentDate, pFinalPaymentDate As Date
+Private pCreatedDate, pFirstPaymentDate, pSecondPaymentDate, pFinalPaymentDate, pDateOfClawback As Date
 Private pIsInstall, pIsDocSigned, pIsSurveyComplete, pIsFinalContract, pIsCancelled, pIsPaidInFull, pIsBlackListed As Boolean
 
-
-Public Property Get State() As String
-    State = pState
+Public Property Get FirstPaymentRow() As Integer
+    FirstPaymentRow = pFirstPaymentRow
 End Property
 
-Public Property Let RepEmail(value As String)
-    pRepEmail = value
+Public Property Let FirstPaymentRow(value As Integer)
+    pFirstPaymentRow = value
+End Property
+
+Public Property Get SecondPaymentRow() As Integer
+    SecondPaymentRow = pSecondPaymentRow
+End Property
+
+Public Property Let SecondPaymentRow(value As Integer)
+    pSecondPaymentRow = value
+End Property
+
+Public Property Get InstalledRow() As Integer
+    FirstPaymentRow = pFirstPaymentRow
+End Property
+
+Public Property Let InstalledRow(value As Integer)
+    pFirstPaymentRow = value
+End Property
+
+Public Property Get DateOfClawback() As Date
+    DateOfClawback = pDateOfClawback
+End Property
+
+Public Property Let DateOfClawback(value As Date)
+    pDateOfClawback = value
+End Property
+
+Public Property Get ClawbackAmount() As Currency
+    ClawbackAmount = pClawbackAmount
+End Property
+
+Public Property Let ClawbackAmount(value As Currency)
+    pClawbackAmount = value
+End Property
+
+Public Property Get sState() As String
+    sState = pState
+End Property
+
+Public Property Let sState(value As String)
+    pState = value
 End Property
 
 Public Property Get ThisWeekFirstPayment() As Currency
@@ -145,8 +184,8 @@ Public Sub setIsSurveyComplete()
     stateArray  = Array("NY", "NJ", "DE", "MD", "CT", "MA")
     Dim isInclementState As Boolean
 
-    For Each state In stateArray
-        If Me.State = state Then
+    For Each sState In stateArray
+        If Me.State = sState Then
             isInclementState = True
         End IF
     Next
@@ -157,7 +196,7 @@ Public Sub setIsSurveyComplete()
                     If NOT isInclementState AND arrayStatus = Me.SubStatus Then
                         pIsSurveyComplete = True
                         Exit For
-                    ElseIf isInclementState AND arrayStatus = Me.SubStatus OR "Site Survey Scheduled" Then
+                    ElseIf isInclementState AND arrayStatus = Me.SubStatus OR "Site Survey Scheduled" = Me.Substatus Then
                         pIsSurveyComplete = True
                         Exit For
                     End If
