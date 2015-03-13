@@ -43,6 +43,7 @@
 		'Sort Master Spreadsheet created Date from oldest to newest'
 		'Check Nate's Evolution that the formulas include all the data from Master and Doc Signed Input'
 		'Remove any job duplicates from MasterReport'
+		'Make duplicate tabs for 1st Payments, 2nd Payments, Installed and Cancelled to save time if any mistakes are made'
 
 	'ADJUSTMENTS AFTER PROCESS HAS BEEN RUN'
 		'Bobby and Josh will press a button, and based on the normal conditions, they will'

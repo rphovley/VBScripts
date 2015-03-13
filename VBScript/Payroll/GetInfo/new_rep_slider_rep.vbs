@@ -62,7 +62,7 @@ Dim PayPeriodStartDate, PayPeriodEndDate as Date
 
                 'Code for getting first job date for the rep'
                 If isFirstSale Then
-                    currentRep.FirstJobDate = .Cells(jobRow, masJobCreatedCol).Value
+                    currentRep.FirstJobDate = .Cells(jobRow, masCreatedDateCol).Value
                     isFirstSale = False
                 End If
 				

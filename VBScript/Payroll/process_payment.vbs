@@ -1,8 +1,6 @@
 '''''''''''''''''''''''''''''objects'''''''''''''''''''''''''
 	Dim job       As cJobData
 	Dim rep       As cRepData
-	Dim payScale  As cScaleData
-	Dim slider    As cSliderData
 
 Sub processPayment(ByVal workBookName As String)
 
@@ -28,12 +26,6 @@ Sub processPayment(ByVal workBookName As String)
 	    	On Error Resume Next
 	    	Set rep = payroll_main.repData(job.repEmail)
 
-	    	If Not rep is Nothing AND rep.PayScaleID <> 0 Then
-		    	Set payScale  = payroll_main.scaleData(Str(rep.PayScaleID))
-		    	If rep.PayScaleID = 22 Or rep.PayScaleID = 23 Then
-		    		Set slider    = payroll_main.sliderData(Str(rep.PayScaleID))
-		    	End If
-		    End If
 	'''''''''''''''''''''''''''''''''''''THESE OBJECTS HAVE EVERYTHING WE NEED TO PROCESS PAYMENT''''''''''''''
 
 

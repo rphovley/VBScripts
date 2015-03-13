@@ -1,4 +1,4 @@
-Sub printAllToDebug(ByRef jobData() As cJobData, ByRef repData As Collection, ByVal workBookName As String)
+Sub printAllToDebug(ByVal workBookName As String)
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''INITIALIZE VARIABLES''''''''''''''''''''''''''
@@ -68,13 +68,17 @@ Sub printAllToDebug(ByRef jobData() As cJobData, ByRef repData As Collection, By
     Dim printRow As Integer
         printRow = 2
 
+        ''''''object''''
+        Dim rep As cRepData
+
     Const EMPTYDATE = #12:00:00 AM#
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''PRINT JOBS TO DEBUG SHEET'''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-    For Each printJob In jobData
-            
+    For Each printJob In payroll_main.jobData
+            On Error Resume Next
+            Set rep = payroll_main.repData(printJob.repEmail)
             With printSheet
             
                     .Cells(printRow, customerCol).value        = printJob.Customer
@@ -132,10 +136,6 @@ Sub printAllToDebug(ByRef jobData() As cJobData, ByRef repData As Collection, By
 
                     .Cells(printRow, daysSinceCol).value = printJob.DaysSinceCreated
 
-            
-            
-            'Get rep info for the job'
-            For Each rep In repData
                 If rep.Email = printJob.RepEmail Then
                     .Cells(printRow, repNameCol).value       = rep.Name
                     .Cells(printRow, repScaleCol).value      = rep.PayScaleID
@@ -157,7 +157,6 @@ Sub printAllToDebug(ByRef jobData() As cJobData, ByRef repData As Collection, By
                         .Cells(printRow, repMarketRateCol).Value  = rep.MarketingRate
                     End If
                 End If
-            Next
 
             End With
             printRow = printRow + 1
