@@ -1,4 +1,4 @@
-Function getRepData(ByVal workBookName As String) As Collection
+Sub getRepData(ByVal workBookName As String)
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''INITIALIZE VARIABLES''''''''''''''''''''''''''
@@ -30,8 +30,6 @@ Function getRepData(ByVal workBookName As String) As Collection
         printRow = 2
 
     '''''''''''''''''''''''''''''Input Object''''''''''''''''''''''
-    Dim repData As Collection
-        Set repData = New Collection
     Dim currentRep As cRepData
 
     '''''''''''''''''''''''''''''Data Size'''''''''''''''''''''''''
@@ -47,7 +45,7 @@ Function getRepData(ByVal workBookName As String) As Collection
       For inputRow = 2 To repDataSize + 1
             With repDataSheet
                     'Set Values for object from the Rep list'
-	                Set currentRep = New cRepData             
+	                Set currentRep = New cRepData            
                         currentRep.ID       = .Cells(inputRow, repListIDCol).Value
                         currentRep.Email    = .Cells(inputRow, repListEmailCol).Value
                         currentRep.Name     = .Cells(inputRow, repListNameCol).Value
@@ -64,12 +62,10 @@ Function getRepData(ByVal workBookName As String) As Collection
                 Set currentRep = getMarketRep(currentRep, workBookName)
 
             ''''''''''Add currentRep to the jobData Collection''''''''''''
-                                repData.Add currentRep, currentRep.Email
+                        payroll_main.repData.Add currentRep.Email, currentRep
         Next inputRow
-
-       Set getRepData = repData
         
-End Function
+End Sub
 
 
 

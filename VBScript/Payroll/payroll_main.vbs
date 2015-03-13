@@ -1,3 +1,9 @@
+'''''''''''''''''''''''''''''Input Array Object''''''''''''''''''''''
+	    Public jobData()  As cJobData
+	    Public repData    As Scripting.Dictionary
+	    Public scaleData  As Scripting.Dictionary
+	    Public sliderData As Scripting.Dictionary
+
 sub payroll_main()
 
 	'This is the main sub that should call everything and have other subs return calculated items
@@ -19,33 +25,32 @@ sub payroll_main()
 	    Dim NatesEvolution As Workbook
 	        Set NatesEvolution = Workbooks(workBookName)
 
-		'''''''''''''''''''''''''''''Input Array Object''''''''''''''''''''''
-	    Dim jobData()  As cJobData
-	    Dim repData    As Collection
-	    Dim scaleData  As Collection
-	    Dim sliderData As Collection
+	''''''''''''''''''''''''''''Set objects'''''''''''''''''''''''
+	Set repData    = New Scripting.Dictionary
+	Set scaleData  = New Scripting.Dictionary
+	Set sliderData = New Scripting.Dictionary
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''MAIN METHODS AND LOGIC'''''''''''''''''''''''''''''''
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 	'Load up cJobData array with information from jobs in Nate'sEvolution'
-		jobData()      = getjobData(workBookName)
+		jobData() = getjobData(workBookName)
 	'Load up repData with Rep Information'
-		Set repData    = getRepData(workBookName)
+		getRepData workBookName
 	'Load up scale data with Scale information'
-		Set scaleData  = getPayScaleData(workBookName)
+		getPayScaleData workBookName
 	'Load up slider data with Slider Information'
-		Set sliderData = getSliderData(workBookName)		
+		getSliderData workBookName		
 
 	'Get relevant payment information from the payment tabs and update jobData'
-		jobData() = getPaymentInfo(jobData, workBookName)
+		getPaymentInfo workBookName
 
 	'Get count information for reps and the jobs they did this past week'
 		Set repData = getCountInfo(jobData, repData, workBookName)
 
 	'Process Payment Info'
-		jobData() = processPayment(jobData, repData, scaleData, sliderData, workBookName)
+		processPayment workBookName 
 	'print out to the debug sheet all of the relevant job data'
 
 

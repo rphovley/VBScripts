@@ -1,4 +1,4 @@
-Function getSliderData(ByVal workBookName As String) As Collection
+Sub getSliderData(ByVal workBookName As String)
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''INITIALIZE VARIABLES''''''''''''''''''''''''''
@@ -27,24 +27,22 @@ Function getSliderData(ByVal workBookName As String) As Collection
 
 
     '''''''''''''''''''''''''''''Input Object''''''''''''''''''''''
-    Dim sliderData As Collection
-        Set sliderData = New Collection
     Dim slider As cSliderData
     '''''''''''''''''''''''''''''Data Size'''''''''''''''''''''''''
     Dim sliderDataSize As Long
-    	sliderDataSize = sliderDataSheet.Cells(1,1).End(xlDown).Row - 1
+    	sliderDataSize = sliderDataSheet.Cells(1,quartileMaxCol).End(xlDown).Row - 1
 
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''GET AND SET VALUES''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-      For inputRow = 1 To (sliderDataSize / 4) + 1
+      For inputRow = 2 To sliderDataSize
             With sliderDataSheet
                     'Set Values for object from the slider list'
 	                Set slider = New cSliderData 
 
-                        slider.ID    = .Cells(1 + quartileOneRow, sliderIDCol).Value
+                        slider.ID    = .Cells(inputRow, sliderIDCol).Value
 
                         'quartile MAX'
                         slider.FirstQuartileMax  = .Cells(inputRow + quartileOneRow, quartileMaxCol).Value
@@ -63,11 +61,9 @@ Function getSliderData(ByVal workBookName As String) As Collection
 
 
             ''''''''''Add currentslider to the jobData Collection''''''''''''
-            sliderData.Add slider, str(slider.ID)
+            payroll_main.sliderData.Add  str(slider.ID), slider
 
             inputRow = inputRow + 3
         Next inputRow
-
-       Set getPaysliderData = sliderData
         
-End Function
+End Sub

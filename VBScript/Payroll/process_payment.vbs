@@ -1,4 +1,10 @@
-Function processPayment(ByRef jobData() As cJobData, ByRef repData As Collection, ByRef scaleData As Collection, ByRef sliderData As Collection, ByVal workBookName As String) As cJobData()
+'''''''''''''''''''''''''''''objects'''''''''''''''''''''''''
+	Dim job       As cJobData
+	Dim rep       As cRepData
+	Dim payScale  As cScaleData
+	Dim slider    As cSliderData
+
+Sub processPayment(ByVal workBookName As String)
 
 	''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 	''''''''''''''''''''''''''INIT VARS'''''''''''''''''''''''''''''''''
@@ -8,24 +14,25 @@ Function processPayment(ByRef jobData() As cJobData, ByRef repData As Collection
 	    Dim NatesEvolution As Workbook
 	        Set NatesEvolution = Workbooks(workBookName)
 
-	'''''''''''''''''''''''''''''objects'''''''''''''''''''''''''
-	Dim job       As cJobData
-	Dim rep       As cRepData
-	Dim payScale  As cScaleData
-	Dim slider    As cSliderData
+	'''''''''''''''''''''''''''''REP INDEX''''''''''''''''''''''''''''''
+		Dim repIndex As Integer
 
 	''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 	''''''''''''''''''''''''PROCESS PAYMENT LOOP''''''''''''''''''''''''''''''''''''
 	''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 	
 
-	    For jobIndex = 0 To UBound(jobData)
+	    For jobIndex = 0 To UBound(payroll_main.jobData)
 	'''''''''''''''''''''''''''''''''''''THESE OBJECTS HAVE EVERYTHING WE NEED TO PROCESS PAYMENT''''''''''''''
-	    	Set job       = jobData(jobIndex)
-	    	Set rep       = findRep(repData, job.repEmail)
-	    	If Not rep is Nothing Then
-		    	Set payScale  = findScale(scaleData, rep.PayScaleID)
-		    	Set slider    = findSlider(sliderData, rep.PayScaleID)
+	    	Set job = payroll_main.jobData(jobIndex)
+	    	On Error Resume Next
+	    	Set rep = payroll_main.repData(job.repEmail)
+
+	    	If Not rep is Nothing AND rep.PayScaleID <> 0 Then
+		    	Set payScale  = payroll_main.scaleData(Str(rep.PayScaleID))
+		    	If rep.PayScaleID = 22 Or rep.PayScaleID = 23 Then
+		    		Set slider    = payroll_main.sliderData(Str(rep.PayScaleID))
+		    	End If
 		    End If
 	'''''''''''''''''''''''''''''''''''''THESE OBJECTS HAVE EVERYTHING WE NEED TO PROCESS PAYMENT''''''''''''''
 
@@ -62,20 +69,21 @@ Function processPayment(ByRef jobData() As cJobData, ByRef repData As Collection
 			''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 			''''''''''''''''''''''''CANCELLATIONS'''''''''''''''''''''''''''''''
 			''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-			Set job = cancellations(job, rep, workBookName)
+			Set job = cancells(job, rep, workBookName)
+
 			End If
-
-			Set jobData(jobIndex) = job
+			payroll_main.repData.Remove rep.Email
+			payroll_main.repData.Add rep.Email, rep
+			Set payroll_main.jobData(jobIndex) = job
 		Next jobIndex
-	processPayment = jobData
-End Function
+End Sub
 
-'returns the rep object associated with the job'
-Function findRep( ByRef repData As Collection, ByVal repEmail As String) As cRepData
+'returns the rep object associated with the job'-
+Function findRep( ByRef repData As Collection, ByVal repEmail As String) As Integer
 		
-	For Each rep In repData
-        If rep.Email = repEmail Then
-        	Set findRep = rep
+	For repIndex = 1 To repData.Count
+        If repData(repIndex) = repEmail Then
+        	findRep = repIndex
         End IF
     Next
 
@@ -102,5 +110,3 @@ Function findSlider(ByRef sliderData As Collection, ByRef scaleID As Integer) As
     Next
 
 End Function
-
-Function countJobs() 

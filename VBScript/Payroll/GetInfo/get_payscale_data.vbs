@@ -1,4 +1,4 @@
-Function getPayScaleData(ByVal workBookName As String) As Collection
+Sub getPayScaleData(ByVal workBookName As String)
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''INITIALIZE VARIABLES''''''''''''''''''''''''''
@@ -22,8 +22,6 @@ Function getPayScaleData(ByVal workBookName As String) As Collection
 
 
     '''''''''''''''''''''''''''''Input Object''''''''''''''''''''''
-    Dim scaleData As Collection
-    	Set scaleData = New Collection
     Dim payScale As cScaleData
 
     '''''''''''''''''''''''''''''Data Size'''''''''''''''''''''''''
@@ -47,10 +45,8 @@ Function getPayScaleData(ByVal workBookName As String) As Collection
 
 
             ''''''''''Add currentscale to the jobData Collection''''''''''''
-            scaleData.Add payScale, Str(payScale.ID)
+            payroll_main.scaleData.Add Str(payScale.ID), payScale 
 
         Next inputRow
-
-       Set getPayScaleData = scaleData
         
-End Function
+End Sub

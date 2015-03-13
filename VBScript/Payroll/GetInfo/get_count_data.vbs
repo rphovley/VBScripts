@@ -1,4 +1,4 @@
-Function getCountInfo(ByRef jobData() As cJobData, ByRef repData() As cRepData, ByVal workBookName As String) As cRepData()
+Sub getCountInfo(ByVal workBookName As String)
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''INITIALIZE VARIABLES''''''''''''''''''''''''''
@@ -37,21 +37,20 @@ Function getCountInfo(ByRef jobData() As cJobData, ByRef repData() As cRepData, 
         printRow = 2
 '''''''''''''''''''''''''''''job Object''''''''''''''''''''''
     Dim rep As cRepData
-    Dim newRepData() As cRepData
-    ReDim newRepData(UBound(repData))
-
+    Dim job As cJobData
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''GET PAYMENT INFORMATION'''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
     'Find jobs in the "1st_Payments_Pending" and'
     '"2nd_Payments_Pending" Tabs and update the jobData info'
-    For repIndex = 0 To UBound(repData)
-        Set rep = repData.Item(repIndex)
 
-		 For jobIndex = 0 To UBound(jobData)
-		      
-			If job.firstPaymentAmount = 0 and job.repEmail = rep and job.Status <> "Cancelled" then
+    For jobIndex = 0 To UBound(payroll_main.jobData)
+            Set job = payroll_main.jobData(jobIndex)
+            On Error Resume Next
+            Set rep = payroll_main.repData(job.repEmail)	
+
+			If job.firstPaymentAmount = 0 and job.repEmail = rep.Email and job.Status <> "Cancelled" then
 				if job.CreatedDate > rep.FirstJobDate + 60 and IsFinalContract = True then
 					rep.SalesThisWeek = rep.SalesThisWeek + 1
 				elseif job.CreatedDate < rep.FirstJobDate + 60 and IsSurveyComplete = True then
@@ -61,17 +60,11 @@ Function getCountInfo(ByRef jobData() As cJobData, ByRef repData() As cRepData, 
 
             ''''''sum up the install pool for the rep'''''
             rep.InstallPool = rep.InstallPool + job.ThisWeekFinalPayment
-
-		 Next
 		 'Reset the job in the array'
-        Set repData.Item(repIndex) = rep
+        Set payroll_main.repData.Item(repIndex) = rep
     Next
 
-
-    getPaymentInfo = repData
-
-
-End Function
+End Sub
 
 Function installPool(ByRef job As cJobData, ByRef rep As cRepData) As cRepData
 

@@ -1,8 +1,9 @@
 'Class
 'Attributes
+
 Private pCustomer, pJobID, pStatus, _
-    pSubStatus, pRepEmail, psState As String
-Private pDaysSinceCreated, pFirstPaymentRow, pSecondPaymentRow, pInstalledRow As Integer
+    pSubStatus, pRepEmail, pStates As String
+Private pDaysSinceCreated, pFirstPaymentRow, pSecondPaymentRow, pInstallRow As Integer
 Private pkW As Double
 Private pAmount, pWhatWasPaid, pFirstPaymentAmount, pSecondPaymentAmount, pFinalPaymentAmount, pClawbackAmount As Currency
 private pThisWeekFirstPayment, pThisWeekSecondPayment, pThisWeekFinalPayment, pThisWeekCancelled As Currency
@@ -25,12 +26,12 @@ Public Property Let SecondPaymentRow(value As Integer)
     pSecondPaymentRow = value
 End Property
 
-Public Property Get InstalledRow() As Integer
-    FirstPaymentRow = pFirstPaymentRow
+Public Property Get InstallRow() As Integer
+    InstallRow = pInstallRow
 End Property
 
-Public Property Let InstalledRow(value As Integer)
-    pFirstPaymentRow = value
+Public Property Let InstallRow(value As Integer)
+    pInstallRow = value
 End Property
 
 Public Property Get DateOfClawback() As Date
@@ -49,12 +50,12 @@ Public Property Let ClawbackAmount(value As Currency)
     pClawbackAmount = value
 End Property
 
-Public Property Get sState() As String
-    sState = pState
+Public Property Get States() As String
+    States = pStates
 End Property
 
-Public Property Let sState(value As String)
-    pState = value
+Public Property Let States(value As String)
+    pStates = value
 End Property
 
 Public Property Get ThisWeekFirstPayment() As Currency
@@ -185,7 +186,7 @@ Public Sub setIsSurveyComplete()
     Dim isInclementState As Boolean
 
     For Each sState In stateArray
-        If Me.State = sState Then
+        If Me.States = sState Then
             isInclementState = True
         End IF
     Next
@@ -194,19 +195,19 @@ Public Sub setIsSurveyComplete()
                 For Each arrayStatus In isArray
                     'if it is a correct backend status, return true'
                     If NOT isInclementState AND arrayStatus = Me.SubStatus Then
-                        pIsSurveyComplete = True
+                        Me.IsSurveyComplete = True
                         Exit For
                     ElseIf isInclementState AND arrayStatus = Me.SubStatus OR "Site Survey Scheduled" = Me.Substatus Then
-                        pIsSurveyComplete = True
+                        Me.IsSurveyComplete = True
                         Exit For
                     End If
 
                 Next arrayStatus
 
             ElseIf Me.Status = "Sales" Then
-                pIsSurveyComplete = False
+                Me.IsSurveyComplete = False
             Else
-                pIsSurveyComplete = True
+                Me.IsSurveyComplete = True
             End If
 End Sub
 

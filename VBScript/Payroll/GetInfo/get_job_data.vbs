@@ -41,7 +41,6 @@ Function getJobData(ByVal workBookName As String) As cJobData()
     '''''''''''''''''''''''''''''Data Size'''''''''''''''''''''''''
     Dim jobDataSize As Long
     	jobDataSize = jobDataSheet.Cells(1,1).End(xlDown).Row - 2
-    	ReDim jobData(jobDataSize)
 
    	'''''''''''Date constant to consider for new jobs''''''''''''''
    	Const NEWJOBDATE = #11/30/2014#
@@ -73,8 +72,9 @@ Function getJobData(ByVal workBookName As String) As cJobData()
                         currentJob.setIsSurveyComplete
 
 	                ''''''''''Add currentJob to the jobData Array'''''''''''''
-                    IF currentJob.IsInstall Or currentJob.isFinalContract Or currentJob.IsSurveyComplete Then
-	                   Set jobData(dataRow) = currentJob
+                    IF currentJob.IsInstall Or currentJob.isFinalContract Or currentJob.IsSurveyComplete  Or currentJob.IsCancelled Then
+	                   Redim Preserve jobData(dataRow)
+                       Set jobData(dataRow) = currentJob
                        dataRow = dataRow + 1
                     End If
 

@@ -1,4 +1,4 @@
-Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workBookName As String) As cJobData()
+Sub getPaymentInfo(ByVal workBookName As String)
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''INITIALIZE VARIABLES''''''''''''''''''''''''''
@@ -37,8 +37,6 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workBookName As Strin
         printRow = 2
 '''''''''''''''''''''''''''''job Object''''''''''''''''''''''
     Dim job As cJobData
-    Dim newJobData() As cJobData
-    ReDim newJobData(UBound(jobData))
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''GET PAYMENT INFORMATION'''''''''''''''''''''''''
@@ -46,8 +44,8 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workBookName As Strin
 
     'Find jobs in the "1st_Payments_Pending" and'
     '"2nd_Payments_Pending" Tabs and update the jobData info'
-    For jobIndex = 0 To UBound(jobData)
-        Set job = jobData(jobIndex)
+    For jobIndex = 0 To UBound(payroll_main.jobData)
+        Set job = payroll_main.jobData(jobIndex)
 
          With InstalledSheet
 
@@ -118,11 +116,8 @@ Function getPaymentInfo(ByRef jobData() As cJobData, ByVal workBookName As Strin
         job.setWhatWasPaid
 
         'Reset the job in the array'
-        Set jobData(jobIndex) = job
+        Set payroll_main.jobData(jobIndex) = job
     Next
 
 
-    getPaymentInfo = jobData
-
-
-End Function
+End Sub
