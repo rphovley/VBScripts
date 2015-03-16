@@ -57,6 +57,7 @@ dim first_payment as currency
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 ''''''''''''''''''''''''''''FOR ACCOUNTS LESS THAN 60 DAYS''''''''''''''''''''''''
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+if DateDiff("d", rep.FirstJobDate, job.CreatedDate) <= 60 then
 	if SalesThisWeek <= 2 And SalesThisWeek > 0 then
 		first_payment =  new_one_two
 	ElseIf SalesThisWeek > 2 and SalesThisWeek <= 5 then
@@ -64,7 +65,7 @@ dim first_payment as currency
 	ElseIf SalesThisWeek > 5 then
 		first_payment = new_six_plus
 	End If
-
+Else
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''FOR ACCOUNTS GREATER THAN 60 DAYS''''''''''''''''''''''''''''
@@ -76,6 +77,7 @@ dim first_payment as currency
 	ElseIf SalesThisWeek > 5 then
 		first_payment =  old_six_plus
 	End If
+End If
 
 	return first_payment
 	
