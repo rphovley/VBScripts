@@ -48,7 +48,7 @@ Dim whatWasPaid As Currency
 					'set the clawback amount'
 					currentJob.ClawbackAmount = .Cells(row, paidCol).value
 					'Remove from list'
-					Rows(row).EntireRow.Delete
+					.Rows(row).EntireRow.Delete
 
 					isAlreadyCancelled = True
 					Exit Do
@@ -82,7 +82,23 @@ Dim whatWasPaid As Currency
 
 
 		'ALL CASES SHOULD REMOVE THIS JOB FROM FIRST AND SECOND PAYMENTS TABS'
+		With Workbooks(WorkBookName).WorkSheets("1st_Payments_Pending")
+			For first_row = 2 To .Cells(1,1).End(xlDown).Row
+				If currentJob.JobID = .Cells(first_row, 4).Value Then
+					.Rows(first_row).EntireRow.Delete
+				End If
+			Next first_row
+		End With
+		'ALL CASES SHOULD REMOVE THIS JOB FROM FIRST AND SECOND PAYMENTS TABS'
+		With Workbooks(WorkBookName).WorkSheets("2nd_Payments_Pending")
+			For second_row = 2 To .Cells(1,1).End(xlDown).Row
+				If currentJob.JobID = .Cells(second_row, 4).Value Then
+					.Rows(second_row).EntireRow.Delete
+				End If
+			Next second_row
+		End With
 	End If
+	currentJob.ThisWeekCancelled = currentJob.ClawbackAmount
 	payroll_main.repData.Remove currentRep.Email
 	payroll_main.repData.Add currentRep.Email, currentRep
 
@@ -115,7 +131,7 @@ Dim jobCol, emailCol, kWCol, paidCol, clawedCol, dateCol As Integer
 		Set Cancelled = NatesEvolution.Worksheets("Cancelled")
 	'Row'
 	Dim printRow As Integer
-		printRow = Cancelled.UsedRange.Rows.Count + 1
+		printRow = .Cells(1,1).End(xlDown).Row + 1
 
 	With Cancelled
 		.Cells(printRow, jobCol)    = currentJob.JobID

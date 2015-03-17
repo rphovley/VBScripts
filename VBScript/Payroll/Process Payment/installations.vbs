@@ -46,9 +46,9 @@ If currentJob.IsInstall Then
 	'Determine what it means for this rep to be "Paid in full"'
 	'if the rep is not marketing'
 	If NOT currentRep.IsMarketing Then
-		scales = payroll_main.scaleData(currentRep.PayScaleID)
-		If NOT scales IS Nothing AND scale.Rate = "Sliding" Then
-			slider = payroll_main.sliderData(currentRep.PayScaleID)
+		Set scales = payroll_main.scaleData(CStr(currentRep.PayScaleID))
+		If NOT scales IS Nothing AND scales.Rate = "Sliding" Then
+			Set slider = payroll_main.sliderData(currentRep.PayScaleID)
 		End If
 
 		'If they aren't on a sliding pay scale'
@@ -71,10 +71,12 @@ If currentJob.IsInstall Then
 		Rate = currentRep.MarketingRate
 	End If
 
-	currentJob.FinalPaymentAmount = (currentJob.kW * Rate) - currentRep.WhatWasPaid
+	currentJob.ThisWeekFinalPayment = (currentJob.kW * Rate) - currentJob.WhatWasPaid
+	currentJob.FinalPaymentAmount = currentJob.ThisWeekFinalPayment
 	'Increment our install pool for this rep'
-	currentRep.IsInstall = currentRep.IsInstall + currentJob.FinalPaymentAmount
-	currentRep.FinalPaymentDate = Date()
+	currentRep.InstallPool = currentRep.InstallPool + currentJob.FinalPaymentAmount
+	currentJob.FinalPaymentDate = Date()
+	currentJob.setWhatWasPaid
 	
 	
 	'Print out to Installed and remove any instances of job from 1st payments and second payments and cancellations'
@@ -120,13 +122,13 @@ Sub printInstallation(ByRef currentJob As cJobData, ByRef currentRep As cRepData
         Set NatesEvolution = Workbooks(workBookName)
 	
 	'worksheets'
-	Dim Cancelled As Worksheet
-		Set Cancelled = NatesEvolution.Worksheets("Installed")
+	Dim Installed As Worksheet
+		Set Installed = NatesEvolution.Worksheets("Installed")
 	'Row'
 	Dim printRow As Integer
 		printRow = Installed.Cells(1,1).End(xlDown).Row + 1
 
-	With Cancelled
+	With Installed
 		.Cells(printRow, repCol)           = currentRep.Name
 		.Cells(printRow, repIDCol)         = currentRep.ID
 		.Cells(printRow, customerCol)      = currentJob.Customer
@@ -139,7 +141,7 @@ Sub printInstallation(ByRef currentJob As cJobData, ByRef currentRep As cRepData
 		.Cells(printRow, secondDateCol)    = currentJob.SecondPaymentDate
 		.Cells(printRow, rateCol)          = Rate
 		.Cells(printRow, finalPaymentCol)  = currentJob.FinalPaymentAmount
-		.Cells(printRow, finalDateCol)     = currentJob.FinalPaymentDate
+		.Cells(printRow, finalDateCol)     = currentJob.ThisWeekFinalPayment
 	End With
 
 End Sub

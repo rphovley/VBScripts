@@ -141,7 +141,7 @@ Public Property Let WhatWasPaid(value As Currency)
 End Property
 
 Public Sub setWhatWasPaid()
-    pWhatWasPaid = pFirstPaymentAmount + pSecondPaymentAmount
+    pWhatWasPaid = pFirstPaymentAmount + pSecondPaymentAmount + pFinalPaymentAmount
 End Sub
 
 Public Property Get FirstPaymentAmount() As Currency
