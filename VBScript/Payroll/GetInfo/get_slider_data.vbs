@@ -5,7 +5,7 @@ Sub getSliderData(ByVal workBookName As String)
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
         
     Dim sliderIDCol, quartileMaxCol, quartileKWCol, _
-        quartileOneRow, quartileTwoRow, quartileThreeRow, quratileFourRow As Integer
+        quartileOneRow, quartileTwoRow, quartileThreeRow, quartileFourRow As Integer
 
         sliderIDCol      = 5
         quartileMaxCol   = 7

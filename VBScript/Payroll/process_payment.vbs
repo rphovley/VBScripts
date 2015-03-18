@@ -40,7 +40,7 @@ Sub processPayment(ByVal workBookName As String)
 					''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 					''''''''''''''''''''''''FIRST PAYMENT'''''''''''''''''''''''''''''''
 					''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-						
+					Set job = firstPayment(job, rep, workBookName)	
 					End IF
 
 
