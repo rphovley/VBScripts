@@ -50,8 +50,9 @@ Do
 'Set starting row for the row counters for each loop/rep
 reportrow = 4
 masterrow = 2
+grand_total = 0
 
-previous_month = "May 2014"
+previous_month = Format(DateAdd("m", -1, ReportDate), "MMMM-YYYY")
 
 
     'Sets the Rep as the new rep to be done
@@ -62,7 +63,7 @@ previous_month = "May 2014"
     With Sheets(Rep)
             .Cells(1, 4) = "Name:"
             .Cells(1, 5) = Rep
-            .Cells(2, 4) = "Date Created:"
+            .Cells(2, 4) = "Date Paid:"
             .Cells(2, 5) = ReportDate
     End With
     
@@ -71,106 +72,90 @@ previous_month = "May 2014"
         .HorizontalAlignment = xlRight
         .Font.Bold = True
     End With
-   
-    Do Until previous_month = ""
-        grand_total = 0
+
     '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-        'Formats the new spreadsheet
-        With Sheets(Rep)
-            .Cells(reportrow - 1, 2) = previous_month
-            .Cells(reportrow, repCol) = "Rep"
-            .Cells(reportrow, customerCol) = "Customer"
-            .Cells(reportrow, kWCol) = "kW"
-            .Cells(reportrow, rateCol) = "Rate/kW"
-            .Cells(reportrow, totalCol) = "Total"
-            .Cells(reportrow, reasonCol) = "Type"
-            .Cells(reportrow, jobIDCol) = "Job ID"
-            .Cells(reportrow, statusCol) = "Status"
-            .Cells(reportrow, subStatusCol) = "SubStatus"
-            .Cells(reportrow, overTypeCol) = "OverrideType"
-        End With
+    'Formats the new spreadsheet
+    With Sheets(Rep)
+        .Cells(reportrow - 1, 2) = previous_month
+        .Cells(reportrow, repCol) = "Rep"
+        .Cells(reportrow, customerCol) = "Customer"
+        .Cells(reportrow, kWCol) = "kW"
+        .Cells(reportrow, rateCol) = "Rate/kW"
+        .Cells(reportrow, totalCol) = "Total"
+        .Cells(reportrow, reasonCol) = "Type"
+        .Cells(reportrow, jobIDCol) = "Job ID"
+        .Cells(reportrow, statusCol) = "Status"
+        .Cells(reportrow, subStatusCol) = "SubStatus"
+        .Cells(reportrow, overTypeCol) = "OverrideType"
+    End With
 
-        'Formats the column headers
-        With Worksheets(Rep).Range(Cells(reportrow - 1, repCol).Address, Cells(reportrow, overTypeCol).Address)
-                .HorizontalAlignment = xlCenter
-                .Font.Bold = True
-                .Interior.Color = RGB(0, 102, 204)
-                .Font.Color = RGB(255, 255, 255)
-        End With
-
-        Do
-            
-            If Sheets("Master Sheet").Cells(masterrow, 2) = Rep Then
-                
-                If Sheets("Master Sheet").Cells(masterrow, month_col) = previous_month Then
-                    'Gives values to the variables to be put into the created worksheet
-                    With Sheets("Master Sheet")
-                      subRep = .Cells(masterrow, 4)
-                      customer = .Cells(masterrow, 6)
-                      kW = .Cells(masterrow, 15)
-                      Rate = .Cells(masterrow, 14)
-                      Total = .Cells(masterrow, 16)
-                      Reason = .Cells(masterrow, 10)
-                      JobID = .Cells(masterrow, 7)
-                      iStatus = .Cells(masterrow, 11)
-                      SubStatus = .Cells(masterrow, 12)
-                      OverrideType = .Cells(masterrow, 13)
-                      grand_total = grand_total + Total
-                    End With
-                    
-                    reportrow = reportrow + 1
-                    
-                    'Inputs data into the rep's report
-                    Sheets(Rep).Cells(reportrow, repCol) = subRep
-                    Sheets(Rep).Cells(reportrow, customerCol) = customer
-                    Sheets(Rep).Cells(reportrow, kWCol) = kW
-                    Sheets(Rep).Cells(reportrow, rateCol) = Rate
-                    Sheets(Rep).Cells(reportrow, totalCol) = Total
-                    If Total < 0 Then
-                        With Sheets(Rep).Cells(reportrow, totalCol)
-                            .Font.Color = RGB(255, 0, 0)
-                        End With
-                    End If
-                    Sheets(Rep).Cells(reportrow, reasonCol) = Reason
-                    Sheets(Rep).Cells(reportrow, jobIDCol) = JobID
-                    Sheets(Rep).Cells(reportrow, statusCol) = iStatus
-                    Sheets(Rep).Cells(reportrow, subStatusCol) = SubStatus
-                    Sheets(Rep).Cells(reportrow, overTypeCol) = OverrideType
-
-                Else
-                    previous_month = Sheets("Master Sheet").Cells(masterrow, month_col)
-                    Exit Do
-                End If
-                masterrow = masterrow + 1
-            Else
-                masterrow = masterrow + 1
-                Exit Do
-            End If
-        Loop
-        
-        'Sums the totals for each customer into a grand total for the rep
-        Worksheets(Rep).Cells(reportrow + 1, 5) = "Total:"
-        Worksheets(Rep).Cells(reportrow + 1, 6) = grand_total
-        'Formats the grand total cells
-        With Worksheets(Rep).Cells(reportrow + 1, 5)
-            .Font.Color = RGB(255, 255, 255)
-            .Interior.Color = RGB(0, 0, 0)
+    'Formats the column headers
+    With Worksheets(Rep).Range(Cells(reportrow - 1, repCol).Address, Cells(reportrow, overTypeCol).Address)
+            .HorizontalAlignment = xlCenter
             .Font.Bold = True
-            .HorizontalAlignment = xlRight
-        End With
-        'Places border around the grand total
-        With Worksheets(Rep).Range(Sheets(Rep).Cells(reportrow + 1, 5), Sheets(Rep).Cells(reportrow + 1, 6))
-            .Borders(xlEdgeLeft).LineStyle = xlContinuous
-            .Borders(xlEdgeTop).LineStyle = xlContinuous
-            .Borders(xlEdgeRight).LineStyle = xlContinuous
-            .Borders(xlEdgeBottom).LineStyle = xlContinuous
-        End With
+            .Interior.Color = RGB(0, 102, 204)
+            .Font.Color = RGB(255, 255, 255)
+    End With
+
+    For masterrow = 2 To  Sheets("Master").Cells(1, 1).End(xlDown).Row + 1
         
-        reportrow = reportrow + 4
-        If Sheets("Master Sheet").Cells(masterrow, 2) <> Rep Then
-            Exit Do
+        If Sheets("Master").Cells(masterrow, 2) = Rep Then
+                'Gives values to the variables to be put into the created worksheet
+                With Sheets("Master")
+                  subRep = .Cells(masterrow, 4)
+                  customer = .Cells(masterrow, 6)
+                  kW = .Cells(masterrow, 15)
+                  Rate = .Cells(masterrow, 14)
+                  Total = .Cells(masterrow, 16)
+                  Reason = .Cells(masterrow, 10)
+                  JobID = .Cells(masterrow, 7)
+                  iStatus = .Cells(masterrow, 11)
+                  SubStatus = .Cells(masterrow, 12)
+                  OverrideType = .Cells(masterrow, 13)
+                  grand_total = grand_total + Total
+                End With
+                
+                reportrow = reportrow + 1
+                
+                'Inputs data into the rep's report
+                Sheets(Rep).Cells(reportrow, repCol) = subRep
+                Sheets(Rep).Cells(reportrow, customerCol) = customer
+                Sheets(Rep).Cells(reportrow, kWCol) = kW
+                Sheets(Rep).Cells(reportrow, rateCol) = Rate
+                Sheets(Rep).Cells(reportrow, totalCol) = Total
+                If Total < 0 Then
+                    With Sheets(Rep).Cells(reportrow, totalCol)
+                        .Font.Color = RGB(255, 0, 0)
+                    End With
+                End If
+                Sheets(Rep).Cells(reportrow, reasonCol) = Reason
+                Sheets(Rep).Cells(reportrow, jobIDCol) = JobID
+                Sheets(Rep).Cells(reportrow, statusCol) = iStatus
+                Sheets(Rep).Cells(reportrow, subStatusCol) = SubStatus
+                Sheets(Rep).Cells(reportrow, overTypeCol) = OverrideType
         End If
-    Loop
+
+    Next masterrow
+    
+    'Sums the totals for each customer into a grand total for the rep
+    Worksheets(Rep).Cells(reportrow + 1, 5) = "Total:"
+    Worksheets(Rep).Cells(reportrow + 1, 6) = grand_total
+    'Formats the grand total cells
+    With Worksheets(Rep).Cells(reportrow + 1, 5)
+        .Font.Color = RGB(255, 255, 255)
+        .Interior.Color = RGB(0, 0, 0)
+        .Font.Bold = True
+        .HorizontalAlignment = xlRight
+    End With
+    'Places border around the grand total
+    With Worksheets(Rep).Range(Sheets(Rep).Cells(reportrow + 1, 5), Sheets(Rep).Cells(reportrow + 1, 6))
+        .Borders(xlEdgeLeft).LineStyle = xlContinuous
+        .Borders(xlEdgeTop).LineStyle = xlContinuous
+        .Borders(xlEdgeRight).LineStyle = xlContinuous
+        .Borders(xlEdgeBottom).LineStyle = xlContinuous
+    End With
+    
+    reportrow = reportrow + 4
 
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     'Adjusts column width of the new tab
