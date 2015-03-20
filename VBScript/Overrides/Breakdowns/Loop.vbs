@@ -6,13 +6,13 @@ Sub WorksheetLoop()
 
    ' Set WS_Count equal to the number of worksheets in the active
    ' workbook.
-   WS_Count = ActiveWorkbook.Worksheets.Count
+   WS_Count = Worksheets("Reps").Cells(2, 1).End(xlDown).Row
 
    ' Begin the loop.
-   For I = 3 To WS_Count
+   For I = 2 To WS_Count + 1
         
-      repName = Worksheets(2).Cells(I - 2, 1).Value
-      repEmail = Worksheets(2).Cells(I - 2, 2).Value
+      repName = Worksheets("Reps").Cells(I, 1).Value
+      repEmail = Worksheets("Reps").Cells(I, 2).Value
       
       MsgBox ActiveWorkbook.Worksheets(repName).Name & " " & repEmail
 
@@ -26,3 +26,4 @@ Sub WorksheetLoop()
    Next I
 
 End Sub
+

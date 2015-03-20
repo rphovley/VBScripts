@@ -65,11 +65,9 @@ Sub EmailReps(ByVal repName As String, ByVal repEmail As String)
             .To = repEmail
             .CC = ""
             .BCC = ""
-            .Subject = "Overrides for new pay structure"
+            .Subject = "February Override Breakdown"
             .Body = "Evolve Team," & vbNewLine & vbNewLine & _
-            "This email contains a breakdown of jobs that have now reached a 100% payable status for the reps you receive overrides on (according to the new pay structure). " & _
-            "Any pay shown in the breakdown will be factored into this week's paycheck. The process of paying out the overrides related to the new pay structure will be paid out over the course of the next 3 months.  " & _
-            "So only a third of what is shown in the breakdown will affect this week's paycheck. " & vbNewLine & vbNewLine & _
+            "This email contains a breakdown of jobs for the reps you receive overrides on (according to the new pay structure). Any pay shown in the breakdown will be factored into this week's paycheck." & vbNewLine & vbNewLine & _
             "Let us know if you have any quesitons," & vbNewLine & vbNewLine & _
             "Thanks!" & vbNewLine & vbNewLine & _
             "Evolve Finance Team" & vbNewLine & vbNewLine & _
@@ -96,3 +94,5 @@ Sub EmailReps(ByVal repName As String, ByVal repEmail As String)
         .EnableEvents = True
     End With
 End Sub
+
+
