@@ -58,8 +58,6 @@ Sub getCountInfo(ByVal workBookName As String)
 				End if
 			End if
 
-            ''''''sum up the install pool for the rep'''''
-            rep.InstallPool = rep.InstallPool + job.ThisWeekFinalPayment
 		 'Reset the job in the array'
         Set payroll_main.repData.Item(repIndex) = rep
     Next

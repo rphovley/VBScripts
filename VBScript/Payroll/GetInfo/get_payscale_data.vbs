@@ -45,7 +45,7 @@ Sub getPayScaleData(ByVal workBookName As String)
 
 
             ''''''''''Add currentscale to the jobData Collection''''''''''''
-            payroll_main.scaleData.Add Str(payScale.ID), payScale 
+            payroll_main.scaleData.Add Trim(CStr(payScale.ID)), payScale
 
         Next inputRow
         

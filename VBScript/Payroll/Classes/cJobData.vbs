@@ -83,11 +83,11 @@ Public Property Let ThisWeekFinalPayment(value As Currency)
 End Property
 
 Public Property Get ThisWeekCancelled() As Currency
-    ThisWeekFinalPayment = pThisWeekFinalPayment
+    ThisWeekCancelled = pThisWeekCancelled
 End Property
 
 Public Property Let ThisWeekCancelled(value As Currency)
-    pThisWeekFinalPayment= value
+    pThisWeekCancelled= value
 End Property
 
 'Rep Info'
