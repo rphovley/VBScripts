@@ -28,12 +28,12 @@ Dim first_payment As Currency
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 if currentJob.IsSurveyComplete AND NOT currentJob.isCancelled And Not currentRep.IsBlackList then
 
-	If DateDiff("d", rep.FirstJobDate, job.CreatedDate) <= 60 Then
-		If SalesThisWeek <= 2 And SalesThisWeek > 0 Then
+	If DateDiff("d", currentRep.FirstJobDate, currentJob.CreatedDate) <= 60 Then
+		If currentRep.SalesThisWeek <= 2 And currentRep.SalesThisWeek > 0 Then
 			first_payment_total = new_one_two
-		ElseIf SalesThisWeek > 2 And SalesThisWeek <= 5 Then
+		ElseIf currentRep.SalesThisWeek > 2 And currentRep.alesThisWeek <= 5 Then
 			first_payment_total = new_three_five
-		ElseIf SalesThisWeek > 5 Then
+		ElseIf currentRep.SalesThisWeek > 5 Then
 			first_payment_total = new_six_plus
 		End If
 	Else
@@ -41,11 +41,11 @@ if currentJob.IsSurveyComplete AND NOT currentJob.isCancelled And Not currentRep
 	''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 	'''''''''''''''''''''''''''''FOR ACCOUNTS GREATER THAN 60 DAYS''''''''''''''''''''''''''''
 	''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-		If SalesThisWeek <= 2 And SalesThisWeek > 0 Then
+		If currentRep.SalesThisWeek <= 2 And currentRep.SalesThisWeek > 0 Then
 			first_payment_total = old_one_two
-		ElseIf SalesThisWeek > 2 And SalesThisWeek <= 5 Then
+		ElseIf currentRep.SalesThisWeek > 2 And currentRep.SalesThisWeek <= 5 Then
 			first_payment_total = old_three_five
-		ElseIf SalesThisWeek > 5 Then
+		ElseIf currentRep.SalesThisWeek > 5 Then
 			first_payment_total = old_six_plus
 		End If
 	End If
