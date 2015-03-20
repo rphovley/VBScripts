@@ -100,7 +100,7 @@ Dim repCol, repIDCol, customerCol, jobCol, kWCol, createdDateCol, _
 		.Cells(printRow, jobCol)           = currentJob.JobID
 		.Cells(printRow, kWCol)            = currentJob.kW
 		.Cells(printRow, createdDateCol)   = currentJob.CreatedDate
-		.Cells(printRow, paymentAmountCol) = currentJob.ThisWeekSecondPayment
+		.Cells(printRow, paymentAmountCol) = currentJob.ThisWeekFirstPayment
 		.Cells(printRow, paymentDateCol)   = Date
 	End With
 
