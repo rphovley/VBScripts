@@ -206,7 +206,7 @@ Public Sub setIsSurveyComplete()
 
             ElseIf Me.Status = "Sales" Then
                 Me.IsSurveyComplete = False
-            Else
+            ElseIf NOT Me.IsCancelled Then
                 Me.IsSurveyComplete = True
             End If
 End Sub

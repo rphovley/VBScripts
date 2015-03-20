@@ -59,7 +59,7 @@ End Function
         
         
         
-Sub printFirst(ByRef currentRep As cRepData)
+Sub printFirst(ByRef currentJob As cJobData, ByRef currentRep As cRepData, ByVal workBookName As String)
 	'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''INITIALIZE VARIABLES''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
