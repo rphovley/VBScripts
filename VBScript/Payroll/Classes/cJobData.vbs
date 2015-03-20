@@ -174,7 +174,7 @@ Public Property Let IsSurveyComplete(value As Boolean)
 End Property
 
 Public Property Get IsSurveyComplete() As Boolean
-    IsSurveyComplete = IsSurveyComplete
+    IsSurveyComplete = pIsSurveyComplete
 End Property
 
 Public Sub setIsSurveyComplete()
