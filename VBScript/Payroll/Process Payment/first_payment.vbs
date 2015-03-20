@@ -31,7 +31,7 @@ if currentJob.IsSurveyComplete AND NOT currentJob.isCancelled And Not currentRep
 	If DateDiff("d", currentRep.FirstJobDate, currentJob.CreatedDate) <= 60 Then
 		If currentRep.SalesThisWeek <= 2 And currentRep.SalesThisWeek > 0 Then
 			first_payment_total = new_one_two
-		ElseIf currentRep.SalesThisWeek > 2 And currentRep.alesThisWeek <= 5 Then
+		ElseIf currentRep.SalesThisWeek > 2 And currentRep.SalesThisWeek <= 5 Then
 			first_payment_total = new_three_five
 		ElseIf currentRep.SalesThisWeek > 5 Then
 			first_payment_total = new_six_plus
@@ -82,9 +82,7 @@ Dim repCol, repIDCol, customerCol, jobCol, kWCol, createdDateCol, _
     Dim NatesEvolution As Workbook
         Set NatesEvolution = Workbooks(WorkBookName)
 
-    ''''''''''''''''''''''''''Create Nate's Evolution'''''''''''''
-        createNatesEvo (WorkBookName)
-        
+
     ''''''''''''''''''''''''''''''Worksheets''''''''''''''''''''''
     Dim firstPayment As Worksheet
         Set firstPayment = NatesEvolution.Worksheets("1st_Payments_Pending")
