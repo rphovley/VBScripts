@@ -15,7 +15,7 @@ Sub printAllToDebug(ByVal workBookName As String)
         repBlackCol, repInactiveCol, repNewCol, _
         repSliderCol, repSliderDateCol, repMarketEndCol, _
         repMarketStartCol, repIsMarketCol, repMarketRateCol, _
-        repFirstJobCol, repSalesWeekCol, repInstallPool As Integer
+        repFirstJobCol, repSalesWeekCol, repInstallPool, isSurveyComplete As Integer
 
         customerCol        = 1
         jobCol             = 2
@@ -54,6 +54,7 @@ Sub printAllToDebug(ByVal workBookName As String)
         repFirstJobCol     = 35
         repSalesWeekCol    = 36
         repInstallPool     = 37
+        isSurveyComplete   = 38
         
 ''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
         'workBookName = InputBox("What is the master report's name?") & ".xlsx"
@@ -92,6 +93,7 @@ Sub printAllToDebug(ByVal workBookName As String)
                     .Cells(printRow, isFinalContractCol).value = printJob.IsFinalContract
                     .Cells(printRow, isInstallCol).value       = printJob.IsInstall
                     .Cells(printRow, isCancelledCol).value     = printJob.IsCancelled
+                    .Cells(printRow, isSurveyComplete).value   = printJob.IsSurveyComplete
                     
                     'Leave the cell empty if it equals Empty Date'
                     If printJob.FirstPaymentDate <> EMPTYDATE Then
