@@ -63,10 +63,3 @@ Sub getCountInfo(ByVal workBookName As String)
     Next
 
 End Sub
-
-Function installPool(ByRef job As cJobData, ByRef rep As cRepData) As cRepData
-
-    rep.InstallPool = rep.InstallPool + job.ThisWeekFinalPayment
-
-    Set installPool = repData
-End Function

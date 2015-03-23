@@ -37,6 +37,7 @@ Function getJobData(ByVal workBookName As String) As cJobData()
     '''''''''''''''''''''''''''''Input Object''''''''''''''''''''''
     Dim jobData() As cJobData
     Dim currentJob  As cJobData
+    Dim weatherRep As cWeatherData
 
     '''''''''''''''''''''''''''''Data Size'''''''''''''''''''''''''
     Dim jobDataSize As Long
@@ -51,7 +52,6 @@ Function getJobData(ByVal workBookName As String) As cJobData()
 
       For inputRow = 2 To jobDataSize + 2
             With jobDataSheet
-                
             	'determine if the job is in the new pay structure'
                 If  .Cells(inputRow, createdDateCol).value >= NEWJOBDATE Then
 
@@ -69,7 +69,7 @@ Function getJobData(ByVal workBookName As String) As cJobData()
 	                    currentJob.setIsInstall
 	                    currentJob.setIsCancelled
                         currentJob.setDaysSinceCreated
-                        currentJob.setIsSurveyComplete
+                        currentJob.setIsSurveyComplete payroll_main.weatherData
 
 	                ''''''''''Add currentJob to the jobData Array'''''''''''''
                     IF currentJob.IsInstall Or currentJob.isFinalContract Or currentJob.IsSurveyComplete  Or currentJob.IsCancelled Then

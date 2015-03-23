@@ -1,8 +1,9 @@
 '''''''''''''''''''''''''''''Input Array Object''''''''''''''''''''''
-	    Public jobData()  As cJobData
-	    Public repData    As Scripting.Dictionary
-	    Public scaleData  As Scripting.Dictionary
-	    Public sliderData As Scripting.Dictionary
+	    Public jobData()   As cJobData
+	    Public repData     As Scripting.Dictionary
+	    Public scaleData   As Scripting.Dictionary
+	    Public sliderData  As Scripting.Dictionary
+	    Public weatherData As Scripting.Dictionary
 
 sub payroll_main()
 
@@ -26,14 +27,17 @@ sub payroll_main()
 	        Set NatesEvolution = Workbooks(workBookName)
 
 	''''''''''''''''''''''''''''Set objects'''''''''''''''''''''''
-	Set repData    = New Scripting.Dictionary
-	Set scaleData  = New Scripting.Dictionary
-	Set sliderData = New Scripting.Dictionary
+	Set repData     = New Scripting.Dictionary
+	Set scaleData   = New Scripting.Dictionary
+	Set sliderData  = New Scripting.Dictionary
+	Set weatherData = New Scripting.Dictionary
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''MAIN METHODS AND LOGIC'''''''''''''''''''''''''''''''
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
+	'Get weather Data exceptions'
+		getWeatherData workBookName
 	'Load up cJobData array with information from jobs in Nate'sEvolution'
 		jobData() = getjobData(workBookName)
 	'Load up repData with Rep Information'
@@ -47,7 +51,7 @@ sub payroll_main()
 		getPaymentInfo workBookName
 
 	'Get count information for reps and the jobs they did this past week'
-		Set repData = getCountInfo(jobData, repData, workBookName)
+		getCountInfo workBookName
 
 	'Process Payment Info'
 		processPayment workBookName 
@@ -58,7 +62,7 @@ sub payroll_main()
 
 		printToDebugRep repData, workBookName
 
-		printAllToDebug jobData, repData, workBookName
+		printAllToDebug workBookName
 	'Loop through pending accounts to grab any info for those jobs based on'
 
 	''''''''''''''''''TURN ON SCREEN UPDATING''''''''''''''''''''''

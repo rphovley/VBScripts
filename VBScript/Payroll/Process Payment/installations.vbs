@@ -140,8 +140,8 @@ Sub printInstallation(ByRef currentJob As cJobData, ByRef currentRep As cRepData
 		.Cells(printRow, secondPaymentCol) = currentJob.SecondPaymentAmount
 		.Cells(printRow, secondDateCol)    = currentJob.SecondPaymentDate
 		.Cells(printRow, rateCol)          = Rate
-		.Cells(printRow, finalPaymentCol)  = currentJob.FinalPaymentAmount
-		.Cells(printRow, finalDateCol)     = currentJob.ThisWeekFinalPayment
+		.Cells(printRow, finalPaymentCol)  = currentJob.ThisWeekFinalPayment
+		.Cells(printRow, finalDateCol)     = Now()
 	End With
 
 End Sub

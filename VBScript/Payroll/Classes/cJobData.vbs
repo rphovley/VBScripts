@@ -177,19 +177,26 @@ Public Property Get IsSurveyComplete() As Boolean
     IsSurveyComplete = pIsSurveyComplete
 End Property
 
-Public Sub setIsSurveyComplete()
+Public Sub setIsSurveyComplete(ByRef weatherData As Dictionary)
     Dim isArray, statusArray, stateArray As Variant
+    Dim weatherRep As cWeatherData
     isArray = Array("Site Survey Complete", "Design Complete", "Application Complete", _
         "Submitted", "Rejected", "Received")
     statusArray = Array("Sales", "Permit")
     stateArray  = Array("NY", "NJ", "DE", "MD", "CT", "MA")
     Dim isInclementState As Boolean
 
-    For Each sState In stateArray
-        If Me.States = sState Then
-            isInclementState = True
-        End IF
-    Next
+    On Error Resume Next
+    Set weatherRep = weatherData.Item(Me.RepEmail)
+    If NOT weatherRep is nothing Then
+        isInclementState = True
+    Else
+        For Each sState In stateArray
+            If Me.States = sState Then
+                isInclementState = True
+            End IF
+        Next
+    End If
         'Loops through backend statuses that trigger backend'
             If Me.Status = "Permit" Then
                 For Each arrayStatus In isArray
