@@ -32,6 +32,8 @@ Sub visibility()
         masStateCol           = 24
 
     ''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
+        Dim workBookName As String
+            workBookName = "3-16-15 Evolve Master Report" & ".xlsx"
         'workBookName = InputBox("What is the master report's name?") & ".xlsm"       
         Dim MasterReport As Workbook
         Set MasterReport = Workbooks(workBookName)
