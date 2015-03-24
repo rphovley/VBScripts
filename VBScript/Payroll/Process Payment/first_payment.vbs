@@ -1,4 +1,4 @@
-Function firstPayment(ByRef currentRep As cRepData, ByRef currentJob As cJobData, ByVal WorkBookName As String) As cJobData
+Function firstPayment(ByRef currentRep As cRepData, ByRef currentJob As cJobData, ByRef weather As cWeatherData, ByVal WorkBookName As String) As cJobData
 
 ''Occurs when site survey complete or 2 weeks after job created date
 Dim first_payment_total As Currency
@@ -21,15 +21,13 @@ Dim first_payment As Currency
 
 'Needs to first count how many accounts qualify for this week's  first payment
 
- ''''''''''''''''''''''''''''''Calculates the first payment''''''''''''''''''''''''''''''''''''
-
-
+ ''''''''''''''''''''''''''''''Calculates the first payment (Should they be paid first payment?)''''''''''''''''''''''''''''''''''''
 if currentJob.IsSurveyComplete AND NOT currentJob.isCancelled And Not currentRep.IsBlackList then
 
 	''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-	''''''''''''''''''''''''''''FOR ACCOUNTS LESS THAN 60 DAYS''''''''''''''''''''''''
+	''''''''''''''''''''''''''''FOR ACCOUNTS LESS THAN 60 DAYS AND WEATHER EXCEPTION TEAM''''''''''''''''''''''''
 	''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-	If DateDiff("d", currentRep.FirstJobDate, currentJob.CreatedDate) <= 60 Then
+	If DateDiff("d", currentRep.FirstJobDate, currentJob.CreatedDate) <= 60 OR NOT weather is Nothing Then
 		If currentRep.SalesThisWeek <= 2 And currentRep.SalesThisWeek > 0 Then
 			first_payment_total = new_one_two
 		ElseIf currentRep.SalesThisWeek > 2 And currentRep.SalesThisWeek <= 5 Then
@@ -37,21 +35,22 @@ if currentJob.IsSurveyComplete AND NOT currentJob.isCancelled And Not currentRep
 		ElseIf currentRep.SalesThisWeek > 5 Then
 			first_payment_total = new_six_plus
 		End If
+		currentJob.ThisWeekFirstPayment = first_payment_total
+		printFirst currentJob, currentRep, workBookName
 	Else
 
 	''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 	'''''''''''''''''''''''''''''FOR ACCOUNTS GREATER THAN 60 DAYS''''''''''''''''''''''''''''
 	''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-		If currentRep.SalesThisWeek <= 2 And currentRep.SalesThisWeek > 0 Then
-			first_payment_total = old_one_two
-		ElseIf currentRep.SalesThisWeek > 2 And currentRep.SalesThisWeek <= 5 Then
-			first_payment_total = old_three_five
-		ElseIf currentRep.SalesThisWeek > 5 Then
-			first_payment_total = old_six_plus
-		End If
+		' If currentRep.SalesThisWeek <= 2 And currentRep.SalesThisWeek > 0 Then
+		' 	first_payment_total = old_one_two
+		' ElseIf currentRep.SalesThisWeek > 2 And currentRep.SalesThisWeek <= 5 Then
+		' 	first_payment_total = old_three_five
+		' ElseIf currentRep.SalesThisWeek > 5 Then
+		' 	first_payment_total = old_six_plus
+		' End If
 	End If
-		currentJob.ThisWeekFirstPayment = first_payment_total
-		printFirst currentJob, currentRep, workBookName
+		
 End If	
 	
     Set firstPayment = currentJob

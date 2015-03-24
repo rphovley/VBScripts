@@ -1,6 +1,7 @@
 '''''''''''''''''''''''''''''objects'''''''''''''''''''''''''
 	Dim job       As cJobData
 	Dim rep       As cRepData
+	Dim weather   As cWeatherData
 
 Sub processPayment(ByVal workBookName As String)
 
@@ -25,6 +26,7 @@ Sub processPayment(ByVal workBookName As String)
 	    	Set job = payroll_main.jobData(jobIndex)
 	    	On Error Resume Next
 	    	Set rep = payroll_main.repData(job.repEmail)
+	    	Set weather = payroll_main.weatherData(job.repEmail)
 
 	'''''''''''''''''''''''''''''''''''''THESE OBJECTS HAVE EVERYTHING WE NEED TO PROCESS PAYMENT''''''''''''''
 
@@ -40,7 +42,7 @@ Sub processPayment(ByVal workBookName As String)
 					''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 					''''''''''''''''''''''''FIRST PAYMENT'''''''''''''''''''''''''''''''
 					''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-					Set job = firstPayment(rep, job, workBookName)	
+					Set job = firstPayment(rep, job, weather, workBookName)	
 					End IF
 
 
@@ -69,36 +71,3 @@ Sub processPayment(ByVal workBookName As String)
 			Set payroll_main.jobData(jobIndex) = job
 		Next jobIndex
 End Sub
-
-'returns the rep object associated with the job'-
-Function findRep( ByRef repData As Collection, ByVal repEmail As String) As Integer
-		
-	For repIndex = 1 To repData.Count
-        If repData(repIndex) = repEmail Then
-        	findRep = repIndex
-        End IF
-    Next
-
-End Function
-
-'Returns the scale object associated with the rep'
-Function findScale(ByRef scaleData As Collection, ByVal scaleID As Integer) As cScaleData
-		
-	For Each payScale In scaleData
-        If payScale.ID = scaleID Then
-        	Set findScale = payScale
-        End IF
-    Next
-
-End Function
-
-'Returns the slider object associated with the scale ID'
-Function findSlider(ByRef sliderData As Collection, ByRef scaleID As Integer) As cSliderData
-		
-	For Each slider In sliderData
-        If slider.ID = scaleID Then
-        	Set findSlider = slider
-        End IF
-    Next
-
-End Function

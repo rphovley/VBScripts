@@ -51,9 +51,9 @@ Sub getCountInfo(ByVal workBookName As String)
             Set rep = payroll_main.repData(job.repEmail)	
 
 			If job.firstPaymentAmount = 0 and job.repEmail = rep.Email and job.Status <> "Cancelled" then
-				if job.CreatedDate > rep.FirstJobDate + 60 and IsFinalContract = True then
+				if job.CreatedDate > rep.FirstJobDate + 60 and job.IsFinalContract = True then
 					rep.SalesThisWeek = rep.SalesThisWeek + 1
-				elseif job.CreatedDate < rep.FirstJobDate + 60 and IsSurveyComplete = True then
+				elseif job.CreatedDate < rep.FirstJobDate + 60 and job.IsSurveyComplete = True then
 					rep.SalesThisWeek = rep.SalesThisWeek + 1
 				End if
 			End if
