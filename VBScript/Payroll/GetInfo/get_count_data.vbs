@@ -36,8 +36,9 @@ Sub getCountInfo(ByVal workBookName As String)
     Dim printRow As Integer
         printRow = 2
 '''''''''''''''''''''''''''''job Object''''''''''''''''''''''
-    Dim rep As cRepData
-    Dim job As cJobData
+    Dim rep     As cRepData
+    Dim job     As cJobData
+    Dim weather As cWeatherData
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''GET PAYMENT INFORMATION'''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -46,18 +47,24 @@ Sub getCountInfo(ByVal workBookName As String)
     '"2nd_Payments_Pending" Tabs and update the jobData info'
 
     For jobIndex = 0 To UBound(payroll_main.jobData)
+            Set rep     = Nothing
+            Set job     = Nothing
+            Set weather = Nothing
             Set job = payroll_main.jobData(jobIndex)
             On Error Resume Next
-            Set rep = payroll_main.repData(job.repEmail)	
+            Set rep     = payroll_main.repData(job.repEmail)
+            Set weather = payroll_main.weatherData(job.repEmail)	
 
-			If job.firstPaymentAmount = 0 and job.repEmail = rep.Email and job.Status <> "Cancelled" then
-				if job.CreatedDate > rep.FirstJobDate + 60 and job.IsFinalContract = True then
-					rep.SalesThisWeek = rep.SalesThisWeek + 1
-				elseif job.CreatedDate < rep.FirstJobDate + 60 and job.IsSurveyComplete = True then
-					rep.SalesThisWeek = rep.SalesThisWeek + 1
-				End if
-			End if
-
+    		If Not weather is Nothing OR DateDiff("d", rep.FirstJobDate, job.CreatedDate) <= 60 Then
+                If job.WhatWasPaid = 0 AND NOT rep is Nothing AND NOT job.IsCancelled _ 
+                    AND NOT rep.IsBlackList AND job.IsSurveyComplete Then
+    					rep.SalesThisWeek = rep.SalesThisWeek + 1
+    			End if
+            Else
+                If job.IsDocSigned Then
+                    rep.SalesThisWeek = rep.SalesThisWeek + 1
+                End If
+            End If 
 		 'Reset the job in the array'
         Set payroll_main.repData.Item(repIndex) = rep
     Next

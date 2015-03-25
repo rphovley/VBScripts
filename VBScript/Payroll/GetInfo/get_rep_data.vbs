@@ -62,7 +62,8 @@ Sub getRepData(ByVal workBookName As String)
                 Set currentRep = getMarketRep(currentRep, workBookName)
 
             ''''''''''Add currentRep to the jobData Collection''''''''''''
-                        payroll_main.repData.Add currentRep.Email, currentRep
+                repData.Add currentRep.Email, currentRep
+
         Next inputRow
         
 End Sub

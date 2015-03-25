@@ -66,10 +66,6 @@ Dim PayPeriodStartDate, PayPeriodEndDate as Date
                     isFirstSale = False
                 End If
 				
-				If .cells(jobRow, masCreatedDateCol).value >= PayPeriodStartDate and .cells(jobRow, masCreatedDateCol).value <= PayPeriodEndDate Then
-					currentRep.SalesThisWeek = currentRep.SalesThisWeek + 1
-				End If
-				
             End if
 
         End With

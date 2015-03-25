@@ -22,6 +22,9 @@ Sub processPayment(ByVal workBookName As String)
 	
 
 	    For jobIndex = 0 To UBound(payroll_main.jobData)
+	    	Set job     = nothing
+	    	Set rep     = nothing
+	    	Set weather = nothing
 	'''''''''''''''''''''''''''''''''''''THESE OBJECTS HAVE EVERYTHING WE NEED TO PROCESS PAYMENT''''''''''''''
 	    	Set job = payroll_main.jobData(jobIndex)
 	    	On Error Resume Next

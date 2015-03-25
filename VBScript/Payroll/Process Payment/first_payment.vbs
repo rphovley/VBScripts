@@ -35,20 +35,29 @@ if currentJob.IsSurveyComplete AND NOT currentJob.isCancelled And Not currentRep
 		ElseIf currentRep.SalesThisWeek > 5 Then
 			first_payment_total = new_six_plus
 		End If
-		currentJob.ThisWeekFirstPayment = first_payment_total
-		printFirst currentJob, currentRep, workBookName
 	Else
 
 	''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 	'''''''''''''''''''''''''''''FOR ACCOUNTS GREATER THAN 60 DAYS''''''''''''''''''''''''''''
 	''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-		' If currentRep.SalesThisWeek <= 2 And currentRep.SalesThisWeek > 0 Then
-		' 	first_payment_total = old_one_two
-		' ElseIf currentRep.SalesThisWeek > 2 And currentRep.SalesThisWeek <= 5 Then
-		' 	first_payment_total = old_three_five
-		' ElseIf currentRep.SalesThisWeek > 5 Then
-		' 	first_payment_total = old_six_plus
-		' End If
+		If currentJob.IsDocSigned Then
+			If currentRep.SalesThisWeek <= 2 And currentRep.SalesThisWeek > 0 Then
+				first_payment_total = old_one_two
+			ElseIf currentRep.SalesThisWeek > 2 And currentRep.SalesThisWeek <= 5 Then
+				first_payment_total = old_three_five
+			ElseIf currentRep.SalesThisWeek > 5 Then
+				first_payment_total = old_six_plus
+			End If
+
+		End If
+	End If
+
+	If first_payment_total <> 0 Then
+		currentJob.ThisWeekFirstPayment = first_payment_total
+		currentJob.FirstPaymentAmount = first_payment_total
+		currentJob.FirstPaymentDate = Date
+		currentJob.setWhatWasPaid
+		printFirst currentJob, currentRep, workBookName
 	End If
 		
 End If	

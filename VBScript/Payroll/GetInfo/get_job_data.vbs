@@ -17,6 +17,7 @@ Function getJobData(ByVal workBookName As String) As cJobData()
         repEmailCol        = 7
         isFinalContractCol = 8
         stateCol           = 9
+        isDocSignedCol     = 10
         
     ''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
         'workBookName = InputBox("What is the master report's name?") & ".xlsx"
@@ -65,6 +66,7 @@ Function getJobData(ByVal workBookName As String) As cJobData()
 	                    currentJob.CreatedDate = .Cells(inputRow, createdDateCol).value
 	                    currentJob.RepEmail    = .Cells(inputRow, repEmailCol).value
                         currentJob.States       = .Cells(inputRow, stateCol).value
+                        currentJob.setIsDocSigned(.Cells(inputRow, isDocSignedCol).value)
                         currentJob.setIsFinalContract(.Cells(inputRow, isFinalContractCol).value)
 	                    currentJob.setIsInstall
 	                    currentJob.setIsCancelled

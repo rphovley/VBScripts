@@ -5,12 +5,17 @@ dim second_payment_rate as currency
 dim number_of_kW as integer
 dim second_payment_total as currency
 
+Dim weather As cWeatherData
 
 
 'determine if job is at second payment status and that it hasn't been cancelled'
 If currentJob.isFinalContract AND NOT currentJob.isCancelled And Not currentRep.IsBlackList Then
-	
-	If currentRep.IsMarketing Then
+	Set weather = Nothing
+	Set weather = payroll_main.weatherData(currentJob.repEmail)
+	'Determine if second payment is under "launching pad/weather exception list" payment plan'
+	If DateDiff("d", currentRep.FirstJobDate, currentJob.CreatedDate) <= 60 OR NOT weather is Nothing Then
+		second_payment_rate = 75
+	ElseIf currentRep.IsMarketing Then
 		second_payment_rate = 25
 	Else
 		second_payment_rate = 50
@@ -19,6 +24,9 @@ If currentJob.isFinalContract AND NOT currentJob.isCancelled And Not currentRep.
 	second_payment_total = currentJob.kW * second_payment_rate
 
 	currentJob.ThisWeekSecondPayment = second_payment_total
+	currentJob.SecondPaymentAmount = second_payment_total
+	currentJob.SecondPaymentDate = Date
+	currentJob.setWhatWasPaid
 	printSecond currentJob, currentRep, workBookName
 End If
 

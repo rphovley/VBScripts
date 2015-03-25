@@ -6,7 +6,7 @@ Sub createNatesEvo(ByVal workBookName As String)
 
 	''''''''''''''''''''''''''''''Columns''''''''''''''''''''''
 	Dim customerCol, jobCol, kWCol, statusCol, subStatusCol, _
-	    createdDateCol, repEmailCol, finalContratCol, stateCol As Integer
+	    createdDateCol, repEmailCol, finalContratCol, stateCol, isDocSignedCol As Integer
 
 	    customerCol        = 1   
 	    jobCol             = 2
@@ -17,6 +17,7 @@ Sub createNatesEvo(ByVal workBookName As String)
 	    repEmailCol        = 7
 	    finalContratCol    = 8
 	    stateCol           = 9
+	    isDocSignedCol     = 10
 	    
 	Dim masCustomerCol, masJobCol, masKWCol, masStatusCol, masSubStatusCol, _
 		masDateCol, masFinalCol, masRepEmailCol, masStateCol As Integer
@@ -43,9 +44,10 @@ Sub createNatesEvo(ByVal workBookName As String)
 
 	''''''''''''''''''''''''''''''Worksheets''''''''''''''''''''''
 		Dim jobDataSheet, printSheet, masterInput, natesSheet As Worksheet
-		Set jobDataSheet = NatesEvolution.Worksheets("Master Input")
+		Set jobDataSheet   = NatesEvolution.Worksheets("Master Input")
 		Set printSheet     = NatesEvolution.Worksheets("Nate's Evolution")
 		Set masterInput    = NatesEvolution.Worksheets("Master Input")
+		Set natesSheet     = NatesEvolution.Worksheets("Nates Input")
 
 	''''''''''''''''''''''''''''''Row Counters''''''''''''''''''''''
 		Dim inputRow, printRow, natesJobRow As Integer
@@ -58,6 +60,8 @@ Sub createNatesEvo(ByVal workBookName As String)
 	'''''''''''Date constant to consider for new jobs''''''''''''''
    	Const NEWJOBDATE = #11/30/2014#
 
+   	'''''''''Found Job in Nate's Input''''''''''''''''''''''''''''''
+		Dim isJobFound As Boolean
 	
 	'''''''''''''''''''''''''Print out'''''''''''''''''''''''''''''
 		For inputRow = 2 To jobDataSize + 1
@@ -67,8 +71,11 @@ Sub createNatesEvo(ByVal workBookName As String)
 
 			If masterInput.Cells(inputRow, masCreatedDateCol).Value >= NEWJOBDATE Then
 				'''''''''''''''''''Find job in Nate's Sheet'''''''''''''''
+				On Error GoTo jobIdNotFound:
+				natesJobRow = Application.WorksheetFunction.Match(masterInput.Cells(inputRow, masJobCol).Value, natesSheet.Range("E:E"), 0)
+				'natesJobrow = "=INDEX($B:$B, MATCH(" + Col_Letter(masJobCol) + CStr(inputRow) + ",$E:$E,0))"
 
-
+				
 
 				'''''''''''''''''''Print out the Output'''''''''''''''''''
 				With printSheet
@@ -82,11 +89,27 @@ Sub createNatesEvo(ByVal workBookName As String)
 					.Cells(printRow, repEmailCol).Value     = masterInput.Cells(inputRow, masRepEmailCol).Value
 					.Cells(printRow, finalContratCol).Value = masterInput.Cells(inputRow, masFinalCol).Value
 					.Cells(printRow, stateCol).Value        = masterInput.Cells(inputRow, masStateCol).Value
+					
+
+					'print out doc signed if documents signed does not equal N'
+					if isJobFound Then
+						.Cells(printRow, isDocSignedCol).Value     = natesSheet.Cells(natesJobRow, nateIsDocSignedCol).Value
+						'.Cells(inputRow, isDocSignedCol).Value     = "=INDEX($B:$B, MATCH(" + Col_Letter(CStr(masJobCol)) + CStr(inputRow) + ",$E:$E,0))"
+						.Cells(printRow, isFinalContractCol).Value = natesSheet.Cells(natesJobrow, nateIsFinalContractCol).Value
+						'.Cells(inputRow, isFinalContractCol).Value = "=INDEX($C:$C, MATCH(" + Col_Letter(CStr(masJobCol)) + CStr(inputRow) + ",$E:$E,0))"
+					Else
+						.Cells(printRow, isDocSignedCol).Value     = "N"
+						.Cells(printRow, isFinalContractCol).Value = "N"
+					End If
 					printRow = printRow + 1
 				End With
 			End If
 
 		Next inputRow
+
+		jobIdNotFound:
+			isJobFound = False
+			Resume Next
 
 
 End Sub

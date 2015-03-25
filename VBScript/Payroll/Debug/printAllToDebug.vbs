@@ -136,9 +136,10 @@ Sub printAllToDebug(ByVal workBookName As String)
                     
                     .Cells(printRow, whatWasPaidCol).value = printJob.WhatWasPaid
 
-                    .Cells(printRow, daysSinceCol).value = printJob.DaysSinceCreated
+                    
 
                 If rep.Email = printJob.RepEmail Then
+                    .Cells(printRow, daysSinceCol).value     = DateDiff("d", rep.FirstJobDate, printJob.CreatedDate)
                     .Cells(printRow, repNameCol).value       = rep.Name
                     .Cells(printRow, repScaleCol).value      = rep.PayScaleID
                     .Cells(printRow, repBlackCol).value      = rep.IsBLackList
