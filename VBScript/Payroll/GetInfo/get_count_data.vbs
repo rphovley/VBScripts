@@ -61,7 +61,8 @@ Sub getCountInfo(ByVal workBookName As String)
     					rep.SalesThisWeek = rep.SalesThisWeek + 1
     			End if
             Else
-                If job.IsDocSigned Then
+                If job.IsDocSigned And job.WhatWasPaid = 0 And Not rep Is Nothing And Not job.IsCancelled _
+                    And Not rep.IsBlackList And job.isSurveyComplete Then
                     rep.SalesThisWeek = rep.SalesThisWeek + 1
                 End If
             End If 

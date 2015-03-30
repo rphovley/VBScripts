@@ -15,7 +15,8 @@ Sub printAllToDebug(ByVal workBookName As String)
         repBlackCol, repInactiveCol, repNewCol, _
         repSliderCol, repSliderDateCol, repMarketEndCol, _
         repMarketStartCol, repIsMarketCol, repMarketRateCol, _
-        repFirstJobCol, repSalesWeekCol, repInstallPool, isSurveyComplete As Integer
+        repFirstJobCol, repSalesWeekCol, repInstallPool, isSurveyComplete, _
+        isWeatherException As Integer
 
         customerCol        = 1
         jobCol             = 2
@@ -55,6 +56,7 @@ Sub printAllToDebug(ByVal workBookName As String)
         repSalesWeekCol    = 36
         repInstallPool     = 37
         isSurveyComplete   = 38
+        isWeatherException = 39
         
 ''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
         'workBookName = InputBox("What is the master report's name?") & ".xlsx"
@@ -73,6 +75,8 @@ Sub printAllToDebug(ByVal workBookName As String)
         Dim rep As cRepData
 
     Const EMPTYDATE = #12:00:00 AM#
+
+    Dim weather As cWeatherData
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''PRINT JOBS TO DEBUG SHEET'''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -139,6 +143,9 @@ Sub printAllToDebug(ByVal workBookName As String)
                     
 
                 If rep.Email = printJob.RepEmail Then
+                    Set weather = Nothing
+                    Set weather = payroll_main.weatherData(rep.Email)
+
                     .Cells(printRow, daysSinceCol).value     = DateDiff("d", rep.FirstJobDate, printJob.CreatedDate)
                     .Cells(printRow, repNameCol).value       = rep.Name
                     .Cells(printRow, repScaleCol).value      = rep.PayScaleID
@@ -158,6 +165,10 @@ Sub printAllToDebug(ByVal workBookName As String)
                         .Cells(printRow, repMarketStartCol).Value = rep.MarkStartDate
                         .Cells(printRow, repMarketEndCol).Value   = rep.MarkEndDate
                         .Cells(printRow, repMarketRateCol).Value  = rep.MarketingRate
+                    End If
+
+                    If NOT weather is Nothing Then
+                        .Cells(printRow, isWeatherException).Value  = True
                     End If
                 End If
 
