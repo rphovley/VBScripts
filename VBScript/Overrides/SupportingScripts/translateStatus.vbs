@@ -17,6 +17,24 @@ Function isReady(ByRef Status As String) As Boolean
     
 End Function
 
+Function isReadyException(ByRef Status As String) As Boolean
+
+Dim isArray As Variant
+    isArray = Array("Submission Hold", "Ready", _
+        "Submitted", "Rejected", "Rebate Program Closed", _
+        "Design Complete", "Application Complete", _
+        "Received", "Site Survey Complete", "Site Survey Scheduled")
+    
+    For Each permitStatus In isArray
+    
+        If permitStatus = Status Then
+            isReady = True
+            Exit For
+        End If
+    Next permitStatus
+    
+End Function
+
 'is status a cancelled status'
 Function isJobCancelled(ByRef Status As String) As Boolean
 

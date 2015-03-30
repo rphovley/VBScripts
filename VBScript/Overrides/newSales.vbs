@@ -81,7 +81,12 @@ Sub newSales()
                         report.Cells(i, StatusCol).Value <> Sales And _
                         report.Cells(i, StatusCol).Value <> cancelled Then
                         If report.Cells(i, StatusCol).Value = "Permit" Then
-                            isSale = isReady(report.Cells(i, SubStatusCol).Value)
+                            'George Fallica Exception'
+                            If report.Cells(i, repEmailCol).Value = "george.fallica@evolvesolar.com" Then
+                                isSale = isReadyException(report.Cells(i, SubStatusCol).Value)
+                            Else
+                                isSale = isReady(report.Cells(i, SubStatusCol).Value)
+                            End If
                         Else
                             isSale = True
                         End If
