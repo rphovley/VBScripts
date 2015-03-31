@@ -171,7 +171,23 @@ previous_month = Format(DateAdd("m", -1, ReportDate), "MMMM-YYYY")
     'ActiveWorkbook.SaveAs ("C:\users\Rodney\desktop\" & "Payroll Breakdown\" & Rep & ".xlsx")
     'ActiveWorkbook.Close
 
+'Create format for the historical breakdown'
+With Sheets(Rep)
+        .Cells(reprow + 3, 2) = "INFORMATION"
+        .Cells(reportrow + 4, repCol) = "Rep"
+        .Cells(reportrow + 4, customerCol) = "Customer"
+        .Cells(reportrow + 4, kWCol) = "kW"
+        .Cells(reportrow + 4, rateCol) = "Rate/kW"
+        .Cells(reportrow + 4, totalCol) = "Total"
+        .Cells(reportrow + 4, reasonCol) = "Date Created"
+        .Cells(reportrow + 4, jobIDCol) = "Job ID"
+        .Cells(reportrow + 4, statusCol) = "Status"
+        .Cells(reportrow + 4, subStatusCol) = "SubStatus"
+        .Cells(reportrow + 4, overTypeCol) = "OverrideType"
+    End With
+
 Loop Until Sheets("Reps").Cells(reprow, 1) = ""
+
 
 End Sub
 

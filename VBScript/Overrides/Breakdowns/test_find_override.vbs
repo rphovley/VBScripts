@@ -62,8 +62,6 @@ Dim totalPaid As Currency
 With masterInput
     Do Until(IsEmpty(.Cells(jobRow, 1)))
 
-
-
         masterTest.Cells(jobRow, 2).value = findInOverrideMap(currentJob, "Matt Ingalls", "RC")
         masterTest.Cells(jobRow, 3).value = findInOverrideMap(currentJob, "Matt Ingalls", "M")
         masterTest.Cells(jobRow, 4).value = findInOverrideMap(currentJob, "Matt Ingalls", "RG")

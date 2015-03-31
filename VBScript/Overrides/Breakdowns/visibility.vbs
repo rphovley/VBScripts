@@ -24,11 +24,11 @@ Application.ScreenUpdating = False
     Dim masCustomerCol, masJobCol, masKWCol, masStatusCol, masSubStatusCol, _
     masDateCol, masFinalCol, masRepEmailCol, masStateCol As Integer
 
-    CustomerCol = 1
+    customerCol = 1
     jobCol = 2
-    KWCol = 3
-    StatusCol = 4
-    SubStatusCol = 5
+    kWCol = 3
+    statusCol = 4
+    subStatusCol = 5
     CreatedDateCol = 7
     FinalCol = 8
     RepEmailCol = 17
@@ -36,7 +36,7 @@ Application.ScreenUpdating = False
 
 ''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
     Dim workBookName1 As String
-        workBookName1 = "3-16-15 Evolve Master Report (Other)" & ".xlsm"
+        workBookName1 = "3-16-15 Evolve Master Report" & ".xlsx"
     'workBookName = InputBox("What is the master report's name?") & ".xlsm"
     Dim MasterReport As Workbook
     Set MasterReport = Workbooks(workBookName1)
@@ -68,20 +68,20 @@ Application.ScreenUpdating = False
     Dim repMaster As Worksheet
     Set repMaster = Breakdown.Worksheets("Reps")
     
-
+    Dim repBreakdown As Worksheet
 
 ''''''''''''''''''''''''''''''Row Counters''''''''''''''''''''''
 
 Dim inputRow, printRow, jobRow As Integer
 
-
+Dim isRepFound As Boolean
+    isRepFound = True
 ''''''''''''''''''''''''''''''Column Counters''''''''''''''''''''''
 
-Dim inputCol, printCol, jobCol As Integer
+Dim inputCol, printCol As Integer
 
 
 '''''''''''''''''''''''''''''Input Object''''''''''''''''''''''
-Dim currentRep As cRepData
 
 Dim currentJob As cJobData
 
@@ -104,19 +104,21 @@ inputRow = 2
 
 'This gets all of the data needed from the Evolve Master Report workbook, Current data worksheet'
 Do Until IsEmpty(masterInput.Cells(inputRow, 1))
+    DoEvents
+    isRepFound = True
     With masterInput
         Set currentJob = New cJobData
-            currentJob.Customer    = .Cells(inputRow, CustomerCol).value
-            currentJob.JobID       = .Cells(inputRow, jobCol).value
-            currentJob.kW          = .Cells(inputRow, KWCol).value
-            currentJob.Status      = .Cells(inputRow, StatusCol).value
-            currentJob.SubStatus   = .Cells(inputRow, SubStatusCol).value
+            currentJob.Customer = .Cells(inputRow, customerCol).value
+            currentJob.jobID = .Cells(inputRow, jobCol).value
+            currentJob.kW = .Cells(inputRow, kWCol).value
+            currentJob.Status = .Cells(inputRow, statusCol).value
+            currentJob.SubStatus = .Cells(inputRow, subStatusCol).value
             currentJob.CreatedDate = .Cells(inputRow, CreatedDateCol).value
-            currentJob.repEmail    = .Cells(inputRow, RepEmailCol).value
-            currentJob.States      = .Cells(inputRow, StateCol).value
+            currentJob.RepEmail = .Cells(inputRow, RepEmailCol).value
+            currentJob.States = .Cells(inputRow, StateCol).value
     End With
 
-    jobData.Add currentJob.JobID, currentJob
+    jobData.Add currentJob.jobID, currentJob
 
     inputRow = inputRow + 1
 
@@ -125,41 +127,54 @@ Do Until IsEmpty(masterInput.Cells(inputRow, 1))
     'Get rep's name from email
     Dim repRange As Range
     Dim repRow As Integer
-    Dim repEmail, repName As String
+    Dim RepEmail, repName As String
     Dim totalPaid As Currency
+    
+    Const MAYDATE = #5/1/2014#
+    Const MARCHDATE = #3/1/2015#
     
     With repMaster
         
-        repEmail = currentJob.repEmail
+        RepEmail = currentJob.RepEmail
         
-        repRow = Application.WorksheetFunction.Match(repEmail, .Range("G:G"), 0)
+        repRow = Application.WorksheetFunction.Match(RepEmail, .Range("G:G"), 0)
         
         repName = .Cells(repRow, 8).value
     
     End With
     
     
-    With OverrideMaster.Worksheets(MonthName(Month(currentJob.CreatedDate), False) & " " & Year(currentJob.CreatedDate) & " Map")
+    If currentJob.CreatedDate < MAYDATE Then
+        Set repBreakdown = OverrideMaster.Sheets("May 2014 Map")
+    ElseIf currentJob.CreatedDate > MARCHDATE Then
+        Set repBreakdown = OverrideMaster.Sheets("February 2015 Map")
+    Else
+        Set repBreakdown = OverrideMaster.Worksheets(MonthName(Month(currentJob.CreatedDate), False) & " " & Year(currentJob.CreatedDate) & " Map")
+    End If
     
+    With repBreakdown
+        On Error GoTo repNotFound:
         repRow = Application.WorksheetFunction.Match(repName, .Range("A:A"), 0)
         
         inputCol = 3
-        
-        'Go through override map to find individual uplines'
-        Do Until IsEmpty(.Cells(repRow, inputCol))
-            overrideType = .Cells(repRow, inputCol).value
-            overrideName = .Cells(repRow, inputCol + 1).value
-            ID           = .Cells(repRow, inputCol + 2).value
-            overrideRate = .Cells(repRow, inputCol + 3).value           
-            
-            totalPaid = findInOverrideMap(currentJob.JobID, overrideName, overrideType)
-            
-            inputCol = inputCol + 4
-            
-
-            'Print out to breakdown '
-             printToBreakDown currentJob, overrideType, overrideName, totalPaid, repName   
-        Loop
+       If isRepFound Then
+            'Go through override map to find individual uplines'
+            Do Until IsEmpty(.Cells(repRow, inputCol))
+                DoEvents
+                overrideType = .Cells(repRow, inputCol).value
+                overrideName = .Cells(repRow, inputCol + 1).value
+                ID = .Cells(repRow, inputCol + 2).value
+                overrideRate = .Cells(repRow, inputCol + 3).value
+                
+                totalPaid = findInOverrideMap(currentJob.jobID, overrideName, overrideType)
+                
+                inputCol = inputCol + 4
+                
+    
+                'Print out to breakdown '
+                 printToBreakDown currentJob, overrideType, overrideName, totalPaid, repName, overrideRate
+            Loop
+        End If
     
     
     End With
@@ -167,6 +182,9 @@ Do Until IsEmpty(masterInput.Cells(inputRow, 1))
 Loop
 
 
+repNotFound:
+    isRepFound = False
+Resume Next
 ''''''''''''''''''TURN ON SCREEN UPDATING''''''''''''''''''''''
 Application.ScreenUpdating = True
 End Sub
@@ -176,23 +194,19 @@ Sub printToBreakDown(ByRef currentJob As cJobData, ByVal overrideType As String,
 
 ''''''''''''''''''''''''''''''Columns''''''''''''''''''''''
     
-    Dim repCol, customerCol, jobIDCol, statusCol, subStatusCol, overrideType as String
-    Dim kW_RateCol As Integer
-    Dim totalPaidCol as Currency
-    Dim kWCol as Double
-    Dim dateCreatCol as Date
+    Dim repCol, customerCol, jobIDCol, statusCol, subStatusCol, overrideTypeCol, _
+     kW_RateCol, totalPaidCol, kWCol, dateCreatCol As Integer
 
-
-    repCol       = 1
-    customerCol  = 2
-    kWCol        = 3
-    kW_RateCol   = 4
-    totalPaidCol = 5
-    dateCreatCol = 6
-    jobIDCol     = 7
-    statusCol    = 8
-    subStatusCol = 9
-    overrideType = 10
+    repCol = 2
+    customerCol = 3
+    kWCol = 4
+    kW_RateCol = 5
+    totalPaidCol = 6
+    dateCreatCol = 7
+    jobIDCol = 8
+    statusCol = 9
+    subStatusCol = 10
+    overrideTypeCol = 11
     
 
 ''''''''''''''''''''''''''''''Row Counters''''''''''''''''''''''
@@ -208,19 +222,19 @@ Dim inputCol, printCol, jobCol As Integer
 ''''''''''''''''''TURN OFF SCREEN UPDATING''''''''''''''''''''''
     Application.ScreenUpdating = False
     
-    printRow = Pre-Breakdown.Worksheets(overrideName).Cells(3,2).End(xlDown).End(xlDown).End(xlDown).Row + 1
+    printRow = Workbooks("Pre-Breakdown.xlsm").Worksheets(overrideName).Cells(3, 2).End(xlDown).End(xlDown).End(xlDown).Row + 1
 
-    With Pre-Breakdown.Worksheets(overrideName)
-        .Cells(printRow, repCol).value       = repName
-        .Cells(printRow, customerCol).value  = currentJob.Customer
-        .Cells(printRow, kWCol).value        = currentJob.kW
-        .Cells(printRow, kW_RateCol).value   = overrideRate
+    With Workbooks("Pre-Breakdown.xlsm").Worksheets(overrideName)
+        .Cells(printRow, repCol).value = repName
+        .Cells(printRow, customerCol).value = currentJob.Customer
+        .Cells(printRow, kWCol).value = currentJob.kW
+        .Cells(printRow, kW_RateCol).value = overrideRate
         .Cells(printRow, totalPaidCol).value = totalPaid
         .Cells(printRow, dateCreatCol).value = currentJob.CreatedDate
-        .Cells(printRow, jobIDCol).value     = currentJob.JobID
-        .Cells(printRow, statusCol).value    = currentJob.Status
+        .Cells(printRow, jobIDCol).value = currentJob.jobID
+        .Cells(printRow, statusCol).value = currentJob.Status
         .Cells(printRow, subStatusCol).value = currentJob.SubStatus
-        .Cells(printRow, overrideType).value = overrideType
+        .Cells(printRow, overrideTypeCol).value = overrideType
 
     End With
     
@@ -231,5 +245,7 @@ Dim inputCol, printCol, jobCol As Integer
     Application.ScreenUpdating = True
 
 End Sub
+
+
 
 
