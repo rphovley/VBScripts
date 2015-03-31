@@ -106,14 +106,14 @@ inputRow = 2
 Do Until IsEmpty(masterInput.Cells(inputRow, 1))
     With masterInput
         Set currentJob = New cJobData
-            currentJob.Customer = .Cells(inputRow, CustomerCol).value
-            currentJob.JobID = .Cells(inputRow, jobCol).value
-            currentJob.kW = .Cells(inputRow, KWCol).value
-            currentJob.Status = .Cells(inputRow, StatusCol).value
-            currentJob.SubStatus = .Cells(inputRow, SubStatusCol).value
+            currentJob.Customer    = .Cells(inputRow, CustomerCol).value
+            currentJob.JobID       = .Cells(inputRow, jobCol).value
+            currentJob.kW          = .Cells(inputRow, KWCol).value
+            currentJob.Status      = .Cells(inputRow, StatusCol).value
+            currentJob.SubStatus   = .Cells(inputRow, SubStatusCol).value
             currentJob.CreatedDate = .Cells(inputRow, CreatedDateCol).value
-            currentJob.repEmail = .Cells(inputRow, RepEmailCol).value
-            currentJob.States = .Cells(inputRow, StateCol).value
+            currentJob.repEmail    = .Cells(inputRow, RepEmailCol).value
+            currentJob.States      = .Cells(inputRow, StateCol).value
     End With
 
     jobData.Add currentJob.JobID, currentJob
@@ -171,7 +171,64 @@ Loop
 Application.ScreenUpdating = True
 End Sub
 
-Sub printToBreakDown(ByRef currentJob As cJobData, ByVal overrideType As String, ByVal overrideName As String, ByVal totalPaid As Currency, ByVal repName As String)
+Sub printToBreakDown(ByRef currentJob As cJobData, ByVal overrideType As String, ByVal overrideName As String, ByVal totalPaid As Currency, ByVal repName As String, ByVal overrideRate As Integer)
+
+
+''''''''''''''''''''''''''''''Columns''''''''''''''''''''''
+    
+    Dim repCol, customerCol, jobIDCol, statusCol, subStatusCol, overrideType as String
+    Dim kW_RateCol As Integer
+    Dim totalPaidCol as Currency
+    Dim kWCol as Double
+    Dim dateCreatCol as Date
+
+
+    repCol       = 1
+    customerCol  = 2
+    kWCol        = 3
+    kW_RateCol   = 4
+    totalPaidCol = 5
+    dateCreatCol = 6
+    jobIDCol     = 7
+    statusCol    = 8
+    subStatusCol = 9
+    overrideType = 10
+    
+
+''''''''''''''''''''''''''''''Row Counters''''''''''''''''''''''
+
+Dim inputRow, printRow, jobRow As Integer
+
+
+''''''''''''''''''''''''''''''Column Counters''''''''''''''''''''''
+
+Dim inputCol, printCol, jobCol As Integer
+
+
+''''''''''''''''''TURN OFF SCREEN UPDATING''''''''''''''''''''''
+    Application.ScreenUpdating = False
+    
+    printRow = Pre-Breakdown.Worksheets(overrideName).Cells(3,2).End(xlDown).End(xlDown).End(xlDown).Row + 1
+
+    With Pre-Breakdown.Worksheets(overrideName)
+        .Cells(printRow, repCol).value       = repName
+        .Cells(printRow, customerCol).value  = currentJob.Customer
+        .Cells(printRow, kWCol).value        = currentJob.kW
+        .Cells(printRow, kW_RateCol).value   = overrideRate
+        .Cells(printRow, totalPaidCol).value = totalPaid
+        .Cells(printRow, dateCreatCol).value = currentJob.CreatedDate
+        .Cells(printRow, jobIDCol).value     = currentJob.JobID
+        .Cells(printRow, statusCol).value    = currentJob.Status
+        .Cells(printRow, subStatusCol).value = currentJob.SubStatus
+        .Cells(printRow, overrideType).value = overrideType
+
+    End With
+    
+
+
+
+''''''''''''''''''TURN ON SCREEN UPDATING''''''''''''''''''''''
+    Application.ScreenUpdating = True
 
 End Sub
 
