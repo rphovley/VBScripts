@@ -11,12 +11,12 @@ Dim repData     As Scripting.Dictionary
 Dim jobData     As Scripting.Dictionary
 
 ''''''''''''''''''''''''''''Set objects'''''''''''''''''''''''
-Set repData     = New Scripting.Dictionary
-Set jobData     = New Scripting.Dictionary
+Set repData = New Scripting.Dictionary
+Set jobData = New Scripting.Dictionary
 
 
 ''''''''''''''''''TURN OFF SCREEN UPDATING''''''''''''''''''''''
-application.screenupdating = False
+Application.ScreenUpdating = False
 
 
 ''''''''''''''''''''''''''''''Columns''''''''''''''''''''''
@@ -24,57 +24,72 @@ application.screenupdating = False
     Dim masCustomerCol, masJobCol, masKWCol, masStatusCol, masSubStatusCol, _
     masDateCol, masFinalCol, masRepEmailCol, masStateCol As Integer
 
-    masCustomerCol        = 1   
-    masJobCol             = 2
-    masKWCol              = 3
-    masStatusCol          = 4
-    masSubStatusCol       = 5
-    masCreatedDateCol     = 7
-    masFinalCol           = 8
-    masRepEmailCol        = 17
-    masStateCol           = 24
+    CustomerCol = 1
+    jobCol = 2
+    KWCol = 3
+    StatusCol = 4
+    SubStatusCol = 5
+    CreatedDateCol = 7
+    FinalCol = 8
+    RepEmailCol = 17
+    StateCol = 24
 
 ''''''''''''''''''''''''''''''Workbooks''''''''''''''''''''''
     Dim workBookName1 As String
-        workBookName1 = "3-16-15 Evolve Master Report" & ".xlsx"
-    'workBookName = InputBox("What is the master report's name?") & ".xlsm"       
+        workBookName1 = "3-16-15 Evolve Master Report (Other)" & ".xlsm"
+    'workBookName = InputBox("What is the master report's name?") & ".xlsm"
     Dim MasterReport As Workbook
     Set MasterReport = Workbooks(workBookName1)
 
 
 
     Dim workBookName2 As String
-        workBookName2 = "Pre-Breakdown" & ".xlsx"
-    'workBookName = InputBox("What is the master report's name?") & ".xlsm"       
+        workBookName2 = "Pre-Breakdown" & ".xlsm"
+    'workBookName = InputBox("What is the master report's name?") & ".xlsm"
     Dim Breakdown As Workbook
     Set Breakdown = Workbooks(workBookName2)
 
 
 
     Dim workBookName3 As String
-        workBookName3 = "February Override Master" & ".xlsx"
-    'workBookName = InputBox("What is the master report's name?") & ".xlsm"       
+        workBookName3 = "February Override Master" & ".xlsm"
+    'workBookName = InputBox("What is the master report's name?") & ".xlsm"
     Dim OverrideMaster As Workbook
     Set OverrideMaster = Workbooks(workBookName3)
 
 
 ''''''''''''''''''''''''''''''Worksheets''''''''''''''''''''''
     Dim masterInput As Worksheet
-        masterInput = MasterReport.Worksheets("Current Data")
+    Set masterInput = MasterReport.Worksheets("Current Data")
 
     Dim breakMaster As Worksheet
-        breakMaster = Breakdown.Worksheets("Master")
+    Set breakMaster = Breakdown.Worksheets("Master")
+    
+    Dim repMaster As Worksheet
+    Set repMaster = Breakdown.Worksheets("Reps")
+    
 
 
 ''''''''''''''''''''''''''''''Row Counters''''''''''''''''''''''
 
-'Dim inputRow, printRow, jobRow, repRow As Integer'
+Dim inputRow, printRow, jobRow As Integer
+
+
+''''''''''''''''''''''''''''''Column Counters''''''''''''''''''''''
+
+Dim inputCol, printCol, jobCol As Integer
 
 
 '''''''''''''''''''''''''''''Input Object''''''''''''''''''''''
 Dim currentRep As cRepData
 
 Dim currentJob As cJobData
+
+'''''''''''''''''''''''''''''Override Data''''''''''''''''''''''
+
+Dim n, t As String
+Dim r As Currency
+Dim ID As Integer
 
 
 '''''''''''''''''''''''''''''Data Size'''''''''''''''''''''''''''''''''''''
@@ -84,28 +99,69 @@ Dim currentJob As cJobData
 '''''''''''''''''''''''''''''LOGIC ''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
+inputRow = 2
+
+
 'This gets all of the data needed from the Evolve Master Report workbook, Current data worksheet'
-do until isEmpty(ActiveCell.Value)
-    with masterInput
-        .Cells(1,2).Activate
-
+Do Until IsEmpty(masterInput.Cells(inputRow, 1))
+    With masterInput
         Set currentJob = New cJobData
-            currentJob.Customer     = ActiveCell.Value 'masCustomerCol'
-            currentJob.JobID        = ActiveCell.offset(0, masJobCol-1).Value
-            currentJob.kW           = ActiveCell.offset(0, masKWCol-1).Value
-            currentJob.Status       = ActiveCell.offset(0, masStatusCol-1).Value
-            currentJob.SubStatus    = ActiveCell.offset(0, masSubStatusCol-1).Value
-            currentJob.CreatedDate  = ActiveCell.offset(0, masCreatedDateCol-1).Value
-            currentJob.RepEmail     = ActiveCell.offset(0, masRepEmailCol-1).Value
-            currentJob.States       = ActiveCell.offset(0, masStateCol-1).Value
-
-    end with
+            currentJob.Customer = .Cells(inputRow, CustomerCol).value
+            currentJob.JobID = .Cells(inputRow, jobCol).value
+            currentJob.kW = .Cells(inputRow, KWCol).value
+            currentJob.Status = .Cells(inputRow, StatusCol).value
+            currentJob.SubStatus = .Cells(inputRow, SubStatusCol).value
+            currentJob.CreatedDate = .Cells(inputRow, CreatedDateCol).value
+            currentJob.repEmail = .Cells(inputRow, RepEmailCol).value
+            currentJob.States = .Cells(inputRow, StateCol).value
+    End With
 
     jobData.Add currentJob.JobID, currentJob
 
-    ActiveCell.offset(1,0).Activate
+    inputRow = inputRow + 1
 
-loop
+    
+    
+    'Get rep's name from email
+    Dim repRange As Range
+    Dim repRow As Integer
+    Dim repEmail, repName As String
+    
+    With repMaster
+        
+        repEmail = currentJob.repEmail
+        
+        repRow = Application.WorksheetFunction.Match(repEmail, .Range("G:G"), 0)
+        
+        repName = .Cells(repRow, 8).value
+    
+    End With
+    
+    
+    With OverrideMaster.Worksheets(MonthName(Month(currentJob.CreatedDate), False) & " " & Year(currentJob.CreatedDate) & " Map")
+    
+        repRow = Application.WorksheetFunction.Match(repName, .Range("A:A"), 0)
+        
+        inputCol = 3
+        
+        Do Until IsEmpty(.Cells(repRow, inputCol))
+            t = .Cells(repRow, inputCol).value
+            n = .Cells(repRow, inputCol + 1).value
+            ID = .Cells(repRow, inputCol + 2).value
+            r = .Cells(repRow, inputCol + 3).value
+            
+            
+            
+            
+            inputCol = inputCol + 4
+            
+        Loop
+    
+    
+    
+    End With
+
+    
 
 
 
@@ -118,8 +174,21 @@ loop
 
 
 
+
+
+
+
+
+
+Loop
+
+
+''''''''''''''''''TURN ON SCREEN UPDATING''''''''''''''''''''''
+Application.ScreenUpdating = True
 
 
 
 
 End Sub
+
+
