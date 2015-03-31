@@ -126,6 +126,7 @@ Do Until IsEmpty(masterInput.Cells(inputRow, 1))
     Dim repRange As Range
     Dim repRow As Integer
     Dim repEmail, repName As String
+    Dim totalPaid As Currency
     
     With repMaster
         
@@ -146,12 +147,11 @@ Do Until IsEmpty(masterInput.Cells(inputRow, 1))
         
         Do Until IsEmpty(.Cells(repRow, inputCol))
             overrideType = .Cells(repRow, inputCol).value
-            overrideNamee = .Cells(repRow, inputCol + 1).value
+            overrideName = .Cells(repRow, inputCol + 1).value
             ID = .Cells(repRow, inputCol + 2).value
-            overrideRate = .Cells(repRow, inputCol + 3).value
+            overrideRate = .Cells(repRow, inputCol + 3).value           
             
-            
-            
+            totalPaid = findInOverrideMap(currentJob.JobID, overrideName, overrideType)
             
             inputCol = inputCol + 4
             
