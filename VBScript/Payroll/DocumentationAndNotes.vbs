@@ -39,11 +39,16 @@
 'Implementaion Notes'
 	
 	'BEFORE PROCESS'
-		'Sort Cancelled sheet WhatWasPaid from smallest to largest'
+		'Import most recent Evolve Master Report and Nate's AC report'
+		'Trim Nate's Report and check jobIDs for 00 at end'
 		'Sort Master Spreadsheet created Date from oldest to newest'
-		'Check Nate's Evolution that the formulas include all the data from Master and Doc Signed Input'
+		'Master Spreadsheet Customer column needs to be reversed to first name last name'
 		'Remove any job duplicates from MasterReport'
-		'Make duplicate tabs for 1st Payments, 2nd Payments, Installed and Cancelled to save time if any mistakes are made'
+		'Update Reps tab with most up to date info, check for duplicate repEmails'
+		'Update Payscales tab with most up to date info'
+		'Update weather tab with most up to date info'
+		'Update Marketing tab with most up to date info'
+
 
 	'ADJUSTMENTS AFTER PROCESS HAS BEEN RUN'
 		'Bobby and Josh will press a button, and based on the normal conditions, they will'

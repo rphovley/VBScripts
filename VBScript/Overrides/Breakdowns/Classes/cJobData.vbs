@@ -5,9 +5,9 @@ Private pCustomer, pJobID, pStatus, _
     pSubStatus, pRepEmail, pStates As String
 Private pDaysSinceCreated, pFirstPaymentRow, pSecondPaymentRow, pInstallRow As Integer
 Private pkW As Double
-Private pAmount, pWhatWasPaid, pFirstPaymentAmount, pSecondPaymentAmount, pFinalPaymentAmount, pClawbackAmount As Currency
+Private pAmount, pWhatWasPaid, pFirstPaymentAmount, pAdjustmentAmount, pFinalPaymentAmount, pClawbackAmount As Currency
 private pThisWeekFirstPayment, pThisWeekSecondPayment, pThisWeekFinalPayment, pThisWeekCancelled As Currency
-Private pCreatedDate, pFirstPaymentDate, pSecondPaymentDate, pFinalPaymentDate, pDateOfClawback As Date
+Private pCreatedDate, pFirstPaymentDate, pAdjustmentDate, pFinalPaymentDate, pDateOfClawback As Date
 Private pIsInstall, pIsDocSigned, pIsSurveyComplete, pIsFinalContract, pIsCancelled, pIsPaidInFull, pIsBlackListed As Boolean
 
 Public Property Get FirstPaymentRow() As Integer
@@ -116,12 +116,12 @@ Public Property Let FirstPaymentDate(value As Date)
     pFirstPaymentDate = value
 End Property
 
-Public Property Get SecondPaymentDate() As Date
-    SecondPaymentDate = pSecondPaymentDate
+Public Property Get AdjustmentDate() As Date
+    AdjustmentDate = pAdjustmentDate
 End Property
 
-Public Property Let SecondPaymentDate(value As Date)
-    pSecondPaymentDate = value
+Public Property Let AdjustmentDate(value As Date)
+    pAdjustmentDate = value
 End Property
 
 Public Property Get FinalPaymentDate() As Date
@@ -141,7 +141,7 @@ Public Property Let WhatWasPaid(value As Currency)
 End Property
 
 Public Sub setWhatWasPaid()
-    pWhatWasPaid = pFirstPaymentAmount + pSecondPaymentAmount + pFinalPaymentAmount
+    pWhatWasPaid = pFirstPaymentAmount + pAdjustmentAmount + pFinalPaymentAmount
 End Sub
 
 Public Property Get FirstPaymentAmount() As Currency
@@ -152,12 +152,12 @@ Public Property Let FirstPaymentAmount(value As Currency)
     pFirstPaymentAmount = value
 End Property
 
-Public Property Get SecondPaymentAmount() As Currency
-    SecondPaymentAmount = pSecondPaymentAmount
+Public Property Get AdjustmentAmount() As Currency
+    AdjustmentAmount = pAdjustmentAmount
 End Property
 
-Public Property Let SecondPaymentAmount(value As Currency)
-    pSecondPaymentAmount = value
+Public Property Let AdjustmentAmount(value As Currency)
+    pAdjustmentAmount = value
 End Property
 
 Public Property Get FinalPaymentAmount() As Currency

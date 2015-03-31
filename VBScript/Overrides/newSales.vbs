@@ -8,6 +8,9 @@ Sub newSales()
 
 'CHECK OVERRIDEMONTH AND monthNumber
 
+    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ''''''''''''''''''''''''''''''''''INIT VARIABLES'''''''''''''''''''''''''''''''''''''
+    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
     'report columns'
     Dim CustomerCol, JobIDCol, kWCol, StatusCol, SubStatusCol, theDateCol, repEmailCol As Integer
@@ -66,16 +69,22 @@ Sub newSales()
     Set histSheet = Master.Sheets("Override Past")
 
     With Sheets("Payments")
+        'override ID to start with'
         startID = Application.WorksheetFunction.Max(.Range("A:A")) + 1
 
+        'Rows'
         startRow = .Cells(1, 2).End(xlDown).Row + 1
         histRow = histSheet.Cells(1, 2).End(xlDown).Row + 1
         payRow = startRow
 
+    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    '''''''''''''''''''''''''''''''''''''''LOGIC'''''''''''''''''''''''''''''''''''''''''
+    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
         Do Until IsEmpty(report.Cells(i, 1))
             x = 1
             isSale = False
 
+                'If the sale is at a permit status
                 If Month(report.Cells(i, theDateCol).Value) = monthNumber Then
                     If report.Cells(i, StatusCol).Value <> cancel And _
                         report.Cells(i, StatusCol).Value <> Sales And _

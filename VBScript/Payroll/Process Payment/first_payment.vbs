@@ -19,6 +19,8 @@ Dim old_six_plus As Currency
     old_six_plus = 450
 Dim first_payment As Currency
 
+Const MARKETINGDATE = #2/1/2015#
+
 'Needs to first count how many accounts qualify for this week's  first payment
 
  ''''''''''''''''''''''''''''''Calculates the first payment (Should they be paid first payment?)''''''''''''''''''''''''''''''''''''
@@ -28,12 +30,17 @@ if currentJob.IsSurveyComplete AND NOT currentJob.isCancelled And Not currentRep
 	''''''''''''''''''''''''''''FOR ACCOUNTS LESS THAN 60 DAYS AND WEATHER EXCEPTION TEAM''''''''''''''''''''''''
 	''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 	If DateDiff("d", currentRep.FirstJobDate, currentJob.CreatedDate) <= 60 OR NOT weather is Nothing Then
-		If currentRep.SalesThisWeek <= 2 And currentRep.SalesThisWeek > 0 Then
-			first_payment_total = new_one_two
-		ElseIf currentRep.SalesThisWeek > 2 And currentRep.SalesThisWeek <= 5 Then
-			first_payment_total = new_three_five
-		ElseIf currentRep.SalesThisWeek > 5 Then
-			first_payment_total = new_six_plus
+		'Exception for marketing reps in January'
+		If currentRep.IsMarketing AND currentJob.CreatedDate >= MARKETINGDATE Then
+			'DO NOT PAY'
+		Else 
+			If currentRep.SalesThisWeek <= 2 And currentRep.SalesThisWeek > 0 Then
+				first_payment_total = new_one_two
+			ElseIf currentRep.SalesThisWeek > 2 And currentRep.SalesThisWeek <= 5 Then
+				first_payment_total = new_three_five
+			ElseIf currentRep.SalesThisWeek > 5 Then
+				first_payment_total = new_six_plus
+			End If
 		End If
 	Else
 

@@ -1,7 +1,13 @@
-Private Sub FirstName()
+Private Sub toFirstLast()
 	'David McRitchie 2000-03-23 programming
 	'http://www.geocities.com/davemcritchie/excel/join.htm#firstname
 	'Put cells in range from "LastName, FirstName" to "FirstName LastName"
+	Dim workBookName As String
+	    Dim testName As String
+	        testName = "VBA Triforce (Ezra)"
+	        workBookName = testName & ".xlsm"
+	        'workBookName = InputBox("What is the master report's name?") & ".xlsx"
+	Dim masterInput As workSheet
 	Application.Calculation = xlManual
 	Dim cell As Range
 	Dim cPos As Long
