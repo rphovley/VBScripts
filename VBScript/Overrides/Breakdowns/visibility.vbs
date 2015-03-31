@@ -87,8 +87,8 @@ Dim currentJob As cJobData
 
 '''''''''''''''''''''''''''''Override Data''''''''''''''''''''''
 
-Dim n, t As String
-Dim r As Currency
+Dim overrideName, overrideType As String
+Dim overrideRate As Currency
 Dim ID As Integer
 
 
@@ -145,10 +145,10 @@ Do Until IsEmpty(masterInput.Cells(inputRow, 1))
         inputCol = 3
         
         Do Until IsEmpty(.Cells(repRow, inputCol))
-            t = .Cells(repRow, inputCol).value
-            n = .Cells(repRow, inputCol + 1).value
+            overrideType = .Cells(repRow, inputCol).value
+            overrideNamee = .Cells(repRow, inputCol + 1).value
             ID = .Cells(repRow, inputCol + 2).value
-            r = .Cells(repRow, inputCol + 3).value
+            overrideRate = .Cells(repRow, inputCol + 3).value
             
             
             
