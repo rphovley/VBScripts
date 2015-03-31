@@ -145,49 +145,33 @@ Do Until IsEmpty(masterInput.Cells(inputRow, 1))
         
         inputCol = 3
         
+        'Go through override map to find individual uplines'
         Do Until IsEmpty(.Cells(repRow, inputCol))
             overrideType = .Cells(repRow, inputCol).value
             overrideName = .Cells(repRow, inputCol + 1).value
-            ID = .Cells(repRow, inputCol + 2).value
+            ID           = .Cells(repRow, inputCol + 2).value
             overrideRate = .Cells(repRow, inputCol + 3).value           
             
             totalPaid = findInOverrideMap(currentJob.JobID, overrideName, overrideType)
             
             inputCol = inputCol + 4
             
+
+            'Print out to breakdown '
+             printToBreakDown(currentJob, overrideType, overrideName)   
         Loop
     
     
-    
     End With
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 Loop
 
 
 ''''''''''''''''''TURN ON SCREEN UPDATING''''''''''''''''''''''
 Application.ScreenUpdating = True
+End Sub
 
-
-
+Sub printToBreakDown(ByRef currentJob As cJobData, ByVal overrideType As String, ByVal overrideName As String)
 
 End Sub
 
