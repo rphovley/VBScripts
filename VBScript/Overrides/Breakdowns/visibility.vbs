@@ -158,7 +158,7 @@ Do Until IsEmpty(masterInput.Cells(inputRow, 1))
             
 
             'Print out to breakdown '
-             printToBreakDown(currentJob, overrideType, overrideName)   
+             printToBreakDown currentJob, overrideType, overrideName, totalPaid, repName   
         Loop
     
     
@@ -171,7 +171,7 @@ Loop
 Application.ScreenUpdating = True
 End Sub
 
-Sub printToBreakDown(ByRef currentJob As cJobData, ByVal overrideType As String, ByVal overrideName As String)
+Sub printToBreakDown(ByRef currentJob As cJobData, ByVal overrideType As String, ByVal overrideName As String, ByVal totalPaid As Currency, ByVal repName As String)
 
 End Sub
 
