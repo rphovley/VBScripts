@@ -40,14 +40,6 @@ Sub processPayment(ByVal workBookName As String)
 	    		'IGNORE ANY JOBS THAT HAVE ALREADY BEEN PAID SECOND PAYMENTS'
 	    		If job.SecondPaymentAmount = 0 Then
 
-	    			'IGNORE ANY JOBS THAT HAVE ALREADY BEEN PAID FIRST PAYMENTS'
-	    			If job.FirstPaymentAmount = 0 Then
-					''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-					''''''''''''''''''''''''FIRST PAYMENT'''''''''''''''''''''''''''''''
-					''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-					Set job = firstPayment(rep, job, weather, workBookName)	
-					End IF
-
 
 				''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 				''''''''''''''''''''''''SECOND PAYMENT''''''''''''''''''''''''''''''
@@ -55,6 +47,14 @@ Sub processPayment(ByVal workBookName As String)
 				Set job = secondPayment(job, rep, workBookName)
 
 				End If
+
+				'IGNORE ANY JOBS THAT HAVE ALREADY BEEN PAID FIRST PAYMENTS'
+    			If job.FirstPaymentAmount = 0 Then
+				''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+				''''''''''''''''''''''''FIRST PAYMENT'''''''''''''''''''''''''''''''
+				''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+				Set job = firstPayment(rep, job, weather, workBookName)	
+				End IF
 
 			''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 			''''''''''''''''''''''''FINAL PAYMENT'''''''''''''''''''''''''''''''

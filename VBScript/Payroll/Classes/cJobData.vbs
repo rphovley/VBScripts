@@ -272,7 +272,7 @@ Public Property Let IsFinalContract(value As Boolean)
 End Property
 
 Public Sub setIsFinalContract(ByVal value As String)
-    If value <> "" Then
+    If value <> "N" Then
         pIsFinalContract = True
     End IF
 End Sub

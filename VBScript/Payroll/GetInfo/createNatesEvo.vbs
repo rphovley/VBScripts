@@ -93,13 +93,17 @@ Sub createNatesEvo(ByVal workBookName As String)
 
 					'print out doc signed if documents signed does not equal N'
 					if isJobFound Then
-						.Cells(printRow, isDocSignedCol).Value     = natesSheet.Cells(natesJobRow, nateIsDocSignedCol).Value
-						'.Cells(inputRow, isDocSignedCol).Value     = "=INDEX($B:$B, MATCH(" + Col_Letter(CStr(masJobCol)) + CStr(inputRow) + ",$E:$E,0))"
-						.Cells(printRow, isFinalContractCol).Value = natesSheet.Cells(natesJobrow, nateIsFinalContractCol).Value
-						'.Cells(inputRow, isFinalContractCol).Value = "=INDEX($C:$C, MATCH(" + Col_Letter(CStr(masJobCol)) + CStr(inputRow) + ",$E:$E,0))"
+						If Trim(natesSheet.Cells(natesJobRow, nateIsDocSignedCol).value) <> "N" Then
+                            .Cells(printRow, isDocSignedCol).value = natesSheet.Cells(natesJobRow, nateIsDocSignedCol).value
+                        End If
+                        '.Cells(inputRow, isDocSignedCol).Value     = "=INDEX($B:$B, MATCH(" + Col_Letter(CStr(masJobCol)) + CStr(inputRow) + ",$E:$E,0))"
+                        If Trim(natesSheet.Cells(natesJobRow, nateIsFinalContractCol).value) <> "N" Then
+                            .Cells(printRow, isFinalContractCol).value = natesSheet.Cells(natesJobRow, nateIsFinalContractCol).value
+                        End If
+                        '.Cells(inputRow, isFinalContractCol).Value = "=INDEX($C:$C, MATCH(" + Col_Letter(CStr(masJobCol)) + CStr(inputRow) + ",$E:$E,0))"
 					Else
 						.Cells(printRow, isDocSignedCol).Value     = "N"
-						.Cells(printRow, isFinalContractCol).Value = "N"
+						.Cells(printRow, finalContratCol).Value = "N"
 					End If
 					printRow = printRow + 1
 				End With

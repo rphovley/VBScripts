@@ -43,7 +43,7 @@ Application.ScreenUpdating = False
 
 
     Dim workBookName3 As String
-        workBookName3 = "February Override Master" & ".xlsx"
+        workBookName3 = "February Override Master" & ".xlsm"
     'workBookName = InputBox("What is the master report's name?") & ".xlsm"
     Dim OverrideMaster As Workbook
     Set OverrideMaster = Workbooks(workBookName3)
@@ -52,7 +52,6 @@ Application.ScreenUpdating = False
 ''''''''''''''''''''''''''''''Worksheets''''''''''''''''''''''
     Dim masterInput As Worksheet
         Set masterInput = MasterReport.Worksheets("Current Data")
-        Set masterTest = MasterReport.Worksheets("Test List")
 
     Dim breakMaster As Worksheet
         Set breakMaster = Breakdown.Worksheets("Master")
@@ -83,7 +82,7 @@ Dim totalPaid As Currency
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 'Find job'
 On Error GoTo jobIdNotFound:
-    thisJobRow = Application.WorksheetFunction.Match(jobID, overidePayments.Range("G:G"), 0)
+    thisJobRow = Application.WorksheetFunction.Match(jobID, overridePayments.Range("G:G"), 0)
     jobRow = thisJobRow
 
 'If j'
