@@ -35,7 +35,7 @@ Application.ScreenUpdating = False
 
 
     Dim workBookName2 As String
-        workBookName2 = "Pre-Breakdown" & ".xlsx"
+        workBookName2 = "Pre-Breakdown" & ".xlsm"
     'workBookName = InputBox("What is the master report's name?") & ".xlsm"
     Dim Breakdown As Workbook
     Set Breakdown = Workbooks(workBookName2)
