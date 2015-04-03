@@ -257,7 +257,7 @@ Public Property Let IsDocSigned(value As Boolean)
 End Property
 
 Public Sub setIsDocSigned(ByVal value As String)
-    If UCase(value) <> "N" Then
+    If UCase(value) <> "" Then
         pIsDocSigned = True
     End IF
 End Sub
@@ -272,7 +272,7 @@ Public Property Let IsFinalContract(value As Boolean)
 End Property
 
 Public Sub setIsFinalContract(ByVal value As String)
-    If value <> "N" Then
+    If value <> "" Then
         pIsFinalContract = True
     End IF
 End Sub

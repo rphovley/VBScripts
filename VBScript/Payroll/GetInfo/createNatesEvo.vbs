@@ -102,8 +102,8 @@ Sub createNatesEvo(ByVal workBookName As String)
                         End If
                         '.Cells(inputRow, isFinalContractCol).Value = "=INDEX($C:$C, MATCH(" + Col_Letter(CStr(masJobCol)) + CStr(inputRow) + ",$E:$E,0))"
 					Else
-						.Cells(printRow, isDocSignedCol).Value     = "N"
-						.Cells(printRow, finalContratCol).Value = "N"
+						.Cells(printRow, isDocSignedCol).Value  = ""
+						.Cells(printRow, finalContratCol).Value = ""
 					End If
 					printRow = printRow + 1
 				End With
