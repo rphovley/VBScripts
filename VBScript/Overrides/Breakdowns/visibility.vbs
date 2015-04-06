@@ -168,6 +168,11 @@ Do Until IsEmpty(masterInput.Cells(inputRow, 1))
                 
                 totalPaid = findInOverrideMap(currentJob.jobID, overrideName, overrideType)
                 
+
+                If totalPaid <= .02 And totalPaid >= -.02 Then
+                    totalPaid = 0
+                End If
+
                 inputCol = inputCol + 4
                 
     
@@ -180,7 +185,9 @@ Do Until IsEmpty(masterInput.Cells(inputRow, 1))
     End With
 
 Loop
-
+    
+    'code to sort the sheets by date'
+    sortSheets
 
 repNotFound:
     isRepFound = False
@@ -244,6 +251,45 @@ Dim inputCol, printCol, jobCol As Integer
 ''''''''''''''''''TURN ON SCREEN UPDATING''''''''''''''''''''''
     Application.ScreenUpdating = True
 
+End Sub
+
+Sub sortSheets()
+Dim rep_count, bottomPrintRow, topPrintRow As Integer
+   Dim I As Integer
+   Dim repCol, valueCol, checkCol As Integer
+       repCol = 2
+       valueCol = 12
+       checkCol = 13
+   Dim repName, repEmail As String
+
+   ' Set rep_count equal to the number of worksheets in the active
+   ' workbook.
+   rep_count = ThisWorkbook.Worksheets("Reps").Cells(2, 1).End(xlDown).Row
+
+   ' Begin the loop.
+   For I = 2 To rep_count
+        
+      repName = ThisWorkbook.Worksheets("Reps").Cells(I, 1).value
+      repEmail = ThisWorkbook.Worksheets("Reps").Cells(I, 2).value
+
+      
+      ' Insert your code here.
+      ' The following line shows how to reference a sheet within
+      ' the loop by displaying the worksheet name in a dialog box.
+      With ThisWorkbook.Worksheets(repName)
+        .Activate
+        topPrintRow = .Cells(3, 2).End(xlDown).End(xlDown).Row + 2
+        bottomPrintRow = .Cells(3, 2).End(xlDown).End(xlDown).End(xlDown).Row + 1
+        .Range("B" & topPrintRow & ":M" & bottomPrintRow).Sort key1:=Range("G" & topPrintRow & ":G" & bottomPrintRow), _
+        order1:=xlDescending, Header:=xlNo
+
+      End With
+      
+    'Adjusts column width of the new tab
+    With Worksheets(repName).Range("C1:K1")
+      .EntireColumn.AutoFit
+    End With
+   Next I
 End Sub
 
 

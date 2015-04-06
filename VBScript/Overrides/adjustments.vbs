@@ -130,9 +130,6 @@ With Master.Sheets("Payments")
                     'was the jobID already cancelled?
                     If isCurrentlyCancelled Then
 
-                                'Code to update Report
-                                alreadyCancelled dictRows
-
                     'was not cancelled
                     Else
 
@@ -532,91 +529,6 @@ Function toHist(ByVal i As Integer, ByVal repName As String, ByVal Reason As Str
             toHist = False
 End Function
 
-Sub alreadyCancelled(ByRef dictRows As Collection)
-    Dim y, i, x, overID As Integer
-    bottomRow = dictRows.Item("bottomRow")
-    y = dictRows.Item("jobRow")
-    i = dictRows.Item("solarRow")
-
-    With Master.Sheets("Payments")
-        overID = .Cells(1, 1).End(xlDown).Row + 1
-        cancel = "Cancel"
-        cancelled = "Cancelled"
-        Sales = "Sales"
-        If report.Cells(i, StatusCol).Value <> cancel And _
-            report.Cells(i, StatusCol).Value <> Sales And _
-            report.Cells(i, StatusCol).Value <> cancelled Then
-            If report.Cells(i, StatusCol).Value = "Permit" Then
-                isSale = isReady(report.Cells(i, SubStatusCol).Value)
-            Else
-                isJobBackend = isBackend_New(report.Cells(i, StatusCol).Value, report.Cells(i, SubStatusCol).Value)
-                isSale = True
-            End If
-
-            If isJobBackend Then
-                Set repRef = Master.Sheets(overrideMonth & " " & overrideYear & " Map")
-            End If
-
-            If isSale Then
-                repEmail = ""
-                repEmail = report.Cells(i, repEmailCol).Value
-                On Error Resume Next
-                    repName = Application.WorksheetFunction.Index(findRep.Range("G:G"), _
-                        Application.WorksheetFunction.Match(repEmail, findRep.Range("B:B"), 0))
-
-                    If repName <> "" And repEmail <> "" Then
-                        'record in historical jobs
-                        isFirst = toHist(i, repName, "New Sale", isFirst)
-                        'OverrideID
-                        .Cells(bottomRow, 1).Value = overID
-                        'OverrideRep
-                        .Cells(bottomRow, 2).Value = .Cells(y, 2).Value
-                        'OverrideRepID
-                        .Cells(bottomRow, 3).Value = .Cells(y, 3).Value
-                        'Rep
-                        .Cells(bottomRow, 4).Value = .Cells(y, 4).Value
-                        'RepID
-                        .Cells(bottomRow, 5).Value = .Cells(y, 5).Value
-                        'Customer
-                        .Cells(bottomRow, 6).Value = .Cells(y, 6).Value
-                        'JobID
-                        .Cells(bottomRow, 7).Value = report.Cells(i, JobIDCol).Value
-                        'Date
-                        If isJobBackend Then
-                            .Cells(bottomRow, 8).Value = "Backend"
-                        Else
-                            .Cells(bottomRow, 8).Value = overrideMonth & " " & overrideYear
-                        End If
-                        'Entry Date
-                        .Cells(bottomRow, 9).Value = overrideMonth & " " & overrideYear
-                        'Reason
-                        .Cells(bottomRow, 10).Value = "Back On"
-                        'Status
-                        .Cells(bottomRow, 11).Value = report.Cells(i, StatusCol).Value
-                        'SubStatus
-                        .Cells(bottomRow, 12).Value = report.Cells(i, SubStatusCol).Value
-                        'OverrideType
-                        .Cells(bottomRow, 13).Value = .Cells(y, 13).Value
-                        'OverrideRate
-                        .Cells(bottomRow, 14).Value = .Cells(y, 14).Value
-                        'kW
-                        .Cells(bottomRow, 15).Value = report.Cells(i, kWCol).Value
-                        'Amount
-                        If isJobBackend Then
-                            .Cells(bottomRow, 16).Value = .Cells(bottomRow, 14).Value * .Cells(bottomRow, 15).Value
-                        Else
-                            .Cells(bottomRow, 16).Value = .Cells(bottomRow, 14).Value * .Cells(bottomRow, 15).Value / 2
-                        End If
-
-                        bottomRow = bottomRow + 1
-                    End If
-                End If
-            End If
-
-    End With
-
-
-End Sub
 
 
 

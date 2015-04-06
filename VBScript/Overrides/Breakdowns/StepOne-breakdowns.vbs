@@ -1,5 +1,8 @@
 Private Sub Override_History()
 
+''''''''''''''''''TURN OFF SCREEN UPDATING''''''''''''''''''''''
+Application.ScreenUpdating = False
+
 'Make main set of variables
 Dim Rep As String
 Dim Email As String
@@ -76,7 +79,7 @@ previous_month = Format(DateAdd("m", -1, ReportDate), "MMMM-YYYY")
     '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     'Formats the new spreadsheet
     With Sheets(Rep)
-        .Cells(reportrow - 1, 2) = previous_month
+        .Cells(reportrow - 1, 2) = previous_month & " Overrides that are payable or will need kilowatt replacement "
         .Cells(reportrow, repCol) = "Rep"
         .Cells(reportrow, customerCol) = "Customer"
         .Cells(reportrow, kWCol) = "kW"
@@ -159,7 +162,7 @@ previous_month = Format(DateAdd("m", -1, ReportDate), "MMMM-YYYY")
 
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     'Adjusts column width of the new tab
-    With Worksheets(Rep).Range("B1:K1")
+    With Worksheets(Rep).Range("C1:K1")
         .EntireColumn.AutoFit
     End With
 
@@ -173,22 +176,29 @@ previous_month = Format(DateAdd("m", -1, ReportDate), "MMMM-YYYY")
 
 'Create format for the historical breakdown'
 With Sheets(Rep)
-        .Cells(reprow + 3, 2) = "INFORMATION"
+        .Cells(reprow + 3, 2) = "Updated information about every job inside of your downline"
         .Cells(reportrow + 4, repCol) = "Rep"
         .Cells(reportrow + 4, customerCol) = "Customer"
         .Cells(reportrow + 4, kWCol) = "kW"
         .Cells(reportrow + 4, rateCol) = "Rate/kW"
-        .Cells(reportrow + 4, totalCol) = "Total"
+        .Cells(reportrow + 4, totalCol) = "Total Paid"
         .Cells(reportrow + 4, reasonCol) = "Date Created"
         .Cells(reportrow + 4, jobIDCol) = "Job ID"
         .Cells(reportrow + 4, statusCol) = "Status"
         .Cells(reportrow + 4, subStatusCol) = "SubStatus"
         .Cells(reportrow + 4, overTypeCol) = "OverrideType"
-    End With
+End With
 
+With Worksheets(Rep).Range(Cells(reportrow + 3, repCol).Address, Cells(reportrow + 4, overTypeCol).Address)
+            .HorizontalAlignment = xlCenter
+            .Font.Bold = True
+            .Interior.Color = RGB(0, 102, 204)
+            .Font.Color = RGB(255, 255, 255)
+    End With
 Loop Until Sheets("Reps").Cells(reprow, 1) = ""
 
-
+''''''''''''''''''TURN OFF SCREEN UPDATING''''''''''''''''''''''
+Application.ScreenUpdating = True
 End Sub
 
 
