@@ -72,54 +72,13 @@ End Property
 '''''''''''''''''''''''''''''''''''''''''''''''''
 ''                Bonus Info                   ''
 '''''''''''''''''''''''''''''''''''''''''''''''''
-Public Property Get NetPromoterQuartile() As String
+Public Property Get NetPromoterQuartile() As Integer
     NetPromoterQuartile = pNetPromoterQuartile
 End Property
 
-Public Property Let NetPromoterQuartile(value As String)
+Public Property Let NetPromoterQuartile(value As Integer)
     pNetPromoterQuartile = value
 End Property
-
-Public Sub setNetPromoter(ByRef weatherData As Dictionary)
-    Dim isArray, statusArray, stateArray As Variant
-    Dim weatherRep As cWeatherData
-    isArray = Array("Site Survey Complete", "Design Complete", "Application Complete", _
-        "Submitted", "Rejected", "Received")
-    statusArray = Array("Sales", "Permit")
-    stateArray  = Array("NY", "NJ", "DE", "MD", "CT", "MA")
-    Dim isInclementState As Boolean
-
-    On Error Resume Next
-    Set weatherRep = weatherData.Item(Me.RepEmail)
-    If NOT weatherRep is nothing Then
-        isInclementState = True
-    Else
-        For Each sState In stateArray
-            If Me.States = sState Then
-                isInclementState = True
-            End IF
-        Next
-    End If
-        'Loops through backend statuses that trigger backend'
-            If Me.Status = "Permit" Then
-                For Each arrayStatus In isArray
-                    'if it is a correct backend status, return true'
-                    If NOT isInclementState AND arrayStatus = Me.SubStatus Then
-                        Me.IsSurveyComplete = True
-                        Exit For
-                    ElseIf isInclementState AND arrayStatus = Me.SubStatus OR "Site Survey Scheduled" = Me.Substatus Then
-                        Me.IsSurveyComplete = True
-                        Exit For
-                    End If
-
-                Next arrayStatus
-
-            ElseIf Me.Status = "Sales" Then
-                Me.IsSurveyComplete = False
-            ElseIf NOT Me.IsCancelled Then
-                Me.IsSurveyComplete = True
-            End If
-End Sub
 
 Public Property Get MaritalStatus() As String
     MaritalStatus = pMaritalStatus
