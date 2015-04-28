@@ -1,98 +1,31 @@
-private pName, pEmail As String
-private pID, pPayScaleID As Integer
-private pKwSum As Double
-private pIsBlackList, pIsInactive, pIsSlider, pIsMarketing As Boolean
-private pMarketingRate, pInstallPool As Currency
-private pFirstJobDate, pStartSliderDate, pMarkStartDate, pMarkEndDate As Date
-private pSalesThisWeek as Integer
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''DECLARE VARIABLES''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-' Get/Set methods'
-Public Property Get InstallPool() As Currency
-    InstallPool = pInstallPool
-End Property
+'''''''''''''''''''''''''''''''''''''''''''''''''
+''                Identifiers                  ''
+'''''''''''''''''''''''''''''''''''''''''''''''''
+private pEmail, pName, pID As String
+'''''''''''''''''''''''''''''''''''''''''''''''''
+''            Payment Information              ''
+'''''''''''''''''''''''''''''''''''''''''''''''''
+private pInstallPool As Currency
+private pFirstJobDate As Date
+private repType As String
+'''''''''''''''''''''''''''''''''''''''''''''''''
+''                Bonus Info                   ''
+'''''''''''''''''''''''''''''''''''''''''''''''''
+private pNetPromoterQuartile As Integer
+private pMaritalStatus As String
+private pBenchmarkArray As Array
 
-Public Property Let InstallPool(value As Currency)
-    pInstallPool = value
-End Property
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''GET/SET VARIABLES''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-Public Property Get FirstJobDate() As Date
-    FirstJobDate = pFirstJobDate
-End Property
-
-Public Property Let FirstJobDate(value As Date)
-    pFirstJobDate = value
-End Property
-
-Public Sub setIsMarketing()
-    If Now() > pMarkStartDate AND Now() < pMarkEndDate Then
-        pIsMarketing = True
-    End If
-End Sub
-
-Public Property Let IsMarketing(value As Boolean)
-    pIsMarketing = value
-End Property
-
-Public Property Get IsMarketing() As Boolean
-    IsMarketing = pIsMarketing
-End Property
-
-Public Property Get MarketingRate() As Currency
-    MarketingRate = pMarketingRate 
-End Property
-
-Public Property Let MarketingRate(value As Currency)
-    pMarketingRate = value
-End Property
-
-Public Property Get MarkEndDate() As Date
-    MarkEndDate = pMarkEndDate
-End Property
-
-Public Property Let MarkEndDate(value As Date)
-    pMarkEndDate = value
-End Property
-
-Public Property Get MarkStartDate() As Date
-    MarkStartDate = pMarkStartDate
-End Property
-
-Public Property Let MarkStartDate(value As Date)
-    pMarkStartDate = value
-End Property
-
-Public Property Let SalesThisWeek(value as Integer)
-	pSalesThisWeek = value
-End Property
-
-Public Property Get SalesThisWeek() As Integer
-	SalesThisWeek = pSalesThisWeek
-End Property
-
-Public Property Let IsSlider(value As Boolean)
-    pIsSlider = value
-End Property
-
-Public Property Get IsSlider() As Boolean
-    IsSlider = pIsSlider
-End Property
-
-Public Property Get StartSliderDate() As Date
-    StartSliderDate = pStartSliderDate
-End Property
-
-Public Property Let StartSliderDate(value As Date)
-    pStartSliderDate = value
-End Property
-
-Public Property Let KwSum(value As Double)
-    pKwSum = value
-End Property
-
-Public Property Get KwSum() As Double
-    KwSum = pKwSum
-End Property
-
+'''''''''''''''''''''''''''''''''''''''''''''''''
+''                Identifiers                  ''
+'''''''''''''''''''''''''''''''''''''''''''''''''
 Public Property Get Email() As String
     Email = pEmail
 End Property
@@ -117,39 +50,89 @@ Public Property Let ID(value As Integer)
     pID = value
 End Property
 
-Public Property Get PayScaleID() As Integer
-    PayScaleID = pPayScaleID
+'''''''''''''''''''''''''''''''''''''''''''''''''
+''            Payment Information              ''
+'''''''''''''''''''''''''''''''''''''''''''''''''
+Public Property Get InstallPool() As Currency
+    InstallPool = pInstallPool
 End Property
 
-Public Property Let PayScaleID(value As Integer)
-    pPayScaleID = value
+Public Property Let InstallPool(value As Currency)
+    pInstallPool = value
 End Property
 
-Public Property Let IsBlackList(value As Boolean)
-    pIsBlackList = value
+Public Property Get FirstJobDate() As Date
+    FirstJobDate = pFirstJobDate
 End Property
 
-Public Property Get IsBlackList() As Boolean
-    IsBlackList = pIsBlackList
+Public Property Let FirstJobDate(value As Date)
+    pFirstJobDate = value
 End Property
 
-Sub setIsBlackList(ByVal val As String)
-    If val = "Y" Then
-        pIsBlackList = True
+'''''''''''''''''''''''''''''''''''''''''''''''''
+''                Bonus Info                   ''
+'''''''''''''''''''''''''''''''''''''''''''''''''
+Public Property Get NetPromoterQuartile() As String
+    NetPromoterQuartile = pNetPromoterQuartile
+End Property
+
+Public Property Let NetPromoterQuartile(value As String)
+    pNetPromoterQuartile = value
+End Property
+
+Public Sub setNetPromoter(ByRef weatherData As Dictionary)
+    Dim isArray, statusArray, stateArray As Variant
+    Dim weatherRep As cWeatherData
+    isArray = Array("Site Survey Complete", "Design Complete", "Application Complete", _
+        "Submitted", "Rejected", "Received")
+    statusArray = Array("Sales", "Permit")
+    stateArray  = Array("NY", "NJ", "DE", "MD", "CT", "MA")
+    Dim isInclementState As Boolean
+
+    On Error Resume Next
+    Set weatherRep = weatherData.Item(Me.RepEmail)
+    If NOT weatherRep is nothing Then
+        isInclementState = True
+    Else
+        For Each sState In stateArray
+            If Me.States = sState Then
+                isInclementState = True
+            End IF
+        Next
     End If
+        'Loops through backend statuses that trigger backend'
+            If Me.Status = "Permit" Then
+                For Each arrayStatus In isArray
+                    'if it is a correct backend status, return true'
+                    If NOT isInclementState AND arrayStatus = Me.SubStatus Then
+                        Me.IsSurveyComplete = True
+                        Exit For
+                    ElseIf isInclementState AND arrayStatus = Me.SubStatus OR "Site Survey Scheduled" = Me.Substatus Then
+                        Me.IsSurveyComplete = True
+                        Exit For
+                    End If
+
+                Next arrayStatus
+
+            ElseIf Me.Status = "Sales" Then
+                Me.IsSurveyComplete = False
+            ElseIf NOT Me.IsCancelled Then
+                Me.IsSurveyComplete = True
+            End If
 End Sub
 
-Public Property Let IsInactive(value As Boolean)
-    pIsInactive = value
+Public Property Get MaritalStatus() As String
+    MaritalStatus = pMaritalStatus
 End Property
 
-Public Property Get IsInactive() As Boolean
-    IsInactive = pIsInactive
+Public Property Let MaritalStatus(value As String)
+    pMaritalStatus = value
 End Property
 
-Sub setIsInactive(ByVal val As String)
-    If val = "Y" Then
-        pIsInactive = True
-    End If
-End Sub
+Public Property Get BenchmarkArray() As String
+    BenchmarkArray = pBenchmarkArray
+End Property
 
+Public Property Let BenchmarkArray(value As String)
+    pBenchmarkArray = value
+End Property

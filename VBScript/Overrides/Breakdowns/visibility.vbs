@@ -5,7 +5,6 @@ Sub visibility()
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 
-
 ''''''''''''''''''''''''''Input Array Object''''''''''''''''''''''
 Dim repData     As Scripting.Dictionary
 Dim jobData     As Scripting.Dictionary
@@ -17,7 +16,6 @@ Set jobData = New Scripting.Dictionary
 
 ''''''''''''''''''TURN OFF SCREEN UPDATING''''''''''''''''''''''
 Application.ScreenUpdating = False
-
 
 ''''''''''''''''''''''''''''''Columns''''''''''''''''''''''
     
@@ -166,7 +164,7 @@ Do Until IsEmpty(masterInput.Cells(inputRow, 1))
                 ID = .Cells(repRow, inputCol + 2).value
                 overrideRate = .Cells(repRow, inputCol + 3).value
                 
-                totalPaid = findInOverrideMap(currentJob.jobID, overrideName, overrideType)
+                'totalPaid = findInOverrideMap(currentJob.jobID, overrideName, overrideType)
                 
 
                 If totalPaid <= .02 And totalPaid >= -.02 Then
@@ -177,7 +175,7 @@ Do Until IsEmpty(masterInput.Cells(inputRow, 1))
                 
     
                 'Print out to breakdown '
-                 printToBreakDown currentJob, overrideType, overrideName, totalPaid, repName, overrideRate
+                'printToBreakDown currentJob, overrideType, overrideName, totalPaid, repName, overrideRate
             Loop
         End If
     
@@ -185,7 +183,15 @@ Do Until IsEmpty(masterInput.Cells(inputRow, 1))
     End With
 
 Loop
+   
+Do Until IsEmpty(OverrideMaster.Cells(inputRow, 1))
+
+    Set repBreakdown = Breakdown.Sheets(.Cells(inputRow, 2))
+    With repBreakdown
+        
+    End With
     
+Loop 
     'code to sort the sheets by date'
     sortSheets
 

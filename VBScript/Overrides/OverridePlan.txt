@@ -1,0 +1,104 @@
+Why do we need to see if the job in the payments tab is in the is in the historical tab?
+	We don't need to anymore, the historical sheet is up to date with new sales from the new sale script
+
+
+How do we handle the cancellations?
+
+	Easiest way may be to just say, how much has been paid out for this override in the historical payments?   If the sum is zero, it was cancelled last go round.  If the job
+	is not in the list, it has never been paid out.  
+
+	Base logic for the system should be about the value that has been created by the system
+	and what has been paid out to this point based on the value created.
+
+What about an override payout uniquely identifies it from others?
+	
+	JobID
+	OverrideType
+	OverrideRep
+	Reason (Backend vs New Sale vs Cancelled)
+	Date
+
+	We will probably want to create a unique ID (we can call it TransactionID or something)
+
+What is the overrideID used for? 
+	
+	It is not used as a unique identifier within the payments tab, but as a way to 
+	identify which transactions belong with which transactions
+
+What determines if the transaction belongs with another transaction (has the same overrideID)?
+
+	JobID
+	OverrideType
+	OverrideRep
+
+	All of the IDs together essentially say, how much has this rep been paid for this particular job and this override type (manager, regional, etc...)
+
+Gather job data from master data sheet
+
+BASE INFO
+	Status
+	SubStatus
+	Customer
+	JobID
+	kW
+	repEmail
+CALCULATE THE FOLLOWING
+	isFirstPayment
+	isInstall
+	isCancelled
+
+Gather historical override data
+
+
+WHAT ARE THE REQUIREMENTS?
+	Create a calculator that will generate overrides based on a report of jobs, historical payouts, and rep uplines
+	Also need to be able to answer this question for every job: "How much has this rep been paid for his manager override on the job?"
+	Rep facing breakdown per job of what they have been paid on their overrides
+
+	DATA STRUCTURES
+	job class
+	historical payouts class
+	rep upline dictionary?
+		{	
+			Month:
+			{
+				upline objects
+			}
+			Month:
+			{
+				upline objects
+			}
+			Month:
+			{
+				upline objects
+			}
+
+		}
+	Rep class
+
+
+Gather all job data from master data
+	
+Gather historical information
+	this is a line by line of the 'payments' tab
+	Will not use the overrideID, will clump by jobID, overrideRep, overrideType
+		Allows us to answer this question:
+		"How much has this rep been paid for his manager override for this particular job?"
+
+Gather Rep information
+
+Gather upline information
+
+process payments
+	New Sales
+		If the sale is not in the historical payments, and qualifies for payment, print to payment
+			50%
+			Backend
+	Adjustments
+		Cancellations
+			If the job has been paid out, clawback whatever total amount has been paid (Not )
+		Backends
+			if the job hits backend status
+				Pay out remaining due on job
+
+

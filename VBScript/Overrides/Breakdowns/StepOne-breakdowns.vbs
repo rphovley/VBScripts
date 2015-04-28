@@ -16,7 +16,7 @@ Dim Reason As String
 Dim JobID As String
 Dim iStatus As String
 Dim SubStatus As String
-Dim OverrideType As String
+Dim overrideType As String
 Dim ReportDate As Date
 Dim previous_month As String
 Dim grand_total As Currency
@@ -26,7 +26,7 @@ ReportDate = InputBox("Input this friday's date as mm/dd/yyyy")
 'Make row counter variables
 Dim masterrow As Long
 Dim reportrow As Integer
-Dim reprow As Integer
+Dim repRow As Integer
 
 'Make column counters
 Dim repCol, customerCol, kWCol, rateCol, totalCol, reasonCol, jobIDCol, statusCol, subStatusCol, overTypeCol, month_col As Integer
@@ -46,7 +46,7 @@ month_col = 9
 
 
 'must be outside of all loops so that it doesn't reset
-reprow = 2
+repRow = 2
 
 'Main part of code that loops through the reps
 Do
@@ -55,11 +55,11 @@ reportrow = 4
 masterrow = 2
 grand_total = 0
 
-previous_month = Format(DateAdd("m", -1, ReportDate), "MMMM-YYYY")
+previous_month = UCase(Format(DateAdd("m", -1, ReportDate), "MMMM-YYYY"))
 
 
     'Sets the Rep as the new rep to be done
-    Rep = Sheets("Reps").Cells(reprow, 1)
+    Rep = Sheets("Reps").Cells(repRow, 1)
     'Creates a new tab with the same name as the rep
     Worksheets.Add(, Worksheets(Worksheets.Count)).Name = Rep
     
@@ -79,7 +79,8 @@ previous_month = Format(DateAdd("m", -1, ReportDate), "MMMM-YYYY")
     '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     'Formats the new spreadsheet
     With Sheets(Rep)
-        .Cells(reportrow - 1, 2) = previous_month & " Overrides that are payable or will need kilowatt replacement "
+        .Range(.Cells(reportrow - 1, 2), .Cells(reportrow - 1, overTypeCol)).Merge
+        .Cells(reportrow - 1, 2) = previous_month & " OVERRIDES THAT ARE PAYABLE OR WILL NEED A KILOWATT REPLACEMENT THIS PERIOD "
         .Cells(reportrow, repCol) = "Rep"
         .Cells(reportrow, customerCol) = "Customer"
         .Cells(reportrow, kWCol) = "kW"
@@ -100,7 +101,7 @@ previous_month = Format(DateAdd("m", -1, ReportDate), "MMMM-YYYY")
             .Font.Color = RGB(255, 255, 255)
     End With
 
-    For masterrow = 2 To  Sheets("Master").Cells(1, 1).End(xlDown).Row + 1
+    For masterrow = 2 To Sheets("Master").Cells(1, 1).End(xlDown).Row + 1
         
         If Sheets("Master").Cells(masterrow, 2) = Rep Then
                 'Gives values to the variables to be put into the created worksheet
@@ -114,7 +115,7 @@ previous_month = Format(DateAdd("m", -1, ReportDate), "MMMM-YYYY")
                   JobID = .Cells(masterrow, 7)
                   iStatus = .Cells(masterrow, 11)
                   SubStatus = .Cells(masterrow, 12)
-                  OverrideType = .Cells(masterrow, 13)
+                  overrideType = .Cells(masterrow, 13)
                   grand_total = grand_total + Total
                 End With
                 
@@ -135,7 +136,7 @@ previous_month = Format(DateAdd("m", -1, ReportDate), "MMMM-YYYY")
                 Sheets(Rep).Cells(reportrow, jobIDCol) = JobID
                 Sheets(Rep).Cells(reportrow, statusCol) = iStatus
                 Sheets(Rep).Cells(reportrow, subStatusCol) = SubStatus
-                Sheets(Rep).Cells(reportrow, overTypeCol) = OverrideType
+                Sheets(Rep).Cells(reportrow, overTypeCol) = overrideType
         End If
 
     Next masterrow
@@ -167,7 +168,7 @@ previous_month = Format(DateAdd("m", -1, ReportDate), "MMMM-YYYY")
     End With
 
     'Moves the rep row counter to the next rep
-    reprow = reprow + 1
+    repRow = repRow + 1
 
     'Creates a workbook for each rep
     'ThisWorkbook.Sheets(Rep).Copy
@@ -176,7 +177,8 @@ previous_month = Format(DateAdd("m", -1, ReportDate), "MMMM-YYYY")
 
 'Create format for the historical breakdown'
 With Sheets(Rep)
-        .Cells(reprow + 3, 2) = "Updated information about every job inside of your downline"
+        .Range(.Cells(reportrow + 3, 2), .Cells(reportrow + 3, overTypeCol)).Merge
+        .Cells(reportrow + 3, 2) = "UPDATED INFORMATION ABOUT EVERY JOB INSIDE OF YOUR DOWNLINE"
         .Cells(reportrow + 4, repCol) = "Rep"
         .Cells(reportrow + 4, customerCol) = "Customer"
         .Cells(reportrow + 4, kWCol) = "kW"
@@ -190,16 +192,17 @@ With Sheets(Rep)
 End With
 
 With Worksheets(Rep).Range(Cells(reportrow + 3, repCol).Address, Cells(reportrow + 4, overTypeCol).Address)
-            .HorizontalAlignment = xlCenter
-            .Font.Bold = True
-            .Interior.Color = RGB(0, 102, 204)
-            .Font.Color = RGB(255, 255, 255)
-    End With
-Loop Until Sheets("Reps").Cells(reprow, 1) = ""
+        .HorizontalAlignment = xlCenter
+        .Font.Bold = True
+        .Interior.Color = RGB(0, 102, 204)
+        .Font.Color = RGB(255, 255, 255)
+End With
+Loop Until Sheets("Reps").Cells(repRow, 1) = ""
 
 ''''''''''''''''''TURN OFF SCREEN UPDATING''''''''''''''''''''''
 Application.ScreenUpdating = True
 End Sub
+
 
 
 
