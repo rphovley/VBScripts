@@ -1,3 +1,4 @@
+'Global Variables'
 Dim solarReport, Master, closedWon As Workbook
     Dim map, report, repRef, findRep, closedRep, histSheet As Worksheet
 Dim overrideMonth, overrideYear As String
@@ -5,36 +6,46 @@ Dim bottomRow As Integer
 Dim isFirst As Boolean
 'report columns'
     Dim CustomerCol, JobIDCol, kWCol, StatusCol, SubStatusCol, theDateCol, repEmailCol As Integer
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 'SORT BY JOB ID THEN OVERRIDE ID BEFORE YOU RUN THIS
 Sub newAdjustments()
 'SORT BY JOB ID THEN OVERRIDE ID BEFORE YOU RUN THIS
 
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 ''''''''''''''''''''''''INIT VARIABLES'''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-    CustomerCol = 1
-    JobIDCol = 2
-    kWCol = 3
-    StatusCol = 4
-    SubStatusCol = 5
-    theDateCol = 7
-    repEmailCol = 17
+    CustomerCol  = 1  'Customer Name'
+    JobIDCol     = 2  'Job ID'
+    kWCol        = 3  'Kilowatts on the job'
+    StatusCol    = 4  'Job Status'
+    SubStatusCol = 5  'Job Sub Status'
+    theDateCol   = 7  'Job Creation Date'
+    repEmailCol  = 17 'Reb email (Unique identifier)'
 
-    'master report workbook'
+    'master report workbook (List of Job Data)'
     Dim masterReport As Workbook
+
+    'Variables to iterate through the job data worksheet'
     Dim i, j, x, y, histRow, jobRow, overRepID, rowLength As Integer
 
-    Dim FilePath, FileName, reportSheet, closedWonSheet, JobID, repName As String
+    ''
+    Dim FilePath, FileName, reportSheet, JobID, repName As String
     Dim isCancelled, isCurrentlyCancelled, paymentsIdFound, isJobBackend, isAlreadyBackend, jobIDfound, isSale As Boolean
+    
+    'Dictionary of rows in various sheets'
     Dim dictRows As New Collection
 
-
+    'Make sure tat the month and year are set correctly every time this script is run'
     overrideMonth = "x"
-    overrideYear = "0"
+    overrideYear  = "0"
 
+    'variable used to indcate the row number in Current Data sheet'
     i = 1
 
-    'MsgBox ("Open Most Recent Solar City Report")
+    MsgBox ("Open Most Recent Solar City Report")
 
     FilePath = Application.GetOpenFilename()
     FileName = convertToName(FilePath)
@@ -51,7 +62,7 @@ Sub newAdjustments()
     Set histSheet = Master.Sheets("Override Past")
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-'''''''''''''''''''''''''''''LOGIC'''''''''''''''''''''''''''
+'''''''''''''''''''''''''      LOGIC      '''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 With Master.Sheets("Payments")
 
@@ -62,24 +73,15 @@ With Master.Sheets("Payments")
         jobIDfound = True
         paymentsIdFound = True
         isAlreadyBackend = False
-
-        FileName = report.Cells(i, JobIDCol).Value
-
-        'find first row associated with jobID if it is not found, it is a new sale
-        On Error GoTo jobIdNotFound:
-            JobID = report.Cells(i, JobIDCol).Value
-            jobRow = Application.WorksheetFunction.Match(report.Cells(i, JobIDCol).Value, Master.Sheets("Override Past").Range("C:C"), 0)
-
+            
         On Error GoTo paymentIdNotFound:
             jobRow = Application.WorksheetFunction.Match(report.Cells(i, JobIDCol).Value, .Range("G:G"), 0)
 
         'find overrideID for first related override
 
         y = jobRow
-        JobID = .Cells(y, 7).Value
+        JobID   = .Cells(y, 7).Value
         checkID = .Cells(y, 3).Value
-
-        isFirst = True
 
         If jobIDfound Then
             Dim checkStatus As String
@@ -94,14 +96,21 @@ With Master.Sheets("Payments")
             Set repRef = Master.Sheets(overrideMonth + " " + overrideYear + " Map")
 
                 JobID = report.Cells(i, JobIDCol).Value
+
             'Was the id found in the payments tab, if it wasn't it is a backend for a rep that didn't have anyone for overrides before
             If paymentsIdFound Then
                 isAlreadyBackend = False
                 Do Until .Cells(y, 7).Value <> report.Cells(i, JobIDCol).Value
                     On Error GoTo wtf:
+
+                    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+                    'These two functions to find overRepID and overID are probably not needed'
+                    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
                     overRepID = Application.WorksheetFunction.Index(.Range("C:C"), Application.WorksheetFunction.Match(.Cells(y, 2).Value, .Range("B:B"), 0))
                     On Error Resume Next:
                     overID = Application.WorksheetFunction.Index(.Range("A:A"), y)
+                    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+                    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
                     sum = 0
                     kWsum = 0
                     isCurrentlyCancelled = False
@@ -114,12 +123,13 @@ With Master.Sheets("Payments")
                         If LCase(.Cells(x, 10).Value) = "cancelled" Then
                             isCurrentlyCancelled = True
                         End If
-                        If .Cells(x, 8).Value = "Backend" Then
+                        If .Cells(x, 10).Value = "Backend" Then
                             isAlreadyBackend = True
                         End If
                         x = x + 1
                     Loop
 
+                    'These dictRows may be deleted in the future'
                     dictRows.Add i, "solarRow"
                     dictRows.Add y, "jobRow"
                     dictRows.Add sum, "sum"
@@ -127,20 +137,13 @@ With Master.Sheets("Payments")
                     dictRows.Add bottomRow, "bottomRow"
 
 
-                    'was the jobID already cancelled?
-                    If isCurrentlyCancelled Then
-
-                    'was not cancelled
-                    Else
-
                         'If it is a backend
                         If isAlreadyBackend = False Then
 
                             'if it is a Backend
                             If isBackend_New(report.Cells(i, StatusCol).Value, report.Cells(i, SubStatusCol).Value) Then
 
-                                    'record in historical jobs
-                                    isFirst = toHist(i, .Cells(y, 4).Value, "New Sale", isFirst)
+                                    
                                     'OverrideID
                                     .Cells(bottomRow, 1).Value = overID
                                     'OverrideRep
@@ -192,8 +195,7 @@ With Master.Sheets("Payments")
 
                             'If it is cancelled
                              ElseIf isItCancelled = True Then
-                                'record in historical jobs
-                                isFirst = toHist(i, .Cells(y, 4).Value, "New Sale", isFirst)
+                                
                                 'OverrideID
                                 .Cells(bottomRow, 1).Value = overID
                                 'OverrideRep
@@ -290,12 +292,11 @@ With Master.Sheets("Payments")
                                 End If
                             End If
                         End If
-
                     End If
                     'set overrideID equal to the next override associated with the jobID
                     overID = .Cells(x, 1).Value
                     'isFirst = False
-                    dictRows.Remove "solarRow"
+                    dictRows.Remove "solarRow" 'Maybe delete these dictRows rows someday'
                     dictRows.Remove "jobRow"
                     dictRows.Remove "sum"
                     dictRows.Remove "kWsum"
@@ -313,14 +314,11 @@ With Master.Sheets("Payments")
                 If isBackend_New(report.Cells(i, StatusCol).Value, report.Cells(i, SubStatusCol).Value) Then
                     x = 1
                     overID = Application.WorksheetFunction.Max(.Range("A:A")) + 1
-                    If Month(report.Cells(i, theDateCol).Value) > 5 And Month(report.Cells(i, theDateCol).Value) < 11 Then
-                        Set repRef = Master.Sheets(MonthName(Month(report.Cells(i, theDateCol).Value), False) & " " & Year(report.Cells(i, theDateCol).Value) & " Map")
-                    Else
-                        Set repRef = Master.Sheets("May 2014 Map")
-                    End If
-                    'record in historical jobs
-                    isFirst = toHist(i, repName, "Upsize", isFirst)
-                 Do Until IsEmpty(repRef.Cells(x, 1))
+                    
+                    Set repRef = Master.Sheets(MonthName(Month(report.Cells(i, theDateCol).Value), False) & " " & Year(report.Cells(i, theDateCol).Value) & " Map")
+                    
+                    
+                    Do Until IsEmpty(repRef.Cells(x, 1))
                             'Check if the cell row is for the right rep
                             If repRef.Cells(x, 1).Value = repName Then
                                 'Set repID to the ID of the cell referenced
@@ -367,127 +365,121 @@ With Master.Sheets("Payments")
                                      End If
                                    y = y + 3
                                 Next y
-
                             End If
                         x = x + 1
-
                         Loop
                 End If
-
             End If
 
-    'IF is New Sale (and possibly all the way to backend)
-    Else
-        isJobBackend = False
-        x = 1
-        Dim testString As String
-
-        testString = MonthName(Month(report.Cells(i, theDateCol).Value), False) & " " & Year(report.Cells(i, theDateCol).Value) & " Map"
-        If Month(report.Cells(i, theDateCol).Value) > 5 And Month(report.Cells(i, theDateCol).Value) < 11 Then
-            Set repRef = Master.Sheets(MonthName(Month(report.Cells(i, theDateCol).Value), False) & " " & Year(report.Cells(i, theDateCol).Value) & " Map")
+        'IF is New Sale (and possibly all the way to backend)
         Else
-            Set repRef = Master.Sheets("May 2014 Map")
-        End If
+            isJobBackend = False
+            x = 1
+            Dim testString As String
 
-        overID = Application.WorksheetFunction.Max(.Range("A:A")) + 1
-        isSale = False
+            testString = MonthName(Month(report.Cells(i, theDateCol).Value), False) & " " & Year(report.Cells(i, theDateCol).Value) & " Map"
 
-        Dim cancel, cancelled, Sales As String
-        cancel = "Cancel"
-        cancelled = "Cancelled"
-        Sales = "Sales"
-        repName = ""
-        histRow = Master.Sheeets("Override Past").Cells(1, 2).End(xlDown).Row + 1
+            Set repRef = Master.Sheets(MonthName(Month(report.Cells(i, theDateCol).Value), False) & " " & Year(report.Cells(i, theDateCol).Value) & " Map")
 
-        If report.Cells(i, StatusCol).Value <> cancel And report.Cells(i, StatusCol).Value <> Sales And report.Cells(i, StatusCol).Value <> cancelled Then
-                    If report.Cells(i, StatusCol).Value = "Permit" Then
-                        isSale = isReady(report.Cells(i, SubStatusCol).Value)
-                    Else
-                        isJobBackend = isBackend_New(report.Cells(i, StatusCol).Value, report.Cells(i, SubStatusCol).Value)
-                        isSale = True
-                    End If
+            overID = Application.WorksheetFunction.Max(.Range("A:A")) + 1
+            isSale = False
 
-                    If isSale Then
+            Dim cancel, cancelled, Sales As String
+            cancel = "Cancel"
+            cancelled = "Cancelled"
+            Sales = "Sales"
+            repName = ""
+            histRow = Master.Sheets("Override Past").Cells(1, 2).End(xlDown).Row + 1
 
-                    repEmail = ""
-                    repEmail = report.Cells(i, repEmailCol).Value
-
-                    On Error GoTo emailError:
-                        repName = Application.WorksheetFunction.Index(findRep.Range("G:G"), Application.WorksheetFunction.Match(repEmail, findRep.Range("B:B"), 0))
-
-                        If repName <> "" And repEmail <> "" Then
-
-                            histRow = histRow + 1
-                            Do Until IsEmpty(repRef.Cells(x, 1))
-                                'Check if the cell row is for the right rep
-                                If repRef.Cells(x, 1).Value = repName Then
-                                    'Set repID to the ID of the cell referenced
-                                    repID = repRef.Cells(x, 2).Value
-                                    rowLength = repRef.Cells(1, 1).End(xlToRight).Row
-                                    'loop through column to get all overrides
-                                    For y = 3 To repRef.Cells(1, 1).End(xlToRight).Column
-
-                                        If repRef.Cells(x, y).Value <> "" And repRef.Cells(x, y + 1).Value <> vbNull Then
-
-                                            'OverrideID
-                                            .Cells(bottomRow, 1).Value = overID
-                                            'OverrideRep
-                                            .Cells(bottomRow, 2).Value = repRef.Cells(x, y + 1).Value
-                                            'OverrideRepID
-                                            .Cells(bottomRow, 3).Value = repRef.Cells(x, y + 2).Value
-                                            'Rep
-                                            .Cells(bottomRow, 4).Value = repName
-                                            'RepID
-                                            .Cells(bottomRow, 5).Value = repRef.Cells(x, 2).Value
-                                            'Customer
-                                            .Cells(bottomRow, 6).Value = report.Cells(i, CustomerCol).Value
-                                            'JobID
-                                            .Cells(bottomRow, 7).Value = report.Cells(i, JobIDCol).Value
-                                            'Date
-                                            If isJobBackend Then
-                                                .Cells(bottomRow, 8).Value = "Backend"
-                                            Else
-                                                .Cells(bottomRow, 8).Value = MonthName(Month(report.Cells(i, theDateCol).Value), False) & " " & overrideYear
-
-                                            End If
-                                            'Date of Override
-                                            .Cells(bottomRow, 9).Value = overrideMonth & " " & overrideYear
-                                            'Reason
-                                             If isJobBackend Then
-                                                .Cells(bottomRow, 10).Value = "Backend"
-                                                'record in historical jobs
-                                                isFirst = toHist(i, repName, "Upsize", isFirst)
-                                             Else
-                                                .Cells(bottomRow, 10).Value = "New Sale"
-                                                'record in historical jobs
-                                                isFirst = toHist(i, repName, "Upsize", isFirst)
-                                             End If
-                                             'Status
-                                            .Cells(bottomRow, 11).Value = report.Cells(i, StatusCol).Value
-                                            'SubStatus
-                                            .Cells(bottomRow, 12).Value = report.Cells(i, SubStatusCol).Value
-                                            'OverrideType
-                                            .Cells(bottomRow, 13).Value = repRef.Cells(x, y).Value
-                                            'OverrideRate
-                                            .Cells(bottomRow, 14).Value = repRef.Cells(x, y + 3).Value
-                                            'kW
-                                            .Cells(bottomRow, 15).Value = report.Cells(i, kWCol).Value
-                                            'Amount
-                                            .Cells(bottomRow, 16).Value = (.Cells(bottomRow, 14).Value * .Cells(bottomRow, 15).Value) / 2
-
-                                            bottomRow = bottomRow + 1
-                                            overID = overID + 1
-                                        End If
-                                       y = y + 3
-                                    Next y
-
-                                End If
-                            x = x + 1
-                            Loop
+            If report.Cells(i, StatusCol).Value <> cancel And report.Cells(i, StatusCol).Value <> Sales And report.Cells(i, StatusCol).Value <> cancelled Then
+                        If report.Cells(i, StatusCol).Value = "Permit" Then
+                            isSale = isReady(report.Cells(i, SubStatusCol).Value)
+                        Else
+                            isJobBackend = isBackend_New(report.Cells(i, StatusCol).Value, report.Cells(i, SubStatusCol).Value)
+                            isSale = True
                         End If
-                  End If
-            End If
-    End If
+
+                        If isSale Then
+
+                        repEmail = ""
+                        repEmail = report.Cells(i, repEmailCol).Value
+
+                        On Error GoTo emailError:
+                            repName = Application.WorksheetFunction.Index(findRep.Range("G:G"), Application.WorksheetFunction.Match(repEmail, findRep.Range("B:B"), 0))
+
+                            If repName <> "" And repEmail <> "" Then
+
+                                histRow = histRow + 1
+                                Do Until IsEmpty(repRef.Cells(x, 1))
+                                    'Check if the cell row is for the right rep
+                                    If repRef.Cells(x, 1).Value = repName Then
+                                        'Set repID to the ID of the cell referenced
+                                        repID = repRef.Cells(x, 2).Value
+                                        rowLength = repRef.Cells(1, 1).End(xlToRight).Row
+                                        'loop through column to get all overrides
+                                        For y = 3 To repRef.Cells(1, 1).End(xlToRight).Column
+
+                                            If repRef.Cells(x, y).Value <> "" And repRef.Cells(x, y + 1).Value <> vbNull Then
+
+                                                'OverrideID
+                                                .Cells(bottomRow, 1).Value = overID
+                                                'OverrideRep
+                                                .Cells(bottomRow, 2).Value = repRef.Cells(x, y + 1).Value
+                                                'OverrideRepID
+                                                .Cells(bottomRow, 3).Value = repRef.Cells(x, y + 2).Value
+                                                'Rep
+                                                .Cells(bottomRow, 4).Value = repName
+                                                'RepID
+                                                .Cells(bottomRow, 5).Value = repRef.Cells(x, 2).Value
+                                                'Customer
+                                                .Cells(bottomRow, 6).Value = report.Cells(i, CustomerCol).Value
+                                                'JobID
+                                                .Cells(bottomRow, 7).Value = report.Cells(i, JobIDCol).Value
+                                                'Date
+                                                If isJobBackend Then
+                                                    .Cells(bottomRow, 8).Value = "Backend"
+                                                Else
+                                                    .Cells(bottomRow, 8).Value = MonthName(Month(report.Cells(i, theDateCol).Value), False) & " " & overrideYear
+
+                                                End If
+                                                'Date of Override
+                                                .Cells(bottomRow, 9).Value = overrideMonth & " " & overrideYear
+                                                'Reason
+                                                 If isJobBackend Then
+                                                    .Cells(bottomRow, 10).Value = "Backend"
+                                                    'record in historical jobs
+                                                    
+                                                 Else
+                                                    .Cells(bottomRow, 10).Value = "New Sale"
+                                                    'record in historical jobs
+                                                   
+                                                 End If
+                                                 'Status
+                                                .Cells(bottomRow, 11).Value = report.Cells(i, StatusCol).Value
+                                                'SubStatus
+                                                .Cells(bottomRow, 12).Value = report.Cells(i, SubStatusCol).Value
+                                                'OverrideType
+                                                .Cells(bottomRow, 13).Value = repRef.Cells(x, y).Value
+                                                'OverrideRate
+                                                .Cells(bottomRow, 14).Value = repRef.Cells(x, y + 3).Value
+                                                'kW
+                                                .Cells(bottomRow, 15).Value = report.Cells(i, kWCol).Value
+                                                'Amount
+                                                .Cells(bottomRow, 16).Value = (.Cells(bottomRow, 14).Value * .Cells(bottomRow, 15).Value) / 2
+
+                                                bottomRow = bottomRow + 1
+                                                overID = overID + 1
+                                            End If
+                                           y = y + 3
+                                        Next y
+
+                                    End If
+                                x = x + 1
+                                Loop
+                            End If
+                      End If
+                End If
+        End If
 
     i = i + 1
     Loop
@@ -506,28 +498,7 @@ emailError:
     Resume Next
 End Sub
 
-Function toHist(ByVal i As Integer, ByVal repName As String, ByVal Reason As String, ByVal isFirst As Boolean) As Boolean
-          Dim histRow As Integer
 
-        If isFirst Then
-           histRow = histSheet.Cells(1, 1).End(xlDown).Row + 1
-              'Rep
-           histSheet.Cells(histRow, 1).Value = repName
-'              Date
-           histSheet.Cells(histRow, 2).Value = overrideMonth & " " & overrideYear
-              'JobID
-          histSheet.Cells(histRow, 3).Value = report.Cells(i, JobIDCol).Value
-              'Customer
-            histSheet.Cells(histRow, 4).Value = report.Cells(i, CustomerCol).Value
-              'kW
-           histSheet.Cells(histRow, 5).Value = report.Cells(i, kWCol).Value
-              'Reason
-            histSheet.Cells(histRow, 6).Value = Reason
-              'Entry Date
-            histSheet.Cells(histRow, 7).Value = overrideMonth & " " & overrideYear
-        End If
-            toHist = False
-End Function
 
 
 
