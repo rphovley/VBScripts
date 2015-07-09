@@ -1,0 +1,55 @@
+REGEX
+
+Office_Recruiters
+find:
+^([0-9]+)[\t ]([$])([0-9]+\.+[0-9]+)[\s][\s]([0-9]+)
+
+replace:
+insert into office_recruiters (distributor_id,recruiter_id,rate) values (\1,\4,\3);
+
+office_reps
+find: 
+^([0-9]+)[\t ]+([0-9]+)
+replace: 
+replace into office_reps (distributor_id,office_id) values (\1,\2);
+
+update distributors with correct roles
+
+find:
+^([0-9]+)
+replace:
+
+update distributors set role_id=6 Where distributor_id=576;
+update distributors set role_id=6 Where distributor_id=714;
+update distributors set role_id=6 Where distributor_id=580;
+update distributors set role_id=6 Where distributor_id=582;
+update distributors set role_id=6 Where distributor_id=1353;
+update distributors set role_id=6 Where distributor_id=1359;
+update distributors set role_id=6 Where distributor_id=1233;
+update distributors set role_id=6 Where distributor_id=1236;
+update distributors set role_id=6 Where distributor_id=1230;
+update distributors set role_id=6 Where distributor_id=1369;
+update distributors set role_id=6 Where distributor_id=1233;
+update distributors set role_id=6 Where distributor_id=1385;
+update distributors set role_id=6 Where distributor_id=1216;
+update distributors set role_id=6 Where distributor_id=329;
+update distributors set role_id=6 Where distributor_id=1326;
+update distributors set role_id=6 Where distributor_id=422;
+update distributors set role_id=6 Where distributor_id=927;
+update distributors set role_id=6 Where distributor_id=1217;
+update distributors set role_id=6 Where distributor_id=1300;
+update distributors set role_id=6 Where distributor_id=1352;
+update distributors set role_id=6 Where distributor_id=1251;
+update distributors set role_id=6 Where distributor_id=1219;
+update distributors set role_id=6 Where distributor_id=1294;
+update distributors set role_id=6 Where distributor_id=1210;
+update distributors set role_id=6 Where distributor_id=1397;
+update distributors set role_id=6 Where distributor_id=1218;
+update distributors set role_id=6 Where distributor_id=86;
+update distributors set role_id=6 Where distributor_id=1434;
+
+SELECT *
+FROM `commission_payouts`
+WHERE `commission_period_id` =14
+AND `commission_payout_type_id` =2
+AND `business_center_id` =1413

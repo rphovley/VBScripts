@@ -1,0 +1,55 @@
+For weekly commissions
+select cpay.business_center_id as rep_id, concat(d.first_name,'',d.last_name) as rep_name, cr.name as commission_requirement, cpay.value as commission_payout, cpd.job_id,jd.customer_name ,rr.rep_reseller_id,
+rr.name as rep_reseller_name
+from commission_payouts as cpay, commission_requirements as cr, commission_periods as cper, distributors as d,
+commission_payout_details as cpd
+left outer join job_data jd on jd.job_id=cpd.job_id
+left outer join rep_resellers rr on rr.rep_reseller_id=cpd.rep_reseller_id
+where cpay.commission_period_id=13 and cpay.commission_period_id=cper.commission_period_id
+and cpay.commission_requirements_id=cr.commission_requirements_id
+and cpay.commission_payout_id = cpd.commission_payout_id
+and cpay.business_center_id=d.distributor_id
+order by rep_id, cr.name
+
+For monthly overrides
+select cpay.business_center_id as rep_id, concat(d.first_name,d.last_name) as rep_name, cpay.value as commission_payout, cpd.job_id, cr.name as commission_type
+from commission_payouts as cpay, commission_requirements as cr, commission_periods as cper, distributors as d,
+commission_payout_details as cpd
+left outer join job_data jd on jd.job_id=cpd.job_id
+where cpay.commission_period_id=1 and cpay.commission_period_id=cper.commission_period_id
+and cpay.commission_requirements_id=cr.commission_requirements_id
+and cpay.commission_payout_id = cpd.commission_payout_id
+and cpay.business_center_id=d.distributor_id
+order by rep_id, cr.name
+
+Select all customers from dashboard
+SELECT c.`first_name`, c.`last_name`, c.`kwh_sold`, c.`job_created_original`, c.`cad_start`, c.`created`, c.`job_id`, u.`first_name` as `rep_first_name`, u.`last_name` as `rep_last_name`, s.`status_name`, u.`id` as `rep_id`
+FROM `customers` as c
+JOIN `users` as u ON c.`user_id` = u.`id`
+JOIN `statuses` as s ON c.`status_id` = s.`id`
+
+Username: reports
+Password: evolve987!
+database: evolve
+
+INSERT INTO `roles` (`id`, `position_title`, `created`, `modified`) VALUES
+(6, 'Field Sales', '2015-06-17 02:11:24', '2015-06-17 02:11:24'),
+(7, 'Field Sales Manager', '2015-06-17 02:11:24', '2015-06-17 02:11:24'),
+(8, 'Inside Sales Manager', '2015-06-17 02:11:24', '2015-06-17 02:11:24'),
+(9, 'Inside Sales', '2015-06-17 02:11:24', '2015-06-17 02:11:24'),
+(10, 'Corporate Recruiter', '2015-06-17 02:11:24', '2015-06-17 02:11:24'),
+(11, 'Head Corporate Recruiter', '2015-06-17 02:11:24', '2015-06-17 02:11:24'),
+(12, 'Lead Gen Specialist', '2015-06-17 02:11:24', '2015-06-17 02:11:24'),
+(13, 'Door to Door', '2015-06-17 02:11:24', '2015-06-17 02:11:24'),
+
+Select From `customers`
+first_name
+last_name
+kwh_sold
+job_id
+job_created
+job_created_original
+proposal
+
+Button has the same information
+
