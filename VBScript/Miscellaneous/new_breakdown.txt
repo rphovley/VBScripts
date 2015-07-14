@@ -32,11 +32,10 @@ Dim repRow As Integer
 Dim repCol, customerCol, kWCol, rateCol, totalCol, reasonCol, jobIDCol, statusCol, subStatusCol, overTypeCol, month_col As Integer
 
 Dim inSolarCity, inSunE As Boolean
-	inSolarCity = False
-	inSunE = False
+	
 
 
-Dim solarCitySheet, suneSheet As Worksheets
+Dim solarCitySheet, suneSheet As Worksheet
 
 Set solarCitySheet = Worksheets("Solar City")
 Set suneSheet = Worksheets("SunEdison")
@@ -46,7 +45,9 @@ repRow = 2
 
 'Main part of code that loops through the reps
 Do
-
+	
+	inSolarCity = False
+	inSunE = False
 	'Set starting row for the row counters for each loop/rep
 	reportrow = 4
 	solarMasterRow = 2
@@ -184,7 +185,7 @@ Do
 	Next solarMasterRow
 	'remove solar city info if they aren't in the sheet
 	If inSolarCity = False Then
-
+		Worksheets(Rep).Range("3:6").ClearContents
 	Else
 		'Sums the totals for each customer into a grand total for the rep
 		Worksheets(Rep).Cells(reportrow + 1, 5) = "Total:"
@@ -262,10 +263,10 @@ Do
 	            'Convert to Readable format
 	            If overrideType = "recruiter_override" Then
 	                overrideType = "Recruit"
-	            ElseIf overrideType = "M" Then
-	                overrideType = "manager_override"
-	            ElseIf overrideType = "RG" Then
-	                overrideType = "regional_override"
+	            ElseIf overrideType = "manager_override" Then
+	                overrideType = "Manager"
+	            ElseIf overrideType = "regional_override" Then
+	                overrideType = "Regional"
 	            ElseIf overrideType = "dvp_override" Then
 	                overrideType = "DVP"
 	            End If
@@ -290,26 +291,32 @@ Do
 
 	Next suneMasterRow
 
+	If inSunE = False Then
+		With Worksheets(Rep)
+			.Range(.Cells(reportrow + 2, 2), .Cells(reportrow + 8), 11).ClearContents
+		End With
+	Else
 
-	'Sums the totals for each customer into a grand total for the rep
-	Worksheets(Rep).Cells(reportrow + 1, 5) = "Total:"
-	Worksheets(Rep).Cells(reportrow + 1, 6) = grand_total
-	'Formats the grand total cells
-	With Worksheets(Rep).Cells(reportrow + 1, 5)
-	    .Font.Color = RGB(255, 255, 255)
-	    .Interior.Color = RGB(0, 0, 0)
-	    .Font.Bold = True
-	    .HorizontalAlignment = xlRight
-	End With
-	'Places border around the grand total
-	With Worksheets(Rep).Range(Sheets(Rep).Cells(reportrow + 1, 5), Sheets(Rep).Cells(reportrow + 1, 6))
-	    .Borders(xlEdgeLeft).LineStyle = xlContinuous
-	    .Borders(xlEdgeTop).LineStyle = xlContinuous
-	    .Borders(xlEdgeRight).LineStyle = xlContinuous
-	    .Borders(xlEdgeBottom).LineStyle = xlContinuous
-	End With
+		'Sums the totals for each customer into a grand total for the rep
+		Worksheets(Rep).Cells(reportrow + 1, 5) = "Total:"
+		Worksheets(Rep).Cells(reportrow + 1, 6) = grand_total
+		'Formats the grand total cells
+		With Worksheets(Rep).Cells(reportrow + 1, 5)
+		    .Font.Color = RGB(255, 255, 255)
+		    .Interior.Color = RGB(0, 0, 0)
+		    .Font.Bold = True
+		    .HorizontalAlignment = xlRight
+		End With
+		'Places border around the grand total
+		With Worksheets(Rep).Range(Sheets(Rep).Cells(reportrow + 1, 5), Sheets(Rep).Cells(reportrow + 1, 6))
+		    .Borders(xlEdgeLeft).LineStyle = xlContinuous
+		    .Borders(xlEdgeTop).LineStyle = xlContinuous
+		    .Borders(xlEdgeRight).LineStyle = xlContinuous
+		    .Borders(xlEdgeBottom).LineStyle = xlContinuous
+		End With
 
-	reportrow = reportrow + 4
+		reportrow = reportrow + 4
+	End If
 	''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 	''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 	''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''FORMAT HISTORICAL BR '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
