@@ -1,0 +1,12 @@
+=IF(M2="RC",
+	INDEX([recruiting_list.xlsx]Sheet1!$C:$C,
+		MATCH([@OverrideRepID],[recruiting_list.xlsx]Sheet1!$B:$B,0)),
+IF(M3="M",
+	INDEX('[offices.xlsx]Office-Manager'!$E:$E,
+		MATCH([@OverrideRepID],'[offices.xlsx]Office-Manager'!C:$C,0)),
+IF(M2="RG",
+	INDEX('[offices.xlsx]Office-Regional'!$E:$E,
+		MATCH([@OverrideRepID],'[offices.xlsx]Office-Regional'!C:$C,0)),
+IF(M2="D",
+	INDEX('[offices.xlsx]Office-DVP'!$E:$E,
+		MATCH([@OverrideRepID],'[offices.xlsx]Office-DVP'!C:$C,0))))))

@@ -1,0 +1,49 @@
+Get rates for Two people fixed (Bertha Dena and Ivan Valenzuela)
+
+	Talk to Jeremy about setting up an update meeting between Chad, Scott, Jeremy, Dan, and myself
+
+Options
+	School 50 hours, work 30 hours,
+	Defer school and work full-time, (I'd need the payout to be significant enough to offset the cost of delaying school.  Which would be a salary equivalent to what I'd get if I were graduated, otherwise, it doesn't make sense to defer school)
+	Work full-time and part-time for some courses
+	Dropout and sell solar
+
+Address in meeting with Chad and Wayne:
+	Make sure that the base pay section is nailed down
+
+
+We considered in progress jobs to be jobs that had a proposal accepted as well as a kW listed from the report we receive from SunEdison
+Commssions were calculated using the rates for D2D reps, managers, FSR reps and managers
+Overrides were calculated using the full $75 per kW per job
+
+Dan wants me to take notes for him if he is not at the meeting
+Get Chad the requirements for the coming weeks.  What we need to develop and by when.
+Take Wayne out to Lunch.  Apologize for assuming the wrong things
+
+
+Deadlines
+	Overrides June 5
+	Base Pay with other payouts June 12
+	Residual Bonus, Volume Bonus, NPS Bonus, June 19
+
+Go over the meeting for tomorrow
+Talk to Wayne about displaying negatives
+
+
+Priorities/Action Steps
+- Set up meeting with Chad and Wayne to walk through Legacy System and strategies for migrations and 
+
+Payroll
+	- Salary is only paid after first proposal has been made
+	- Go through task list
+	- need administrator abilities
+Onboarding
+	- Ability to create and edit data this coming week (API as well)
+	- Office views and permissions created and functional (We will want some sort of training on this as well--For JEremy)
+
+SELECT * 
+FROM  `commission_payouts` AS c
+LEFT JOIN  `office_reps` AS o ON c.business_center_id = o.distributor_id
+JOIN  `commission_payout_details` AS cp ON c.commission_payout_id = cp.commission_payout_id
+JOIN  `job_data` AS j ON j.job_id = cp.job_id
+WHERE commission_payout_type_id =2

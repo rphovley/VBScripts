@@ -1,0 +1,26 @@
+Sub toNewSheets()
+
+	'Make column counters
+	Dim fromOverrideRepCol,
+	fromCustomerCol,
+	fromKWCol,
+	rateCol,
+	totalCol,
+	reasonCol,
+	jobIDCol,
+	statusCol,
+	subStatusCol,
+	overTypeCol,
+
+	repCol = 2
+	customerCol = 3
+	kWCol = 4
+	rateCol = 5
+	totalCol = 6
+	reasonCol = 7
+	jobIDCol = 8
+	statusCol = 9
+	subStatusCol = 10
+	overTypeCol = 11
+	month_col = 9
+End Sub
