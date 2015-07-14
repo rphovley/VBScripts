@@ -1,32 +1,58 @@
 For weekly commissions
-select cpay.business_center_id as rep_id, concat(d.first_name,'',d.last_name) as rep_name, cr.name as commission_requirement, cpay.value as commission_payout, cpd.job_id,jd.customer_name ,rr.rep_reseller_id,
+
+select cpay.business_center_id as rep_id, concat(d.first_name,' ',d.last_name) as rep_name, cr.name as commission_requirement, cpay.value as commission_payout, cpd.job_id,jd.customer_name ,rr.rep_reseller_id,
 rr.name as rep_reseller_name
 from commission_payouts as cpay, commission_requirements as cr, commission_periods as cper, distributors as d,
 commission_payout_details as cpd
 left outer join job_data jd on jd.job_id=cpd.job_id
 left outer join rep_resellers rr on rr.rep_reseller_id=cpd.rep_reseller_id
-where cpay.commission_period_id=13 and cpay.commission_period_id=cper.commission_period_id
+where cpay.commission_period_id=15 and cpay.commission_period_id=cper.commission_period_id
 and cpay.commission_requirements_id=cr.commission_requirements_id
 and cpay.commission_payout_id = cpd.commission_payout_id
 and cpay.business_center_id=d.distributor_id
 order by rep_id, cr.name
 
-For monthly overrides
-select cpay.business_center_id as rep_id, concat(d.first_name,d.last_name) as rep_name, cpay.value as commission_payout, cpd.job_id, cr.name as commission_type
-from commission_payouts as cpay, commission_requirements as cr, commission_periods as cper, distributors as d,
-commission_payout_details as cpd
-left outer join job_data jd on jd.job_id=cpd.job_id
-where cpay.commission_period_id=1 and cpay.commission_period_id=cper.commission_period_id
-and cpay.commission_requirements_id=cr.commission_requirements_id
-and cpay.commission_payout_id = cpd.commission_payout_id
-and cpay.business_center_id=d.distributor_id
-order by rep_id, cr.name
+
+For Overrides
+select
+	cpay.commission_payout_id as 'payout_id', concat(dpay.first_name,dpay.last_name) as 'upline_rep', cpay.business_center_id as 'upline_rep_id', cr.name as 'commission_type', cpay.value as 'payment_amount',
+	j.system_size , cpd.job_id, concat(drep.first_name,drep.last_name) as 'upline_rep', j.distributor_id as 'downline_rep_id'
+from commission_payouts as cpay
+	inner join commission_payout_details cpd on cpay.commission_payout_id       = cpd.commission_payout_id
+	inner join distributors as dpay          on cpay.business_center_id         = dpay.distributor_id
+	inner join job_data j                    on j.job_id                        = cpd.job_id
+	inner join commission_requirements cr    on cpay.commission_requirements_id = cr.commission_requirements_id
+	left join office_reps orep               on j.distributor_id                = orep.distributor_id
+	inner join distributors as drep          on j.distributor_id                = drep.distributor_id
+where cpay.commission_period_id = 
+
+For override breakdowns
+select
+	cpay.commission_payout_id as 'payout_id', concat(dpay.first_name,dpay.last_name) as 'upline_rep', cpay.business_center_id as 'upline_rep_id', concat(drep.first_name,drep.last_name) as 'downline_rep', j.distributor_id as 'downline_rep_id',
+	j.customer_name, j.job_id, j.date_sold, " " as 'date_paid', " " as 'reason', " " as 'status', " " as 'sub_status',
+	cr.name as 'commission_type', CAST((CAST(cpay.value as decimal(6,2))/CAST(j.system_size as decimal(4,2))) as decimal(4,2)) as "rate", j.system_size, cpay.value as 'payment_amount'
+	
+from commission_payouts as cpay
+	inner join commission_payout_details cpd on cpay.commission_payout_id       = cpd.commission_payout_id
+	inner join distributors as dpay          on cpay.business_center_id         = dpay.distributor_id
+	inner join job_data j                    on j.job_id                        = cpd.job_id
+	inner join commission_requirements cr    on cpay.commission_requirements_id = cr.commission_requirements_id
+	left join office_reps orep               on j.distributor_id                = orep.distributor_id
+	inner join distributors as drep          on j.distributor_id                = drep.distributor_id
+where cpay.commission_period_id = 7
 
 Select all customers from dashboard
-SELECT c.`first_name`, c.`last_name`, c.`kwh_sold`, c.`job_created_original`, c.`cad_start`, c.`created`, c.`job_id`, u.`first_name` as `rep_first_name`, u.`last_name` as `rep_last_name`, s.`status_name`, u.`id` as `rep_id`
+SELECT REPLACE(TRIM(CONCAT(c.`first_name`, " ", c.`last_name`)), '  ', ' ') as "customer_full_name", c.`kwh_sold`, c.`job_created_original`, c.`cad_start`, c.`created`, c.`job_id`, REPLACE(TRIM(CONCAT(u.`first_name`, " ",  u.`last_name`)), '  ', '') as "rep_full_name", s.`status_name`, u.`id` as `rep_id`
 FROM `customers` as c
 JOIN `users` as u ON c.`user_id` = u.`id`
 JOIN `statuses` as s ON c.`status_id` = s.`id`
+
+Select all customers from dashboard
+SELECT CONCAT(c.`first_name`, ' ', c.`last_name`) as "customer_full_name", c.`kwh_sold`, c.`job_created_original`, c.`cad_start`, c.`created`, c.`job_id`, CONCAT(u.`first_name`, ' ',  u.`last_name`) as "rep_full_name", s.`status_name`, u.`id` as `rep_id`
+FROM `customers` as c
+JOIN `users` as u ON c.`user_id` = u.`id`
+JOIN `statuses` as s ON c.`status_id` = s.`id`
+
 
 Username: reports
 Password: evolve987!
@@ -52,4 +78,32 @@ job_created_original
 proposal
 
 Button has the same information
+
+Add New Items to Payroll
+	Required Items for commission_payouts
+		payout id: max + 1
+		commission_payout_type_id (Ramp Pay 1, Base Pay 2, Overrides 3)
+		business_center_id:
+		commission_period_id
+		commission_requirements_id: (check requirements table: 1st Payment 9, 2nd Payment 10)
+		value
+
+	SQL:
+			INSERT INTO commission_payouts 
+				(payout_id, commission_payout_type_id, business_center_id, commission_period_id, commission_requirements_id, value)
+			VALUES
+				()
+
+			INSERT INTO commission_payout_details
+				(commission_detail_id,commission_payout_id,payroll_payout_type,business_center_id, value, percent, amount)
+			VALUES
+				()	
+	Required Items for commission_payouts_details
+		commission_detail_id (same as below)
+		commission_payout_id (fk to payout_id)
+		payroll_payout_type (Benchmark Bonus, Commission)
+		business_center_id
+		value
+		percent: 100
+		amount
 

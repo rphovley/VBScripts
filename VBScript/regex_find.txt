@@ -53,3 +53,28 @@ FROM `commission_payouts`
 WHERE `commission_period_id` =14
 AND `commission_payout_type_id` =2
 AND `business_center_id` =1413
+
+10225
+
+Add New Items to Payroll
+find:
+^([0-9]+)[\s]+([0-9]+)[\s]+([0-9]+)[\s]+([0-9]+)[\s]+([0-9]+)[\s]+([0-9]+)[\s]+([a-z]+)
+replace:
+INSERT INTO commission_payouts 
+		(commission_payout_id, commission_payout_type_id, business_center_id, commission_period_id, commission_requirements_id, value)
+	VALUES
+		((SELECT MAX(`commission_payout_id`)+1 FROM `commission_payouts` as c), \1,\2,\3,\4,\5);
+INSERT INTO commission_payout_details
+		(commission_payout_detail_id,commission_payout_id,payroll_payout_type,job_id, business_center_id, value, percent, amount)
+	VALUES
+		((SELECT MAX(`commission_payout_id`) FROM `commission_payouts` as c1),(SELECT MAX(`commission_payout_id`) FROM `commission_payouts` as c2), \6,"\7", \2,\5,100,\5);
+
+2	432	14	10	810	2030818	Commission
+2	1220	14	10	1836	2026545	Commission
+2	432	14	10	543.375	2029639	Commission
+2	758	14	10	3672	2026528	Commission
+2	1111	14	10	2160	2032709	Commission
+2	1111	14	10	1620	2032036	Commission
+2	1111	14	10	1836	2012517	Commission
+2	935	14	10	2160	2034446	Commission
+2	758	14	10	4968	2028176	Commission
